@@ -1,0 +1,79 @@
+// ─── Rate Limit Middleware ────────────────────────────────────────
+
+import rateLimit from 'express-rate-limit';
+import type { Request, Response, NextFunction } from 'express';
+import { SUBSCRIPTION_LIMITS } from '@jobagg/shared';
+
+// Pre-built limiters for each tier
+const limiters = {
+  FREE: rateLimit({
+    windowMs: 60 * 1000,
+    max: SUBSCRIPTION_LIMITS.FREE.rateLimit,
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req: Request) => req.user?.userId || req.ip || 'anonymous',
+    message: {
+      data: null,
+      error: {
+        message: 'Too many requests. Upgrade your plan for higher limits.',
+        code: 'RATE_LIMIT_EXCEEDED',
+      },
+    },
+  }),
+  PRO: rateLimit({
+    windowMs: 60 * 1000,
+    max: SUBSCRIPTION_LIMITS.PRO.rateLimit,
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req: Request) => req.user?.userId || req.ip || 'anonymous',
+    message: {
+      data: null,
+      error: {
+        message: 'Rate limit exceeded.',
+        code: 'RATE_LIMIT_EXCEEDED',
+      },
+    },
+  }),
+  ENTERPRISE: rateLimit({
+    windowMs: 60 * 1000,
+    max: SUBSCRIPTION_LIMITS.ENTERPRISE.rateLimit,
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req: Request) => req.user?.userId || req.ip || 'anonymous',
+    message: {
+      data: null,
+      error: {
+        message: 'Rate limit exceeded.',
+        code: 'RATE_LIMIT_EXCEEDED',
+      },
+    },
+  }),
+};
+
+/**
+ * Global rate limiter — applies FREE tier limits to all requests.
+ * For per-user tier-based limiting, use `tieredRateLimit` after auth.
+ */
+export const globalRateLimit = rateLimit({
+  windowMs: 60 * 1000,
+  max: SUBSCRIPTION_LIMITS.FREE.rateLimit,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    data: null,
+    error: {
+      message: 'Too many requests. Please try again later.',
+      code: 'RATE_LIMIT_EXCEEDED',
+    },
+  },
+});
+
+/**
+ * Per-tier rate limiter — checks `req.user?.subscriptionPlan` set by auth middleware.
+ * Defaults to FREE limits for unauthenticated users.
+ */
+export function tieredRateLimit(req: Request, res: Response, next: NextFunction): void {
+  const plan = (req as any).subscriptionPlan || 'FREE';
+  const limiter = limiters[plan as keyof typeof limiters] || limiters.FREE;
+  limiter(req, res, next);
+}

@@ -1,0 +1,29 @@
+import 'reflect-metadata';
+import { DataSource } from 'typeorm';
+import { config } from './unifiedConfig.js';
+import { Job } from '../entities/Job.js';
+import { User } from '../entities/User.js';
+import { Source } from '../entities/Source.js';
+import { SavedJob } from '../entities/SavedJob.js';
+
+export const AppDataSource = new DataSource({
+  type: 'postgres',
+  url: config.db.url,
+  synchronize: true, // Force sync for local docker schema deployment
+  logging: config.isDev ? ['query', 'error'] : ['error'],
+  entities: [Job, User, Source, SavedJob],
+  migrations: [],
+  subscribers: [],
+});
+
+export const initializeDatabase = async () => {
+  try {
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+      console.log('📦 Data Source has been initialized!');
+    }
+  } catch (error) {
+    console.error('❌ Error during Data Source initialization', error);
+    process.exit(1);
+  }
+};

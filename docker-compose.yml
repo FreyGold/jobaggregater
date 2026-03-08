@@ -1,0 +1,69 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: jobaggDB
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d jobaggDB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=postgres://user:password@postgres:5432/jobaggDB
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=supersecret123
+      - CORS_ORIGIN=http://localhost:3000
+      - STRIPE_SECRET_KEY=sk_test_51T8jLEDKhU3qA8DkhpcQq8A5hXR2HdeFAQsx2PqSKJcIQHPGc3uz8R8obYmAc6mPEYhdyMGGucWXhgsOsgb6Rmxw00KpVkKqwJ
+      - STRIPE_WEBHOOK_SECRET=
+      - STRIPE_PRICE_PRO_ID=price_1T8jbADKhU3qA8DkSJq0kpZE
+      - STRIPE_PRICE_ENTERPRISE_ID=price_1T8jbaDKhU3qA8DkWwSyczV4
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,32 @@
+{
+  "name": "jobaggregator",
+  "private": true,
+  "scripts": {
+    "dev:api": "pnpm --filter @jobagg/api dev",
+    "dev:web": "pnpm --filter @jobagg/web dev",
+    "dev:mobile": "pnpm --filter @jobagg/mobile start",
+    "build": "pnpm -r build",
+    "build:shared": "pnpm --filter @jobagg/shared build",
+    "build:api": "pnpm --filter @jobagg/api build",
+    "build:web": "pnpm --filter @jobagg/web build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r exec tsc --noEmit",
+    "clean": "pnpm -r exec rm -rf dist node_modules .next .expo"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "prettier": "^3.4.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "npm:types-react@19.0.0-rc.1",
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+    }
+  },
+  "packageManager": "pnpm@9.15.0"
+}

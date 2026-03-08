@@ -1,0 +1,90 @@
+// ─── Subscription Controller ─────────────────────────────────────
+
+import type { Request, Response } from 'express';
+import { BaseController } from './BaseController.js';
+import type { StripeService } from '../services/stripeService.js';
+
+export class SubscriptionController extends BaseController {
+  constructor(private readonly stripeService: StripeService) {
+    super();
+  }
+
+  getPlans = async (_req: Request, res: Response) => {
+    try {
+      const plans = this.stripeService.getPlans();
+      this.handleSuccess(res, plans);
+    } catch (error) {
+      this.handleError(error, res, 'SubscriptionController.getPlans');
+    }
+  };
+
+  createCheckout = async (req: Request, res: Response) => {
+    try {
+      const { plan } = req.body as { plan: 'PRO' | 'ENTERPRISE' };
+      if (!plan || !['PRO', 'ENTERPRISE'].includes(plan)) {
+        res.status(400).json({
+          data: null,
+          error: { message: 'Invalid plan. Must be PRO or ENTERPRISE.', code: 'INVALID_PLAN' },
+        });
+        return;
+      }
+
+      const result = await this.stripeService.createCheckoutSession(
+        req.user!.userId,
+        req.user!.email,
+        plan,
+      );
+      this.handleSuccess(res, result);
+    } catch (error) {
+      this.handleError(error, res, 'SubscriptionController.createCheckout');
+    }
+  };
+
+  createPortal = async (req: Request, res: Response) => {
+    try {
+      const result = await this.stripeService.createPortalSession(req.user!.userId);
+      this.handleSuccess(res, result);
+    } catch (error) {
+      this.handleError(error, res, 'SubscriptionController.createPortal');
+    }
+  };
+
+  getCurrentSubscription = async (req: Request, res: Response) => {
+    try {
+      const user = await this.stripeService['userRepository'].findByIdFull(req.user!.userId);
+      if (!user) {
+        res.status(404).json({
+          data: null,
+          error: { message: 'User not found', code: 'USER_NOT_FOUND' },
+        });
+        return;
+      }
+
+      this.handleSuccess(res, {
+        plan: user.subscriptionPlan,
+        status: user.subscriptionStatus,
+        stripeCustomerId: user.stripeCustomerId,
+      });
+    } catch (error) {
+      this.handleError(error, res, 'SubscriptionController.getCurrentSubscription');
+    }
+  };
+
+  handleWebhook = async (req: Request, res: Response) => {
+    try {
+      const signature = req.headers['stripe-signature'] as string;
+      if (!signature) {
+        res.status(400).json({
+          data: null,
+          error: { message: 'Missing stripe-signature header', code: 'MISSING_SIGNATURE' },
+        });
+        return;
+      }
+
+      const result = await this.stripeService.handleWebhook(req.body, signature);
+      this.handleSuccess(res, result);
+    } catch (error) {
+      this.handleError(error, res, 'SubscriptionController.handleWebhook');
+    }
+  };
+}

@@ -1,0 +1,44 @@
+name: jobaggregator
+metadata:
+  template: jobaggregator@1.0.0
+
+infra:
+  provider: bicep
+  path: ./infra
+
+services:
+  postgres:
+    project: .
+    language: docker
+    host: containerapp
+    docker:
+      path: ./docker/postgres/Dockerfile
+      context: .
+      remoteBuild: true
+    
+  redis:
+    project: .
+    language: docker
+    host: containerapp
+    docker:
+      path: ./docker/redis/Dockerfile
+      context: .
+      remoteBuild: true
+
+  api:
+    project: ./apps/api
+    language: ts
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: ../..
+      remoteBuild: true
+
+  web:
+    project: ./apps/web
+    language: ts
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: ../..
+      remoteBuild: true
