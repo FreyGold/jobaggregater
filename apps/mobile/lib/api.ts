@@ -1,9 +1,11 @@
 // ─── Mobile API Client ───────────────────────────────────────────
 
+import { Platform } from 'react-native';
 import type { ApiResponse, ApiErrorResponse } from '@jobagg/shared';
 
 // TODO: Replace with your actual API URL or use env vars
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3001';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 
+  (Platform.OS === 'web' ? 'http://localhost:3001' : 'http://10.0.2.2:3001');
 
 let authToken: string | null = null;
 

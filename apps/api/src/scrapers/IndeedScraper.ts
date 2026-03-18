@@ -141,6 +141,8 @@ export class IndeedScraper extends BaseScraper {
               .substring(0, 24);
           }
 
+          const snippet = $(el).find('div.job-snippet, .jobsearch-JobComponent-description').text().trim();
+
           if (title && sourceId && !seenIds.has(sourceId)) {
             seenIds.add(sourceId);
             found++;
@@ -151,7 +153,7 @@ export class IndeedScraper extends BaseScraper {
               url: jobUrl.split('?')[0] || jobUrl,
               sourceId,
               sourceName: this.name,
-              description: `${title} at ${company}. Found on Indeed for ${country.name}.`,
+              description: snippet || `${title} at ${company}. Found on Indeed for ${country.name}.`,
               postedAt: new Date().toISOString(),
               tags: ['arab-jobs', keyword.toLowerCase().replace(/\s+/g, '-')],
               employmentType: 'full-time' as EmploymentType,

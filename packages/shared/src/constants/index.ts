@@ -23,7 +23,7 @@ export const MAX_PAGE_SIZE = 100;
 
 export const SUBSCRIPTION_LIMITS = {
   FREE: {
-    jobResultsPerPage: 100,
+    jobResultsPerPage: 40,
     savedJobs: 10,
     rateLimit: 60, // requests per minute
   },

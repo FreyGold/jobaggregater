@@ -1,33 +1,49 @@
 // ─── Tab Layout ──────────────────────────────────────────────────
 
 import { Tabs } from 'expo-router';
+import { Home, Search, Bookmark, CreditCard, User } from 'lucide-react-native';
+import { THEME } from '../../lib/theme';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#6366f1',
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarActiveTintColor: THEME.colors.primary,
+        tabBarInactiveTintColor: THEME.colors.textMuted,
         tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopColor: '#e5e7eb',
+          backgroundColor: THEME.colors.card,
+          borderTopColor: THEME.colors.border,
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
         },
-        headerStyle: { backgroundColor: '#ffffff' },
-        headerTitleStyle: { fontWeight: '600' },
+        headerStyle: { 
+          backgroundColor: THEME.colors.card,
+          elevation: 0, 
+          shadowOpacity: 0,
+          borderBottomWidth: 1,
+          borderBottomColor: THEME.colors.border,
+        },
+        headerTitleStyle: { 
+          fontWeight: '700',
+          fontSize: 20,
+          color: THEME.colors.text,
+        },
+        headerTitleAlign: 'left',
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Jobs',
+          title: 'Feed',
           tabBarLabel: 'Jobs',
+          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
-          tabBarLabel: 'Search',
+          href: null,
         }}
       />
       <Tabs.Screen
@@ -35,6 +51,7 @@ export default function TabLayout() {
         options={{
           title: 'Saved',
           tabBarLabel: 'Saved',
+          tabBarIcon: ({ color, size }) => <Bookmark color={color} size={size} />
         }}
       />
       <Tabs.Screen
@@ -42,6 +59,7 @@ export default function TabLayout() {
         options={{
           title: 'Plans',
           tabBarLabel: 'Plans',
+          tabBarIcon: ({ color, size }) => <CreditCard color={color} size={size} />
         }}
       />
       <Tabs.Screen
@@ -49,6 +67,7 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarLabel: 'Profile',
+          tabBarIcon: ({ color, size }) => <User color={color} size={size} />
         }}
       />
     </Tabs>

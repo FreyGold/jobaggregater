@@ -2,6 +2,8 @@ import * as cheerio from 'cheerio';
 import { BaseScraper } from './BaseScraper.js';
 import { type JobCreateInput, EmploymentType, ExperienceLevel } from '@jobagg/shared';
 import { chunk } from '../utils/index.js';
+// @ts-ignore
+import PQueue from 'p-queue';
 
 // ─── LinkedIn Arab Countries Scraper ─────────────────────────────
 // Searches across 50 job categories × 22 Arab countries × 10 pages.
@@ -84,28 +86,14 @@ const JOB_CATEGORIES = [
 // All 22 Arab League countries with their common LinkedIn location strings.
 // LinkedIn's public search uses location= parameter (URL-encoded).
 const ARAB_COUNTRIES = [
-  { name: 'Saudi Arabia',              location: 'Saudi Arabia' },
-  { name: 'United Arab Emirates',      location: 'United Arab Emirates' },
-  { name: 'Egypt',                     location: 'Egypt' },
-  { name: 'Qatar',                     location: 'Qatar' },
-  { name: 'Kuwait',                    location: 'Kuwait' },
-  { name: 'Bahrain',                   location: 'Bahrain' },
-  { name: 'Oman',                      location: 'Oman' },
-  { name: 'Jordan',                    location: 'Jordan' },
-  { name: 'Lebanon',                   location: 'Lebanon' },
-  { name: 'Iraq',                      location: 'Iraq' },
-  { name: 'Morocco',                   location: 'Morocco' },
-  { name: 'Tunisia',                   location: 'Tunisia' },
-  { name: 'Algeria',                   location: 'Algeria' },
-  { name: 'Libya',                     location: 'Libya' },
-  { name: 'Sudan',                     location: 'Sudan' },
-  { name: 'Yemen',                     location: 'Yemen' },
-  { name: 'Syria',                     location: 'Syria' },
-  { name: 'Palestine',                 location: 'Palestine' },
-  { name: 'Somalia',                   location: 'Somalia' },
-  { name: 'Mauritania',               location: 'Mauritania' },
-  { name: 'Djibouti',                  location: 'Djibouti' },
-  { name: 'Comoros',                   location: 'Comoros' },
+  { name: 'Saudi Arabia', location: 'Saudi Arabia' },
+  { name: 'United Arab Emirates', location: 'United Arab Emirates' },
+  { name: 'Egypt', location: 'Egypt' },
+  { name: 'Qatar', location: 'Qatar' },
+  { name: 'Kuwait', location: 'Kuwait' },
+  { name: 'Bahrain', location: 'Bahrain' },
+  { name: 'Oman', location: 'Oman' },
+  { name: 'Jordan', location: 'Jordan' },
 ];
 
 // 10 pages × 25 results per page = 250 results max per category-country pair
@@ -115,55 +103,51 @@ export class LinkedInScraper extends BaseScraper {
   readonly key = 'linkedin';
   readonly name = 'LinkedIn';
 
+  // @ts-ignore
+  private queue = new PQueue({ concurrency: 5 });
+
   async scrape(): Promise<JobCreateInput[]> {
     console.log(
       `[Scraper: ${this.name}] Starting multi-country scrape ` +
-      `(${ARAB_COUNTRIES.length} countries × ${JOB_CATEGORIES.length} categories × ${PAGES_PER_CATEGORY} pages)...`
+        `(${ARAB_COUNTRIES.length} countries × ${JOB_CATEGORIES.length} categories × ${PAGES_PER_CATEGORY} pages)...`,
     );
     const allJobs: JobCreateInput[] = [];
     const seenIds = new Set<string>();
 
+    const tasks: (() => Promise<void>)[] = [];
+
     for (const country of ARAB_COUNTRIES) {
-      console.log(`[Scraper: ${this.name}] ── Country: ${country.name} ──`);
+      for (const category of JOB_CATEGORIES) {
+        tasks.push(async () => {
+          try {
+            const categoryJobs = await this.scrapeCategory(
+              category.keywords,
+              category.tags,
+              country,
+              seenIds,
+            );
+            allJobs.push(...categoryJobs);
 
-      const chunks = chunk(JOB_CATEGORIES, 5); // Scrape 5 categories concurrently
-      for (const catChunk of chunks) {
-        await Promise.all(
-          catChunk.map(async (category) => {
-            try {
-              const categoryJobs = await this.scrapeCategory(
-                category.keywords,
-                category.tags,
-                country,
-                seenIds,
-              );
-              allJobs.push(...categoryJobs);
-
-              if (categoryJobs.length > 0) {
-                console.log(
-                  `[Scraper: ${this.name}] ${country.name} / "${category.keywords}": ` +
-                  `${categoryJobs.length} unique jobs (total: ${allJobs.length})`
-                );
-              }
-            } catch (err) {
-              console.error(
-                `[Scraper: ${this.name}] Error on ${country.name} / "${category.keywords}":`,
-                err,
+            if (categoryJobs.length > 0) {
+              console.log(
+                `[Scraper: ${this.name}] ${country.name} / "${category.keywords}": ` +
+                  `${categoryJobs.length} unique jobs (total: ${allJobs.length})`,
               );
             }
-          })
-        );
-        // Delay between chunks to avoid hard rate limiting
-        await this.delay(1200);
+          } catch (err) {
+            console.error(
+              `[Scraper: ${this.name}] Error on ${country.name} / "${category.keywords}":`,
+              err,
+            );
+          }
+        });
       }
-
-      // Longer delay between countries
-      await this.delay(3000);
     }
 
+    await this.queue.addAll(tasks);
+
     console.log(
-      `[Scraper: ${this.name}] Completed. Scraped ${allJobs.length} total jobs across ` +
-      `${ARAB_COUNTRIES.length} countries.`
+      `[Scraper: ${this.name}] Finished multi-country scrape. Total unique jobs: ${allJobs.length}`,
     );
     return allJobs;
   }
@@ -187,21 +171,16 @@ export class LinkedInScraper extends BaseScraper {
         `&start=${start}`;
 
       try {
-        const response = await fetch(url, {
+        const response = await this.client.get(url, {
           headers: {
-            'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
-              '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
           },
+          responseType: 'text',
         });
 
-        if (!response.ok) {
-          // Stop paginating this category on error (likely rate limited)
-          break;
-        }
+        // if the status is not ok, got throws an HTTPError out of the box.
 
-        const html = await response.text();
+        const html = response.body as string;
         const $ = cheerio.load(html);
         let foundOnPage = 0;
 
@@ -228,6 +207,11 @@ export class LinkedInScraper extends BaseScraper {
           if (title && cleanUrl && sourceId && !seenIds.has(sourceId)) {
             seenIds.add(sourceId);
             foundOnPage++;
+            const snippet = $(element)
+              .find('.base-search-card__metadata, .job-search-card__snippet')
+              .text()
+              .trim();
+
             jobs.push({
               title,
               company: company || 'Unknown Company',
@@ -235,7 +219,9 @@ export class LinkedInScraper extends BaseScraper {
               url: cleanUrl,
               sourceId,
               sourceName: this.name,
-              description: `${title} at ${company}. Category: ${keywords}. Country: ${country.name}.`,
+              description:
+                snippet ||
+                `${title} at ${company}. Category: ${keywords}. Country: ${country.name}.`,
               postedAt: dateStr ? new Date(dateStr).toISOString() : new Date().toISOString(),
               tags: ['arab-jobs', ...tags],
               employmentType: 'full-time' as EmploymentType,
@@ -260,13 +246,22 @@ export class LinkedInScraper extends BaseScraper {
 
   private guessExperienceFromTitle(title: string): ExperienceLevel {
     const lower = title.toLowerCase();
-    if (lower.includes('senior') || lower.includes('sr.') || lower.includes('staff') || lower.includes('principal'))
+    if (
+      lower.includes('senior') ||
+      lower.includes('sr.') ||
+      lower.includes('staff') ||
+      lower.includes('principal')
+    )
       return 'senior';
     if (lower.includes('junior') || lower.includes('jr.') || lower.includes('entry'))
       return 'entry';
-    if (lower.includes('intern'))
-      return 'entry';
-    if (lower.includes('lead') || lower.includes('director') || lower.includes('vp') || lower.includes('head of'))
+    if (lower.includes('intern')) return 'entry';
+    if (
+      lower.includes('lead') ||
+      lower.includes('director') ||
+      lower.includes('vp') ||
+      lower.includes('head of')
+    )
       return 'lead';
     return 'mid';
   }

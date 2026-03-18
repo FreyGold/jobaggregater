@@ -30,7 +30,7 @@ export const config = {
   },
 
   cors: {
-    origin: optional('CORS_ORIGIN', 'http://localhost:3000'),
+    origin: optional('CORS_ORIGIN', 'http://localhost:3000,http://localhost:8081'),
   },
 
   stripe: {

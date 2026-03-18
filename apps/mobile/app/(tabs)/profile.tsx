@@ -3,11 +3,14 @@
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../lib/auth';
+import { ChevronRight } from 'lucide-react-native';
+import { THEME } from '../../lib/theme';
+import { Button } from '../../components/ui/Button';
 
 const PLAN_COLORS: Record<string, string> = {
-  FREE: '#9ca3af',
-  PRO: '#6366f1',
-  ENTERPRISE: '#f59e0b',
+  FREE: THEME.colors.textMuted,
+  PRO: THEME.colors.primary,
+  ENTERPRISE: THEME.colors.warning,
 };
 
 export default function ProfileScreen() {
@@ -35,18 +38,17 @@ export default function ProfileScreen() {
           <Text style={styles.subtext}>
             Sign in to save jobs and track your applications.
           </Text>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={() => router.push('/(auth)/login')}
-          >
-            <Text style={styles.primaryButtonText}>Sign In</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={() => router.push('/(auth)/register')}
-          >
-            <Text style={styles.secondaryButtonText}>Create Account</Text>
-          </TouchableOpacity>
+          <Button 
+            title="Sign In" 
+            style={{ width: '100%', marginTop: 24 }} 
+            onPress={() => router.push('/(auth)/login')} 
+          />
+          <Button 
+            title="Create Account" 
+            variant="outline" 
+            style={{ width: '100%', marginTop: 12 }} 
+            onPress={() => router.push('/(auth)/register')} 
+          />
         </View>
       </View>
     );
@@ -74,83 +76,75 @@ export default function ProfileScreen() {
       </View>
 
       {/* Actions */}
-      <View style={styles.card}>
+      <View style={styles.menuCard}>
         <TouchableOpacity
           style={styles.menuItem}
           onPress={() => router.push('/(tabs)/subscription')}
         >
           <Text style={styles.menuText}>Manage Subscription</Text>
-          <Text style={styles.menuArrow}>→</Text>
+          <ChevronRight size={20} color={THEME.colors.textMuted} />
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.menuItem}
+          style={[styles.menuItem, { borderBottomWidth: 0 }]}
           onPress={() => router.push('/(tabs)/saved')}
         >
           <Text style={styles.menuText}>Saved Jobs</Text>
-          <Text style={styles.menuArrow}>→</Text>
+          <ChevronRight size={20} color={THEME.colors.textMuted} />
         </TouchableOpacity>
       </View>
 
       {/* Logout */}
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Sign Out</Text>
-      </TouchableOpacity>
+      <Button 
+        title="Sign Out" 
+        variant="ghost" 
+        textStyle={{ color: THEME.colors.error }}
+        style={styles.logoutButton}
+        onPress={handleLogout} 
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb', padding: 16 },
+  container: { flex: 1, backgroundColor: THEME.colors.background, padding: THEME.layout.padding },
   card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
+    backgroundColor: THEME.colors.card,
+    borderRadius: THEME.layout.borderRadius.lg,
     padding: 24,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: THEME.colors.border,
     marginBottom: 16,
+    ...THEME.shadows.sm,
   },
-  heading: { fontSize: 20, fontWeight: '700', color: '#111827' },
-  subtext: { fontSize: 14, color: '#6b7280', marginTop: 8, textAlign: 'center' },
-  primaryButton: {
-    marginTop: 20,
-    backgroundColor: '#6366f1',
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-  },
-  primaryButtonText: { color: '#ffffff', fontWeight: '600', fontSize: 15 },
-  secondaryButton: {
-    marginTop: 10,
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
+  menuCard: {
+    backgroundColor: THEME.colors.card,
+    borderRadius: THEME.layout.borderRadius.lg,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: THEME.colors.border,
+    marginBottom: 16,
+    ...THEME.shadows.sm,
   },
-  secondaryButtonText: { color: '#6366f1', fontWeight: '600', fontSize: 15 },
+  heading: { ...THEME.typography.h2 },
+  subtext: { ...THEME.typography.body, marginTop: 8, textAlign: 'center' },
   avatarCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#eef2ff',
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: THEME.colors.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
-  avatarText: { fontSize: 28, fontWeight: '700', color: '#6366f1' },
-  userName: { fontSize: 20, fontWeight: '700', color: '#111827' },
-  userEmail: { fontSize: 14, color: '#6b7280', marginTop: 4 },
+  avatarText: { fontSize: 32, fontWeight: '700', color: THEME.colors.primary },
+  userName: { ...THEME.typography.h3 },
+  userEmail: { ...THEME.typography.body, marginTop: 4 },
   planBadge: {
-    marginTop: 12,
+    marginTop: 16,
     paddingHorizontal: 16,
     paddingVertical: 6,
-    borderRadius: 20,
+    borderRadius: THEME.layout.borderRadius.pill,
   },
   planBadgeText: { fontSize: 13, fontWeight: '700', letterSpacing: 0.5 },
   menuItem: {
@@ -158,18 +152,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    paddingVertical: 14,
+    padding: THEME.layout.padding,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: THEME.colors.divider,
   },
-  menuText: { fontSize: 16, color: '#111827', fontWeight: '500' },
-  menuArrow: { fontSize: 18, color: '#9ca3af' },
+  menuText: { ...THEME.typography.subtitle },
   logoutButton: {
     marginTop: 8,
-    backgroundColor: '#fee2e2',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
+    backgroundColor: THEME.colors.errorLight,
   },
-  logoutText: { color: '#dc2626', fontWeight: '600', fontSize: 16 },
 });

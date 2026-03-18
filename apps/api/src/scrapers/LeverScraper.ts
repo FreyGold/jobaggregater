@@ -96,7 +96,7 @@ export class LeverScraper extends BaseScraper {
       url: job.hostedUrl,
       sourceId: `lever-${job.id}`,
       sourceName: this.name,
-      description: `${job.text} at ${displayName}. Team: ${job.categories?.team || 'Unknown'}. Commitment: ${job.categories?.commitment || 'Unknown'}.`,
+      description: job.description || `${job.text} at ${displayName}. Team: ${job.categories?.team || 'Unknown'}. Commitment: ${job.categories?.commitment || 'Unknown'}.`,
       postedAt: new Date(job.createdAt).toISOString(),
       tags: ['tech', slug],
       employmentType: this.mapCommitment(job.categories?.commitment),

@@ -113,6 +113,20 @@ export class JobRepository {
     );
     return results.filter(r => r.status === 'fulfilled').length;
   }
+
+  async findQueuedForEnrichment(limit: number = 10) {
+    return this.repo.createQueryBuilder('job')
+      .where('job.description LIKE :marker', { marker: '%Found on Indeed%' })
+      .orWhere('job.description LIKE :marker2', { marker2: '%Found on LinkedIn%' })
+      .orWhere('job.description LIKE :marker3', { marker3: '%Scraped from BuiltIn%' })
+      .orWhere('job.description LIKE :marker4', { marker4: '%Found on Wuzzuf%' })
+      .take(limit)
+      .getMany();
+  }
+
+  async updateDescription(id: string, description: string) {
+    return this.repo.update(id, { description, updatedAt: new Date() });
+  }
 }
 
 export const jobRepository = new JobRepository();

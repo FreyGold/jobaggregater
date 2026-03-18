@@ -64,7 +64,14 @@ export class WeWorkRemotelyScraper extends BaseScraper {
       const titleText = $(el).find('title').text().trim();
       const link = $(el).find('link').text().trim();
       const pubDateStr = $(el).find('pubDate').text().trim();
-      const description = $(el).find('description').text().replace(/<[^>]*>?/gm, '').substring(0, 500);
+      
+      // Keep full HTML description without stripping tags or truncating
+      let description = $(el).find('description').text().trim();
+      // Sometimes CDATA wraps HTML content in RSS:
+      if (description.startsWith('<![CDATA[')) {
+        description = description.replace(/^<!\[CDATA\[/, '').replace(/\]\]>$/, '');
+      }
+
       const guid = $(el).find('guid').text().trim() || link;
 
       const parts = titleText.split(':');

@@ -1,3 +1,4 @@
+import { decode } from 'html-entities';
 import { BaseScraper } from './BaseScraper.js';
 import { type JobCreateInput, EmploymentType, ExperienceLevel } from '@jobagg/shared';
 
@@ -87,7 +88,7 @@ export class GreenhouseScraper extends BaseScraper {
   }
 
   private async fetchCompanyJobs(slug: string): Promise<JobCreateInput[]> {
-    const response = await fetch(`https://boards-api.greenhouse.io/v1/boards/${slug}/jobs`);
+    const response = await fetch(`https://boards-api.greenhouse.io/v1/boards/${slug}/jobs?content=true`);
 
     if (!response.ok) {
       // 404 means the slug doesn't exist / company not on Greenhouse — ignore silently
@@ -105,20 +106,29 @@ export class GreenhouseScraper extends BaseScraper {
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' ');
 
-    const jobs: JobCreateInput[] = rawJobs.map((job) => ({
-      title: job.title,
-      company: displayName,
-      location: job.location?.name || 'Remote/Unknown',
-      url: job.absolute_url,
-      sourceId: `gh-${job.id}`,
-      sourceName: this.name,
-      description: `${job.title} at ${displayName}. Department: ${job.departments?.[0]?.name || 'Unknown'}.`,
-      postedAt: job.updated_at || new Date().toISOString(),
-      tags: ['tech', slug],
-      employmentType: 'full-time' as EmploymentType,
-      experienceLevel: this.inferExperienceLevel(job.title),
-      isRemote: job.location?.name?.toLowerCase().includes('remote') || false,
-    }));
+    const jobs: JobCreateInput[] = rawJobs.map((job) => {
+      // API provides HTML entities for content (e.g. &lt;), but it's simpler to decode during render if needed
+      // Most times react-native-render-html or dangerouslySetInnerHTML will handle raw tags.
+      let content = job.content;
+      if (content && typeof content === 'string') {
+        content = decode(content);
+      }
+      
+      return {
+        title: job.title,
+        company: displayName,
+        location: job.location?.name || 'Remote/Unknown',
+        url: job.absolute_url,
+        sourceId: `gh-${job.id}`,
+        sourceName: this.name,
+        description: content || `${job.title} at ${displayName}. Department: ${job.departments?.[0]?.name || 'Unknown'}.`,
+        postedAt: job.updated_at || new Date().toISOString(),
+        tags: ['tech', slug],
+        employmentType: 'full-time' as EmploymentType,
+        experienceLevel: this.inferExperienceLevel(job.title),
+        isRemote: job.location?.name?.toLowerCase().includes('remote') || false,
+      };
+    });
 
     if (jobs.length > 0) {
       console.log(`[Scraper: ${this.name}] ${displayName}: ${jobs.length} jobs`);

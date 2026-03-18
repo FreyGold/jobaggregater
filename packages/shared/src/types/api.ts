@@ -22,6 +22,9 @@ export interface PaginationMeta {
   total: number;
   totalPages: number;
   hasMore: boolean;
+  plan?: string;
+  cappedAt?: number;
+  upgradeMessage?: string;
 }
 
 export interface PaginationParams {

@@ -104,6 +104,8 @@ export class WuzzufScraper extends BaseScraper {
               .substring(0, 24);
           }
 
+          const snippet = $(el).find('div.css-16vc97v, div[class*="JobSnippet"]').text().trim();
+
           if (title && sourceId && !seenIds.has(sourceId)) {
             seenIds.add(sourceId);
             found++;
@@ -114,7 +116,7 @@ export class WuzzufScraper extends BaseScraper {
               url: jobUrl,
               sourceId,
               sourceName: this.name,
-              description: `${title} at ${company}. ${jobType ? `Type: ${jobType}.` : ''} Found on Wuzzuf (Egypt).`,
+              description: snippet || `${title} at ${company}. ${jobType ? `Type: ${jobType}.` : ''} Found on Wuzzuf (Egypt).`,
               postedAt: new Date().toISOString(),
               tags: ['arab-jobs', 'egypt', keyword.toLowerCase().replace(/\s+/g, '-')],
               employmentType: this.mapEmploymentType(jobType),

@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import { CacheService } from '../lib/redis.js';
 import { scraperRegistry } from '../scrapers/ScraperRegistry.js';
 import { jobRepository } from '../repositories/JobRepository.js';
+import { runJobEnrichment } from './enrichmentJob.js';
 import type { Job } from '../entities/Job.js';
 import type { JobCreateInput } from '@jobagg/shared';
 
@@ -81,12 +82,20 @@ export const startScraperCron = () => {
     }
   };
 
+  // 4. Job Description Enrichment (Every 15 mins)
+  const runEnrichment = async () => {
+    console.log('⏰ Running job enrichment worker...');
+    await runJobEnrichment();
+  };
+
   // Schedule the recurring jobs (DISABLED)
-  // cron.schedule('0 */2 * * *', runAtsScrapers);    // Every 2 hours
-  // cron.schedule('0 0 * * *', runRemotiveDaily);    // Every day at midnight
-
+  cron.schedule('0 */2 * * *', runAtsScrapers);    // Every 2 hours
+  cron.schedule('0 0 * * *', runRemotiveDaily);    // Every day at midnight
+  cron.schedule('*/15 * * * *', runEnrichment);   // Every 15 minutes
+ 
   // Run once on startup (DISABLED)
-  // setTimeout(runScrapersOnStartup, 5000);
+  setTimeout(runScrapersOnStartup, 5000);
+  setTimeout(runEnrichment, 10000);
 
-  console.log('📅 Cron schedules disabled: Scrapers will not run automatically.');
+  // console.log('📅 Cron schedules disabled: Scrapers will not run automatically.');
 };

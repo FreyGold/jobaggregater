@@ -39,7 +39,7 @@ services:
       - DATABASE_URL=postgres://user:password@postgres:5432/jobaggDB
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=supersecret123
-      - CORS_ORIGIN=http://localhost:3000
+      - CORS_ORIGIN=http://localhost:3000,http://localhost:8081
       - STRIPE_SECRET_KEY=sk_test_51T8jLEDKhU3qA8DkhpcQq8A5hXR2HdeFAQsx2PqSKJcIQHPGc3uz8R8obYmAc6mPEYhdyMGGucWXhgsOsgb6Rmxw00KpVkKqwJ
       - STRIPE_WEBHOOK_SECRET=
       - STRIPE_PRICE_PRO_ID=price_1T8jbADKhU3qA8DkSJq0kpZE

@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../lib/auth';
 import { api } from '../../lib/api';
 import type { SubscriptionPlanDetails } from '@jobagg/shared';
+import { THEME } from '../../lib/theme';
+import { Button } from '../../components/ui/Button';
 
 export default function SubscriptionScreen() {
   const { user, isAuthenticated } = useAuth();
@@ -70,7 +72,7 @@ export default function SubscriptionScreen() {
   if (loading) {
     return (
       <View style={[styles.container, styles.centered]}>
-        <ActivityIndicator size="large" color="#6366f1" />
+        <ActivityIndicator size="large" color={THEME.colors.primary} />
       </View>
     );
   }
@@ -85,9 +87,7 @@ export default function SubscriptionScreen() {
           <Text style={styles.currentBadgeText}>
             Current: {currentPlan} · {user?.subscriptionStatus}
           </Text>
-          <TouchableOpacity style={styles.manageButton} onPress={handleManage}>
-            <Text style={styles.manageText}>Manage Billing</Text>
-          </TouchableOpacity>
+          <Button title="Manage Billing" size="sm" variant="secondary" onPress={handleManage} />
         </View>
       )}
 
@@ -128,19 +128,13 @@ export default function SubscriptionScreen() {
                 <Text style={styles.currentPlanText}>Current Plan</Text>
               </View>
             ) : plan.id === 'FREE' ? null : (
-              <TouchableOpacity
-                style={[styles.subscribeButton, isDowngrade && styles.subscribeButtonMuted]}
-                onPress={() => handleSubscribe(plan.id)}
+              <Button
+                title={`${isDowngrade ? 'Switch to ' : 'Upgrade to '}${plan.name}`}
+                style={{ marginTop: 16 }}
+                loading={checkoutLoading === plan.id}
                 disabled={checkoutLoading === plan.id}
-              >
-                {checkoutLoading === plan.id ? (
-                  <ActivityIndicator color="#ffffff" />
-                ) : (
-                  <Text style={styles.subscribeText}>
-                    {isDowngrade ? 'Switch to ' : 'Upgrade to '}{plan.name}
-                  </Text>
-                )}
-              </TouchableOpacity>
+                onPress={() => handleSubscribe(plan.id)}
+              />
             )}
           </View>
         );
@@ -150,39 +144,33 @@ export default function SubscriptionScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
-  content: { padding: 16, paddingBottom: 40 },
+  container: { flex: 1, backgroundColor: THEME.colors.background },
+  content: { padding: THEME.layout.padding, paddingBottom: 40 },
   centered: { justifyContent: 'center', alignItems: 'center' },
-  heading: { fontSize: 24, fontWeight: '700', color: '#111827', marginBottom: 16 },
+  heading: { ...THEME.typography.h2, marginBottom: 16 },
   currentBadge: {
-    backgroundColor: '#eef2ff',
+    backgroundColor: THEME.colors.primaryLight,
     padding: 16,
-    borderRadius: 12,
+    borderRadius: THEME.layout.borderRadius.md,
     marginBottom: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  currentBadgeText: { fontSize: 14, fontWeight: '600', color: '#4338ca' },
-  manageButton: {
-    backgroundColor: '#4338ca',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  manageText: { color: '#ffffff', fontWeight: '500', fontSize: 13 },
+  currentBadgeText: { fontSize: 14, fontWeight: '600', color: THEME.colors.primaryDark },
   planCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
+    backgroundColor: THEME.colors.card,
+    borderRadius: THEME.layout.borderRadius.lg,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: THEME.colors.border,
+    ...THEME.shadows.sm,
   },
-  planCardActive: { borderColor: '#6366f1', borderWidth: 2 },
-  planCardHighlight: { borderColor: '#6366f1', borderWidth: 2 },
+  planCardActive: { borderColor: THEME.colors.primary, borderWidth: 2 },
+  planCardHighlight: { borderColor: THEME.colors.primary, borderWidth: 2 },
   popularBadge: {
-    backgroundColor: '#6366f1',
+    backgroundColor: THEME.colors.primary,
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -190,26 +178,17 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   popularText: { color: '#ffffff', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
-  planName: { fontSize: 20, fontWeight: '700', color: '#111827' },
+  planName: { ...THEME.typography.h3 },
   priceRow: { flexDirection: 'row', alignItems: 'baseline', marginTop: 8, marginBottom: 16 },
-  price: { fontSize: 32, fontWeight: '800', color: '#111827' },
-  priceInterval: { fontSize: 15, color: '#6b7280', marginLeft: 4 },
-  feature: { fontSize: 14, color: '#4b5563', marginBottom: 8, lineHeight: 20 },
+  price: { fontSize: 32, fontWeight: '800', color: THEME.colors.text },
+  priceInterval: { fontSize: 15, color: THEME.colors.textSecondary, marginLeft: 4 },
+  feature: { ...THEME.typography.body, marginBottom: 8 },
   currentPlanButton: {
     marginTop: 16,
-    backgroundColor: '#e5e7eb',
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  currentPlanText: { color: '#6b7280', fontWeight: '600' },
-  subscribeButton: {
-    marginTop: 16,
-    backgroundColor: '#6366f1',
+    backgroundColor: THEME.colors.divider,
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: THEME.layout.borderRadius.md,
     alignItems: 'center',
   },
-  subscribeButtonMuted: { backgroundColor: '#9ca3af' },
-  subscribeText: { color: '#ffffff', fontWeight: '600', fontSize: 15 },
+  currentPlanText: { color: THEME.colors.textSecondary, fontWeight: '600' },
 });

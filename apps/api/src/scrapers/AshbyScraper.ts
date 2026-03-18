@@ -100,7 +100,7 @@ export class AshbyScraper extends BaseScraper {
         url: `https://jobs.ashbyhq.com/${slug}/${job.id}`,
         sourceId: `ashby-${job.id}`,
         sourceName: this.name,
-        description: `${job.title} at ${displayName}. Team: ${job.team || 'Unknown'}. Type: ${job.employmentType || 'Unknown'}.`,
+        description: job.descriptionHtml || `${job.title} at ${displayName}. Team: ${job.team || 'Unknown'}. Type: ${job.employmentType || 'Unknown'}.`,
         postedAt: job.publishedAt || new Date().toISOString(),
         tags: ['tech', slug],
         employmentType: this.mapEmploymentType(job.employmentType),

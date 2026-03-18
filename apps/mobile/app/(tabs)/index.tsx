@@ -1,78 +1,202 @@
-// ─── Jobs Feed Tab ───────────────────────────────────────────────
-
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl } from 'react-native';
+import { useState, useEffect } from 'react';
 import type { Job } from '@jobagg/shared';
 import { api } from '../../lib/api';
+import { JobCard } from '../../components/ui/JobCard';
+import { EmptyState } from '../../components/ui/EmptyState';
+import { JobFiltersSheet } from '../../components/ui/JobFiltersSheet';
+import { Search as SearchIcon, SearchX, Briefcase, SlidersHorizontal } from 'lucide-react-native';
+import { THEME } from '../../lib/theme';
 
 export default function JobsFeedScreen() {
-  const router = useRouter();
+  const [keyword, setKeyword] = useState('');
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [searched, setSearched] = useState(false);
+
+  // Filters State
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [isRemote, setIsRemote] = useState<boolean | null>(null);
+  const [experience, setExperience] = useState<string | null>(null);
+  const [employmentType, setEmploymentType] = useState<string | null>(null);
+
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({ limit: '50' });
+      if (keyword.trim()) params.append('keyword', keyword.trim());
+      if (isRemote !== null) params.append('isRemote', String(isRemote));
+      if (experience) params.append('experienceLevel', experience);
+      if (employmentType) params.append('employmentType', employmentType);
+
+      const res = await api.get<Job[]>(`/api/jobs?${params.toString()}`);
+      setJobs(res.data || []);
+      if (keyword.trim() || isRemote !== null || experience || employmentType) {
+        setSearched(true);
+      } else {
+        setSearched(false);
+      }
+    } catch (err) {
+      console.error('Failed to fetch jobs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchJobs() {
-      try {
-        setLoading(true);
-        // Using Type parameter { data: Job[] } based on standard pagination
-        const res = await api.get<{ data: Job[] }>('/api/jobs');
-        setJobs(res.data?.data || []);
-      } catch (err) {
-        console.error('Failed to fetch jobs:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchJobs();
-  }, []);
+  }, [isRemote, experience, employmentType]);
 
-  if (loading) {
-    return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color="#6366f1" />
-      </View>
-    );
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchJobs();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [keyword]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchJobs();
+    setRefreshing(false);
+  };
+
+  const activeFiltersCount = [isRemote !== null, experience !== null, employmentType !== null].filter(Boolean).length;
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={jobs}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => router.push(`/job/${item.id}`)}
-          >
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.company}>{item.company} · {item.location}</Text>
-            {item.salaryMax ? ( // Show max salary roughly or currency
-               <Text style={styles.salary}>{item.salaryCurrency || '$'}{item.salaryMax}</Text>
-            ) : item.salaryMin ? (
-               <Text style={styles.salary}>{item.salaryCurrency || '$'}{item.salaryMin}</Text>
-            ) : null}
-            <Text style={styles.date}>{new Date(item.postedAt).toLocaleDateString()}</Text>
-          </TouchableOpacity>
-        )}
+      <View style={styles.headerRow}>
+        <View style={styles.searchContainer}>
+          <SearchIcon color={THEME.colors.textMuted} size={20} style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search jobs..."
+            placeholderTextColor={THEME.colors.textMuted}
+            value={keyword}
+            onChangeText={setKeyword}
+            onSubmitEditing={fetchJobs}
+            returnKeyType="search"
+            autoCapitalize="none"
+          />
+        </View>
+        <TouchableOpacity 
+          style={[styles.filterButton, activeFiltersCount > 0 && styles.filterButtonActive]}
+          onPress={() => setIsFilterVisible(true)}
+        >
+          <SlidersHorizontal size={20} color={activeFiltersCount > 0 ? THEME.colors.primaryDark : THEME.colors.textSecondary} />
+          {activeFiltersCount > 0 && (
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{activeFiltersCount}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
+      
+      {loading && !refreshing ? (
+        <View style={styles.centerContainer}>
+          <ActivityIndicator size="large" color={THEME.colors.primary} />
+        </View>
+      ) : jobs.length > 0 ? (
+        <FlatList
+          data={jobs}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={THEME.colors.primary} />
+          }
+          renderItem={({ item }) => <JobCard job={item} />}
+        />
+      ) : searched ? (
+        <EmptyState 
+          icon={<SearchX color={THEME.colors.textSecondary} size={32} />}
+          title="No results found"
+          description="We couldn't find any matching jobs. Try adjusting your search term or filters."
+        />
+      ) : (
+        <EmptyState 
+          icon={<Briefcase color={THEME.colors.textSecondary} size={32} />}
+          title="No jobs available"
+          description="Check back later for new opportunities."
+        />
+      )}
+
+      <JobFiltersSheet
+        visible={isFilterVisible}
+        onClose={() => setIsFilterVisible(false)}
+        selectedRemote={isRemote}
+        setSelectedRemote={setIsRemote}
+        selectedExperience={experience}
+        setSelectedExperience={setExperience}
+        selectedType={employmentType}
+        setSelectedType={setEmploymentType}
+        onApply={() => setIsFilterVisible(false)}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
-  list: { padding: 16, gap: 12 },
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
+  container: { flex: 1, backgroundColor: THEME.colors.background },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: THEME.layout.padding,
+    backgroundColor: THEME.colors.card,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.colors.border,
+    gap: 12,
   },
-  title: { fontSize: 17, fontWeight: '600', color: '#111827' },
-  company: { fontSize: 14, color: '#6b7280', marginTop: 4 },
-  salary: { fontSize: 13, color: '#6366f1', marginTop: 8, fontWeight: '500' },
-  date: { fontSize: 12, color: '#9ca3af', marginTop: 8 },
+  searchContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: THEME.colors.background,
+    borderRadius: THEME.layout.borderRadius.md,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+    paddingHorizontal: 12,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    height: 44,
+    fontSize: THEME.typography.body.fontSize,
+    color: THEME.colors.text,
+  },
+  filterButton: {
+    width: 44,
+    height: 44,
+    backgroundColor: THEME.colors.background,
+    borderRadius: THEME.layout.borderRadius.md,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterButtonActive: {
+    backgroundColor: THEME.colors.primaryLight,
+    borderColor: THEME.colors.primary,
+  },
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: THEME.colors.primary,
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: THEME.colors.background,
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  list: { padding: THEME.layout.padding, gap: 12 },
+  centerContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 });
