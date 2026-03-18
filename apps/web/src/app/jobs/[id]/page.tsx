@@ -7,6 +7,7 @@ import { useJob } from '@/hooks/use-jobs';
 import { formatSalary, formatTimeAgo } from '@jobagg/shared';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { PageShell } from '@/components/layout/PageShell';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -29,10 +30,10 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const { data: job, isLoading, isError } = useJob(id);
 
   return (
-    <main className="flex min-h-screen flex-col">
+    <main className="min-h-screen">
       <Header />
 
-      <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 flex-1 flex flex-col">
+      <PageShell className="max-w-3xl">
         {/* Back link */}
         <Link
           href="/jobs"
@@ -58,10 +59,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         )}
 
         {job && (
-          <article>
+          <article className="space-y-6">
             {/* Header */}
-            <div className="rounded-xl border border-border bg-card p-6">
-              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{job.title}</h1>
+            <header className="rounded-xl border border-border bg-card p-6">
+              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                {job.title}
+              </h1>
 
               <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5">
@@ -84,7 +87,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 </span>
               </div>
 
-              {/* Tags & badges */}
+              {/* Badges */}
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <Badge variant="secondary" className="capitalize">
                   <Briefcase className="mr-1 h-3 w-3" />
@@ -114,7 +117,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               )}
 
               {/* Action buttons */}
-              <div className="mt-6 flex gap-3">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a
                   href={job.url}
                   target="_blank"
@@ -129,24 +132,24 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                   Save Job
                 </Button>
               </div>
-            </div>
+            </header>
 
             {/* Description */}
-            <div className="mt-6 rounded-xl border border-border bg-card p-6">
+            <section className="rounded-xl border border-border bg-card p-6">
               <h2 className="text-lg font-semibold text-foreground">Job Description</h2>
               <div
                 className="mt-4 prose prose-sm prose-zinc max-w-none text-muted-foreground [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1"
                 dangerouslySetInnerHTML={{ __html: job.description }}
               />
-            </div>
+            </section>
 
             {/* Source info */}
-            <div className="mt-4 text-center text-xs text-muted-foreground">
+            <footer className="pt-1 text-center text-xs text-muted-foreground">
               Source: {job.sourceName}
-            </div>
+            </footer>
           </article>
         )}
-      </div>
+      </PageShell>
 
       <Footer />
     </main>

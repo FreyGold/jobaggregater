@@ -9,18 +9,18 @@ import type { JobCreateInput } from '@jobagg/shared';
 // Extracted shared upsert logic
 async function processJobs(jobsToSave: JobCreateInput[]) {
   const mappedJobs: Partial<Job>[] = jobsToSave.map((job) => ({
-      title: job.title,
-      company: job.company,
-      location: job.location,
-      salary: job.salaryCurrency ? `${job.salaryCurrency} ${job.salaryMax || ''}`.trim() : undefined,
-      url: job.url,
-      source: job.sourceName,
-      description: job.description,
-      postedAt: job.postedAt ? new Date(job.postedAt) : new Date(),
-      tags: job.tags || [],
-      employmentType: job.employmentType as any,
-      experienceLevel: job.experienceLevel as any,
-      isRemote: job.isRemote,
+    title: job.title,
+    company: job.company,
+    location: job.location,
+    salary: job.salaryCurrency ? `${job.salaryCurrency} ${job.salaryMax || ''}`.trim() : undefined,
+    url: job.url,
+    source: job.sourceName,
+    description: job.description,
+    postedAt: job.postedAt ? new Date(job.postedAt) : new Date(),
+    tags: job.tags || [],
+    employmentType: job.employmentType as any,
+    experienceLevel: job.experienceLevel as any,
+    isRemote: job.isRemote,
   }));
 
   const newOrUpdated = await jobRepository.upsertMany(mappedJobs);
@@ -35,9 +35,9 @@ export const startScraperCron = () => {
     try {
       const sources = scraperRegistry.getAll();
       const results = await Promise.allSettled(
-        sources.map((scraper) => scraper.scrape()) // No limit passed in
+        sources.map((scraper) => scraper.scrape()), // No limit passed in
       );
-      
+
       const allJobs: JobCreateInput[] = [];
       results.forEach((res, i) => {
         if (res.status === 'fulfilled') allJobs.push(...res.value);
@@ -54,9 +54,9 @@ export const startScraperCron = () => {
     console.log('⏰ Running ATS 2-hour scraper cron...');
     try {
       // Get all except remotive
-      const sources = scraperRegistry.getAll().filter(s => s.key !== 'remotive');
+      const sources = scraperRegistry.getAll().filter((s) => s.key !== 'remotive');
       const results = await Promise.allSettled(sources.map((s) => s.scrape()));
-      
+
       const allJobs: JobCreateInput[] = [];
       results.forEach((res, i) => {
         if (res.status === 'fulfilled') allJobs.push(...res.value);
@@ -89,13 +89,13 @@ export const startScraperCron = () => {
   };
 
   // Schedule the recurring jobs (DISABLED)
-  cron.schedule('0 */2 * * *', runAtsScrapers);    // Every 2 hours
-  cron.schedule('0 0 * * *', runRemotiveDaily);    // Every day at midnight
-  cron.schedule('*/15 * * * *', runEnrichment);   // Every 15 minutes
- 
+  cron.schedule('0 */2 * * *', runAtsScrapers); // Every 2 hours
+  cron.schedule('0 0 * * *', runRemotiveDaily); // Every day at midnight
+  cron.schedule('*/15 * * * *', runEnrichment); // Every 15 minutes
+
   // Run once on startup (DISABLED)
-  setTimeout(runScrapersOnStartup, 5000);
-  setTimeout(runEnrichment, 10000);
+  // setTimeout(runScrapersOnStartup, 5000);
+  // setTimeout(runEnrichment, 10000);
 
   // console.log('📅 Cron schedules disabled: Scrapers will not run automatically.');
 };

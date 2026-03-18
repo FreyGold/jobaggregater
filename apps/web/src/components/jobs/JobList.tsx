@@ -5,9 +5,10 @@
 import type { Job, PaginationMeta } from '@jobagg/shared';
 import { JobCard } from './JobCard';
 import { JobCardSkeleton } from './JobCardSkeleton';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 interface JobListProps {
   jobs: Job[] | undefined;
@@ -44,7 +45,7 @@ export function JobList({
   // Error state
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-destructive/20 bg-destructive/5 p-12 text-center">
+      <div className="flex flex-col items-center justify-center rounded-xl border border-destructive/20 bg-destructive/5 p-12 text-center shadow-sm shadow-black/5">
         <p className="text-sm font-medium text-destructive">Failed to load jobs</p>
         <p className="mt-1 text-xs text-muted-foreground">
           Please check your connection and try again.
@@ -56,7 +57,7 @@ export function JobList({
   // Empty state
   if (!jobs || jobs.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-card p-16 text-center">
+      <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-card p-16 text-center shadow-sm shadow-black/5">
         <Inbox className="h-10 w-10 text-muted-foreground/40" />
         <p className="mt-4 text-sm font-medium text-foreground">No jobs found</p>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -68,24 +69,28 @@ export function JobList({
 
   return (
     <div className="space-y-4">
-      {/* Results count */}
+      {/* Results / actions */}
       {meta && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <p>
-            Showing {jobs.length} of {meta.total.toLocaleString()} jobs
-            {meta.cappedAt && meta.total > meta.cappedAt && (
-              <span className="ml-2 font-medium text-destructive">
-                (Hidden: {meta.total - meta.cappedAt})
-              </span>
-            )}
-          </p>
-          
+        <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4 shadow-sm shadow-black/5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-muted-foreground">
+            <div>
+              Showing <span className="font-medium text-foreground">{jobs.length}</span> of{' '}
+              <span className="font-medium text-foreground">{meta.total.toLocaleString()}</span>{' '}
+              jobs
+              {meta.cappedAt && meta.total > meta.cappedAt && (
+                <span className="ml-2 font-medium text-destructive">
+                  (Hidden: {meta.total - meta.cappedAt})
+                </span>
+              )}
+            </div>
+          </div>
+
           {meta.cappedAt && meta.total > meta.cappedAt && (
-            <Link 
+            <Link
               href="/pricing"
-              className="text-primary hover:underline font-medium inline-flex items-center gap-1"
+              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'gap-1.5')}
             >
-              Subscribe for more <ChevronRight className="h-3 w-3" />
+              Subscribe for more <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           )}
         </div>
@@ -104,7 +109,7 @@ export function JobList({
 
       {/* Pagination */}
       {meta && meta.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4 pt-4">
+        <nav aria-label="Pagination" className="flex items-center justify-center gap-4 pt-2">
           <Button
             variant="outline"
             size="sm"
@@ -115,7 +120,8 @@ export function JobList({
             Previous
           </Button>
           <span className="text-sm text-muted-foreground">
-            Page {meta.page} of {meta.totalPages}
+            Page <span className="font-medium text-foreground">{meta.page}</span> of{' '}
+            <span className="font-medium text-foreground">{meta.totalPages}</span>
           </span>
           <Button
             variant="outline"
@@ -126,7 +132,7 @@ export function JobList({
             Next
             <ChevronRight className="h-4 w-4" />
           </Button>
-        </div>
+        </nav>
       )}
     </div>
   );

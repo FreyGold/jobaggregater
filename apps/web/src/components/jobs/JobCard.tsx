@@ -16,7 +16,8 @@ import {
   ExternalLink,
   Wifi,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface JobCardProps {
   job: Job;
@@ -29,7 +30,7 @@ export function JobCard({ job, isSaved = false, onSave, onUnsave }: JobCardProps
   const salaryText = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);
 
   return (
-    <Card className="group transition-all hover:shadow-md hover:border-primary/20">
+    <Card className="group hover:border-primary/20 hover:shadow-md">
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-4">
           {/* Left: Job Info */}
@@ -37,7 +38,7 @@ export function JobCard({ job, isSaved = false, onSave, onUnsave }: JobCardProps
             <div className="flex items-center gap-2">
               <Link
                 href={`/jobs/${job.id}`}
-                className="text-base font-semibold text-foreground hover:text-primary transition-colors truncate"
+                className="truncate text-base font-semibold text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
               >
                 {job.title}
               </Link>
@@ -95,8 +96,9 @@ export function JobCard({ job, isSaved = false, onSave, onUnsave }: JobCardProps
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="size-9 hover:bg-muted/70"
               onClick={() => (isSaved ? onUnsave?.(job.id) : onSave?.(job.id))}
+              aria-label={isSaved ? 'Unsave job' : 'Save job'}
               title={isSaved ? 'Unsave job' : 'Save job'}
             >
               {isSaved ? (
@@ -105,11 +107,20 @@ export function JobCard({ job, isSaved = false, onSave, onUnsave }: JobCardProps
                 <Bookmark className="h-4 w-4" />
               )}
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-              <a href={job.url} target="_blank" rel="noopener noreferrer" title="View original">
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            </Button>
+
+            <a
+              className={cn(
+                buttonVariants({ variant: 'ghost', size: 'icon' }),
+                'size-9 hover:bg-muted/70',
+              )}
+              href={job.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View original posting"
+              title="View original"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </CardContent>

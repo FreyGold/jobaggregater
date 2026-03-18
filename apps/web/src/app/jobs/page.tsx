@@ -8,6 +8,7 @@ import type { JobFilters } from '@jobagg/shared';
 import { useJobs, useSaveJob, useSavedJobs } from '@/hooks/use-jobs';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { PageShell } from '@/components/layout/PageShell';
 import { JobList } from '@/components/jobs/JobList';
 import { JobFiltersSidebar } from '@/components/jobs/JobFilters';
 
@@ -61,38 +62,45 @@ function JobsPageContent() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="min-h-screen">
       <Header />
 
-      <div className="w-full max-w-7xl px-4 py-8 sm:px-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Browse Jobs</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+      <PageShell>
+        <header className="mb-6 sm:mb-8">
+          <div className="mb-3 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
+            Search across 15+ sources
+          </div>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Browse Jobs
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Aggregated listings from all sources. Use filters to narrow results.
           </p>
-        </div>
+        </header>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
-          {/* Filters Sidebar */}
-          <div className="order-1 lg:order-1">
-            <JobFiltersSidebar filters={filters} onFiltersChange={handleFiltersChange} />
-          </div>
+        <section className="rounded-2xl bg-card/40 p-0 sm:p-2">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr] lg:gap-8">
+            {/* Filters Sidebar */}
+            <div className="lg:sticky lg:top-20 lg:self-start">
+              <JobFiltersSidebar filters={filters} onFiltersChange={handleFiltersChange} />
+            </div>
 
-          {/* Job Listings */}
-          <div className="order-2 lg:order-2">
-            <JobList
-              jobs={data?.jobs}
-              meta={data?.meta}
-              isLoading={isLoading}
-              isError={isError}
-              savedJobIds={savedJobIds}
-              onSave={(id) => save.mutate(id)}
-              onUnsave={(id) => unsave.mutate(id)}
-              onPageChange={handlePageChange}
-            />
+            {/* Job Listings */}
+            <section aria-label="Job results" className="min-w-0">
+              <JobList
+                jobs={data?.jobs}
+                meta={data?.meta}
+                isLoading={isLoading}
+                isError={isError}
+                savedJobIds={savedJobIds}
+                onSave={(id) => save.mutate(id)}
+                onUnsave={(id) => unsave.mutate(id)}
+                onPageChange={handlePageChange}
+              />
+            </section>
           </div>
-        </div>
-      </div>
+        </section>
+      </PageShell>
 
       <Footer />
     </main>
@@ -101,7 +109,9 @@ function JobsPageContent() {
 
 export default function JobsPage() {
   return (
-    <Suspense fallback={<div>Loading jobs...</div>}>
+    <Suspense
+      fallback={<div className="px-4 py-10 text-sm text-muted-foreground">Loading jobs…</div>}
+    >
       <JobsPageContent />
     </Suspense>
   );

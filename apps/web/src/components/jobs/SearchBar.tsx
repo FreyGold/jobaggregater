@@ -47,10 +47,16 @@ export function SearchBar({
         />
         <Input
           type="text"
+          aria-label={placeholder}
           placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleSearch();
+            }
+          }}
           className={`rounded-r-none border-r-0 pl-12 ${
             isLarge ? 'h-14 text-base rounded-l-xl' : 'h-11 rounded-l-lg'
           }`}
@@ -58,7 +64,9 @@ export function SearchBar({
       </div>
       <Button
         onClick={handleSearch}
-        className={`rounded-l-none ${isLarge ? 'h-14 px-8 rounded-r-xl text-base' : 'h-11 px-6 rounded-r-lg'}`}
+        className={`rounded-l-none border-l-0 ${
+          isLarge ? 'h-14 px-8 rounded-r-xl text-base' : 'h-11 px-6 rounded-r-lg'
+        }`}
       >
         Search
       </Button>
