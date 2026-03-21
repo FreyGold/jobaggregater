@@ -54,7 +54,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         )}
 
         {isError && (
-          <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-12 text-center">
+          <div className="  border border-destructive/20 bg-destructive/5 p-12 text-center">
             <p className="text-sm font-medium text-destructive">Failed to load job</p>
           </div>
         )}
@@ -104,7 +104,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             <article className="space-y-6">
               {/* Header */}
-              <header className="rounded-xl border border-border bg-card p-6">
+              <header className="  border border-border bg-card p-6">
                 <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                   {job.title}
                 </h1>
@@ -178,7 +178,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               </header>
 
               {/* Description */}
-              <section className="rounded-xl border border-border bg-card p-6">
+              <section className="  border border-border bg-card p-6">
                 <h2 className="text-lg font-semibold text-foreground">Job Description</h2>
                 <div
                   className="mt-4 prose prose-sm prose-zinc max-w-none text-muted-foreground [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1"

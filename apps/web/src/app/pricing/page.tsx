@@ -73,7 +73,7 @@ export default function PricingPage() {
             <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-3">
               {isLoading
                 ? Array.from({ length: 3 }).map((_, i) => (
-                    <Card key={i} className="animate-pulse h-96 rounded-3xl" />
+                    <Card key={i} className="animate-pulse h-96 " />
                   ))
                 : plans?.map((plan) => {
                     const Icon = PLAN_ICONS[plan.id] || Zap;
@@ -83,7 +83,7 @@ export default function PricingPage() {
                     return (
                       <Card
                         key={plan.id}
-                        className={`relative flex flex-col rounded-3xl text-left bg-card transition-all hover:-translate-y-1 hover:shadow-xl ${
+                        className={`relative flex flex-col text-left bg-card transition-all hover:-translate-y-1 hover:shadow-xl ${
                           isPopular
                             ? 'border-primary ring-2 ring-primary/20 shadow-md'
                             : 'border-border shadow-sm hover:ring-2 hover:ring-primary/20'
@@ -99,9 +99,7 @@ export default function PricingPage() {
 
                         <CardHeader className="pb-8 pt-8 px-8">
                           <div className="flex items-center gap-2 mb-4">
-                            <div
-                              className={`rounded-xl p-3 ${isPopular ? 'bg-primary/10' : 'bg-muted'}`}
-                            >
+                            <div className={`  p-3 ${isPopular ? 'bg-primary/10' : 'bg-muted'}`}>
                               <Icon
                                 className={`h-6 w-6 ${isPopular ? 'text-primary' : 'text-muted-foreground'}`}
                               />
@@ -136,7 +134,7 @@ export default function PricingPage() {
                             isCurrentPlan ? (
                               <Button
                                 variant="outline"
-                                className="w-full h-12 rounded-xl font-semibold"
+                                className="w-full h-12   font-semibold"
                                 disabled
                               >
                                 Current Plan
@@ -144,7 +142,7 @@ export default function PricingPage() {
                             ) : (
                               <Button
                                 variant="outline"
-                                className="w-full h-12 rounded-xl font-semibold"
+                                className="w-full h-12   font-semibold"
                                 disabled
                               >
                                 Free Forever
@@ -153,14 +151,14 @@ export default function PricingPage() {
                           ) : isCurrentPlan ? (
                             <Button
                               variant="outline"
-                              className="w-full h-12 rounded-xl font-semibold"
+                              className="w-full h-12   font-semibold"
                               disabled
                             >
                               Current Plan
                             </Button>
                           ) : (
                             <Button
-                              className="w-full h-12 rounded-xl font-semibold"
+                              className="w-full h-12   font-semibold"
                               variant={isPopular ? 'default' : 'outline'}
                               onClick={() => handleUpgrade(plan.id as 'PRO' | 'ENTERPRISE')}
                               disabled={checkout.isPending}

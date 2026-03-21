@@ -45,9 +45,9 @@ export default function BookmarksPage() {
                 <Skeleton className="h-5 w-40" />
                 <Skeleton className="h-8 w-24 rounded-full" />
               </div>
-              <Skeleton className="h-24 w-full rounded-xl" />
-              <Skeleton className="h-24 w-full rounded-xl" />
-              <Skeleton className="h-24 w-full rounded-xl" />
+              <Skeleton className="h-24 w-full  " />
+              <Skeleton className="h-24 w-full  " />
+              <Skeleton className="h-24 w-full  " />
             </div>
           </Card>
         ) : jobs.length === 0 ? (

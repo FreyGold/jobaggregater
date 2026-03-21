@@ -92,7 +92,7 @@ export default function AboutPage() {
                 </div>
               </div>
               <div className="flex justify-center">
-                <div className="w-48 h-48 sm:w-64 sm:h-64 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center border border-primary/10">
+                <div className="w-48 h-48 sm:w-64 sm:h-64 bg-gradient-to-br from-primary/20 to-primary/5   flex items-center justify-center border border-primary/10">
                   <div className="text-center">
                     <Code2 className="h-16 w-16 text-primary/60 mx-auto mb-4" />
                     <p className="text-sm font-medium text-foreground">Ahmed Tawfik</p>

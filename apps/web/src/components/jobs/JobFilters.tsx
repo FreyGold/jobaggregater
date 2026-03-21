@@ -52,7 +52,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
   ].filter(Boolean).length;
 
   return (
-    <aside className="space-y-6 rounded-xl border border-border bg-card p-5 shadow-sm shadow-black/5">
+    <aside className="space-y-6   border border-border bg-card p-5 shadow-sm shadow-black/5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">

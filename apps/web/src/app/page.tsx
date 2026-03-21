@@ -31,14 +31,13 @@ export default function HomePage() {
         {/* Background Gradients */}
         <div className="pointer-events-none absolute inset-0 -z-10 flex justify-center">
           <div className="h-[50rem] w-[50rem] rounded-full bg-primary/5 opacity-50 blur-3xl mix-blend-multiply" />
-          <div className="absolute top-1/2 h-[30rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 opacity-40 blur-3xl mix-blend-multiply" />
         </div>
 
         <Container>
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-8 inline-flex animate-fade-in items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium text-primary shadow-sm backdrop-blur-sm transition-colors hover:bg-primary/10 hover:text-primary">
               <Zap className="h-3.5 w-3.5" />
-              <span>Aggregating from 15+ job boards</span>
+              <span>Aggregating from 30+ job boards</span>
             </div>
 
             <h1 className="text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
@@ -54,22 +53,21 @@ export default function HomePage() {
 
             {/* Search */}
             <div className="mx-auto mt-12 max-w-2xl">
-              <div className="rounded-2xl border bg-card p-4 shadow-xl backdrop-blur-md transition-shadow hover:shadow-2xl">
+              <div className="  border bg-card p-4 shadow-xl backdrop-blur-md transition-shadow hover:shadow-2xl">
                 <SearchBar size="lg" />
               </div>
             </div>
 
             {/* Stats */}
-            <div className="mx-auto mt-16 grid max-w-lg grid-cols-2 gap-8 sm:mt-20 sm:max-w-none sm:grid-cols-4">
+            <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 gap-8 sm:mt-20 sm:max-w-none sm:grid-cols-3">
               {[
-                { icon: Briefcase, value: '1M+', label: 'Active Jobs' },
-                { icon: Globe, value: '250+', label: 'Remote First' },
+                { icon: Briefcase, value: '100K+', label: 'Active Jobs' },
                 { icon: Clock, value: '24/7', label: 'Updated Daily' },
                 { icon: Shield, value: 'Verified', label: 'Quality Listings' },
               ].map(({ icon: Icon, value, label }) => (
                 <div
                   key={label}
-                  className="flex flex-col items-center justify-center rounded-2xl bg-primary/5 p-6 shadow-sm ring-1 ring-inset ring-primary/10 transition-all hover:bg-primary/10 hover:ring-primary/20"
+                  className="flex flex-col items-center justify-center   bg-primary/5 p-6 shadow-sm ring-1 ring-inset ring-primary/10 transition-all hover:bg-primary/10 hover:ring-primary/20"
                 >
                   <Icon className="mx-auto h-6 w-6 text-primary" />
                   <div className="mt-4 text-3xl font-bold tracking-tight text-foreground">
@@ -114,12 +112,12 @@ export default function HomePage() {
                 {
                   icon: Zap,
                   title: 'Smart Filters',
-                  desc: 'Filter by salary, location, remote, experience level, and more.',
+                  desc: 'Filter by location, remote, experience level, and more.',
                 },
               ].map(({ icon: Icon, title, desc }) => (
                 <div
                   key={title}
-                  className="group relative rounded-3xl border border-border bg-card p-10 text-center shadow-sm transition-all hover:shadow-md hover:ring-2 hover:ring-primary/20"
+                  className="group relative border border-border bg-card p-10 text-center shadow-sm transition-all hover:shadow-md hover:ring-2 hover:ring-primary/20"
                 >
                   <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
                     <Icon className="h-7 w-7 text-primary" />
