@@ -11,7 +11,7 @@ import { jobFiltersSchema } from '../validators/job.schema.js';
 import { asyncErrorWrapper } from '../utils/index.js';
 
 const jobService = new JobService(jobRepository, userRepository);
-const jobController = new JobController(jobService, userRepository);
+const jobController = new JobController(jobService);
 
 const router: Router = Router();
 

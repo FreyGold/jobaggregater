@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Link from 'next/link';
+import { apiClient, ApiError } from '@/lib/api';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -34,23 +35,20 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      const res = await fetch('http://localhost:3001/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
+      const data = await apiClient.post<{ token: string; user: { id: string; email: string; name: string } }>(
+        '/api/auth/register',
+        { name, email, password },
+      );
 
       login(data.data.token, data.data.user);
       router.push('/');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('Registration failed');
+      }
     } finally {
       setIsLoading(false);
     }

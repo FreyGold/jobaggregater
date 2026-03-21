@@ -8,6 +8,32 @@ import type { JobRepository } from '../repositories/JobRepository.js';
 import type { UserRepository } from '../repositories/UserRepository.js';
 import type { JobFiltersInput } from '../validators/job.schema.js';
 
+const LIST_CACHE_TTL_SECONDS = 300;
+const JOB_CACHE_TTL_SECONDS = 900;
+const SEARCH_CACHE_TTL_SECONDS = 300;
+
+function normalizeListFilters(filters: JobFiltersInput): Record<string, unknown> {
+  const normalized: Record<string, unknown> = {
+    page: filters.page ?? 1,
+    limit: filters.limit ?? DEFAULT_PAGE_SIZE,
+    sortBy: filters.sortBy ?? 'postedAt',
+    sortOrder: filters.sortOrder ?? 'desc',
+  };
+
+  for (const [key, value] of Object.entries(filters)) {
+    if (value === undefined || value === null || value === '') continue;
+    if (Array.isArray(value)) {
+      normalized[key] = [...value].sort();
+      continue;
+    }
+    normalized[key] = value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(normalized).sort(([a], [b]) => a.localeCompare(b)),
+  );
+}
+
 export class JobService {
   constructor(
     private readonly jobRepository: JobRepository,
@@ -15,7 +41,9 @@ export class JobService {
   ) {}
 
   async listJobs(filters: JobFiltersInput, userPlan: SubscriptionPlan = 'FREE') {
-    const cacheKey = `jobs:list:${JSON.stringify(filters)}:${userPlan}`;
+    const cacheVersion = await CacheService.getListCacheVersion();
+    const normalizedFilters = normalizeListFilters(filters);
+    const cacheKey = `jobs:list:v${cacheVersion}:${userPlan}:${JSON.stringify(normalizedFilters)}`;
     const cached = await CacheService.get<any>(cacheKey);
     if (cached) return cached;
 
@@ -57,7 +85,7 @@ export class JobService {
       },
     };
 
-    await CacheService.set(cacheKey, result, 60); // 1 minute cache
+    await CacheService.set(cacheKey, result, LIST_CACHE_TTL_SECONDS);
     return result;
   }
 
@@ -71,7 +99,7 @@ export class JobService {
       throw new AppError(404, 'Job not found', 'JOB_NOT_FOUND');
     }
 
-    await CacheService.set(cacheKey, job, 300); // 5 minutes cache
+    await CacheService.set(cacheKey, job, JOB_CACHE_TTL_SECONDS);
     return job;
   }
 
@@ -81,7 +109,7 @@ export class JobService {
     if (cached) return cached;
 
     const results = await this.jobRepository.search(keyword, limit);
-    await CacheService.set(cacheKey, results, 60);
+    await CacheService.set(cacheKey, results, SEARCH_CACHE_TTL_SECONDS);
     return results;
   }
 

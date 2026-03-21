@@ -41,6 +41,7 @@ export interface JobFilters extends PaginationParams {
   salaryMax?: number;
   source?: string;
   isRemote?: boolean;
+  arabOnly?: boolean;
   employmentType?: string;
   experienceLevel?: string;
   dateFrom?: string;

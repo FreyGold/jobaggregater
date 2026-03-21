@@ -12,6 +12,10 @@ export const jobFiltersSchema = z.object({
     .enum(['true', 'false'])
     .transform((v) => v === 'true')
     .optional(),
+  arabOnly: z
+    .enum(['true', 'false'])
+    .transform((v) => v === 'true')
+    .optional(),
   employmentType: z.string().optional(),
   experienceLevel: z.string().optional(),
   dateFrom: z.string().optional(),

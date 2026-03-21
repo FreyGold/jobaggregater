@@ -1,10 +1,25 @@
 // ─── Home Page ───────────────────────────────────────────────────
 
+import type { Metadata } from 'next';
+import { createMetadata } from '@/lib/seo';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Container } from '@/components/layout/Container';
 import { SearchBar } from '@/components/jobs/SearchBar';
 import { Briefcase, Globe, Clock, TrendingUp, Shield, Zap } from 'lucide-react';
+
+export const metadata: Metadata = {
+  ...createMetadata({
+    title: 'JobAgg — Job Listings & Job Search',
+    description:
+      'Find jobs faster with JobAgg. Search aggregated job listings from 15+ sources, filter remote and on-site roles, and save your favorites.',
+    path: '/',
+  }),
+  other: {
+    keywords:
+      'job listing, job listings, jobs, job search, find job, find jobs, find a job, remote jobs, on-site jobs, internships, contract jobs, full-time jobs, part-time jobs, software engineer jobs',
+  },
+};
 
 export default function HomePage() {
   return (

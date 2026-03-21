@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Link from 'next/link';
+import { apiClient, ApiError } from '@/lib/api';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -33,23 +34,20 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const res = await fetch('http://localhost:3001/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
+      const data = await apiClient.post<{ token: string; user: { id: string; email: string; name: string } }>(
+        '/api/auth/login',
+        { email, password },
+      );
 
       login(data.data.token, data.data.user);
       router.push('/');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('Login failed');
+      }
     } finally {
       setIsLoading(false);
     }

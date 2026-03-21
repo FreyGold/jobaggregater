@@ -31,33 +31,69 @@ function extractDescription(html: string, source: string): string | null {
   }
 
   if (source.toLowerCase().includes('builtin')) {
-    // Check if the description is located within the structured ld+json schema map.
+    // 1) Preferred: JSON-LD (BuiltIn usually includes JobPosting description)
     const scripts = $('script[type="application/ld+json"]').toArray();
     for (const script of scripts) {
-      const content = $(script).html();
-      if (content) {
+      const raw = $(script).contents().text();
+      const content = raw?.trim();
+      if (!content) continue;
+
+      // Some sites HTML-encode the JSON or include multiple JSON blobs.
+      const candidates: string[] = [content];
+      const decoded = decode(content);
+      if (decoded !== content) candidates.push(decoded);
+
+      for (const c of candidates) {
         try {
-          const parsed = JSON.parse(content);
-          if (parsed && typeof parsed === 'object') {
-            const graph = parsed['@graph'] || (Array.isArray(parsed) ? parsed : [parsed]);
-            for (const item of graph) {
-              if (item['@type'] === 'JobPosting' && item.description) {
-                return item.description;
-              }
-            }
-            if (parsed.description && typeof parsed.description === 'string') {
-              return parsed.description;
+          const parsed = JSON.parse(c);
+          const nodes = Array.isArray(parsed)
+            ? parsed
+            : parsed && typeof parsed === 'object' && Array.isArray((parsed as any)['@graph'])
+              ? (parsed as any)['@graph']
+              : [parsed];
+
+          for (const item of nodes) {
+            if (!item || typeof item !== 'object') continue;
+            const type = (item as any)['@type'];
+            const desc = (item as any).description;
+            if (
+              (type === 'JobPosting' || (Array.isArray(type) && type.includes('JobPosting'))) &&
+              typeof desc === 'string'
+            ) {
+              return desc;
             }
           }
-        } catch (e) {
-          // JSON parse failed, ignore this script tag
-          continue;
+
+          if (
+            parsed &&
+            typeof parsed === 'object' &&
+            typeof (parsed as any).description === 'string'
+          ) {
+            return (parsed as any).description;
+          }
+        } catch {
+          // ignore
         }
       }
     }
 
-    // BuiltIn Job page selectors (often in a script tag or specific div)
-    return $('.job-description, .job-info__description, .description').html();
+    // 2) Fallback: DOM-based extraction for BuiltIn job detail pages
+    // BuiltIn frequently renders the description inside an element with id="job-post-body-<id>"
+    const idBody = $('[id^="job-post-body-"]').first();
+    if (idBody.length) {
+      const bodyHtml = idBody.html();
+      if (bodyHtml) return bodyHtml;
+    }
+
+    // Other common containers / app shells
+    const domHtml =
+      $('[data-id="job-description"]').first().html() ||
+      $('section[aria-label="Job Description"]').first().html() ||
+      $('.job-description').first().html() ||
+      $('.job-info__description').first().html() ||
+      $('.description').first().html();
+
+    return domHtml || null;
   }
 
   if (source.toLowerCase().includes('indeed')) {

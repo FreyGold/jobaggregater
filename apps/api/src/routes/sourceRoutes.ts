@@ -1,11 +1,12 @@
 // ─── Source Routes ───────────────────────────────────────────────
 
 import { Router, Request, Response } from 'express';
-import { sourceRepository } from '../repositories/SourceRepository.js';
 import { jobRepository } from '../repositories/JobRepository.js';
 import { asyncErrorWrapper } from '../utils/index.js';
 import { scraperRegistry } from '../scrapers/ScraperRegistry.js';
 import { Job } from '../entities/Job.js';
+import { config } from '../config/unifiedConfig.js';
+import { CacheService } from '../lib/redis.js';
 
 const router: Router = Router();
 
@@ -27,6 +28,32 @@ router.get(
 router.post(
   '/scrape',
   asyncErrorWrapper(async (req: Request, res: Response) => {
+    const configuredSecret = config.scrape.manualSecret;
+    const providedSecret = req.headers['x-scrape-secret'];
+    const parsedSecret = Array.isArray(providedSecret) ? providedSecret[0] : providedSecret;
+
+    if (config.isProd && !configuredSecret) {
+      res.status(503).json({
+        data: null,
+        error: {
+          message: 'Manual scraping is disabled in production until SCRAPE_SECRET is configured.',
+          code: 'SCRAPE_DISABLED',
+        },
+      });
+      return;
+    }
+
+    if (configuredSecret && parsedSecret !== configuredSecret) {
+      res.status(403).json({
+        data: null,
+        error: {
+          message: 'Invalid scrape secret.',
+          code: 'FORBIDDEN',
+        },
+      });
+      return;
+    }
+
     const sources = scraperRegistry.getAll();
     
     // Execute all scrapers in parallel
@@ -65,6 +92,7 @@ router.post(
 
     if (allJobs.length > 0) {
       await jobRepository.upsertMany(allJobs);
+      await CacheService.bumpListCacheVersion();
     }
 
     res.json({

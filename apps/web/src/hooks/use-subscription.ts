@@ -49,6 +49,7 @@ export function useCurrentSubscription() {
     },
     retry: false,
     enabled: !!apiClient.getToken(),
+    staleTime: 15 * 60 * 1000,
   });
 }
 

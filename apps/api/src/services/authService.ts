@@ -22,7 +22,11 @@ export class AuthService {
       name: input.name,
     });
 
-    const token = this.generateToken(user.id, user.email);
+    const token = this.generateToken(
+      user.id,
+      user.email,
+      user.subscriptionPlan as 'FREE' | 'PRO' | 'ENTERPRISE',
+    );
     return { user, token };
   }
 
@@ -37,7 +41,11 @@ export class AuthService {
       throw new AppError(401, 'Invalid email or password', 'INVALID_CREDENTIALS');
     }
 
-    const token = this.generateToken(user.id, user.email);
+    const token = this.generateToken(
+      user.id,
+      user.email,
+      user.subscriptionPlan as 'FREE' | 'PRO' | 'ENTERPRISE',
+    );
     return {
       user: {
         id: user.id,
@@ -59,8 +67,12 @@ export class AuthService {
     return user;
   }
 
-  private generateToken(userId: string, email: string): string {
-    return jwt.sign({ userId, email }, config.auth.jwtSecret, {
+  private generateToken(
+    userId: string,
+    email: string,
+    subscriptionPlan: 'FREE' | 'PRO' | 'ENTERPRISE' = 'FREE',
+  ): string {
+    return jwt.sign({ userId, email, subscriptionPlan }, config.auth.jwtSecret, {
       expiresIn: config.auth.jwtExpiresIn as any,
     });
   }

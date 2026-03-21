@@ -24,6 +24,7 @@ import {
   BarChart3,
 } from 'lucide-react';
 import Link from 'next/link';
+import { absoluteUrl } from '@/lib/seo';
 
 export default function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -59,95 +60,138 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         )}
 
         {job && (
-          <article className="space-y-6">
-            {/* Header */}
-            <header className="rounded-xl border border-border bg-card p-6">
-              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                {job.title}
-              </h1>
+          <>
+            {/* JSON-LD */}
+            <script
+              type="application/ld+json"
+              // Keep it as minimal, valid JobPosting schema; omit unknowns.
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  '@context': 'https://schema.org',
+                  '@type': 'JobPosting',
+                  title: job.title,
+                  description: job.description,
+                  hiringOrganization: {
+                    '@type': 'Organization',
+                    name: job.company,
+                  },
+                  jobLocationType: job.isRemote ? 'TELECOMMUTE' : undefined,
+                  applicantLocationRequirements: job.isRemote
+                    ? { '@type': 'Country', name: 'Worldwide' }
+                    : undefined,
+                  jobLocation: job.isRemote
+                    ? undefined
+                    : {
+                        '@type': 'Place',
+                        address: {
+                          '@type': 'PostalAddress',
+                          addressLocality: job.location,
+                        },
+                      },
+                  employmentType: job.employmentType,
+                  datePosted: job.postedAt,
+                  validThrough: undefined,
+                  identifier: {
+                    '@type': 'PropertyValue',
+                    name: job.sourceName,
+                    value: job.id,
+                  },
+                  directApply: false,
+                  url: absoluteUrl(`/jobs/${job.id}`),
+                }),
+              }}
+            />
 
-              <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1.5">
-                  <Building2 className="h-4 w-4" />
-                  {job.company}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4" />
-                  {job.location}
-                </span>
-                {job.isRemote && (
-                  <span className="flex items-center gap-1.5 text-primary">
-                    <Wifi className="h-4 w-4" />
-                    Remote
+            <article className="space-y-6">
+              {/* Header */}
+              <header className="rounded-xl border border-border bg-card p-6">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                  {job.title}
+                </h1>
+
+                <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <Building2 className="h-4 w-4" />
+                    {job.company}
                   </span>
-                )}
-                <span className="flex items-center gap-1.5">
-                  <Clock className="h-4 w-4" />
-                  {formatTimeAgo(job.postedAt)}
-                </span>
-              </div>
-
-              {/* Badges */}
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" className="capitalize">
-                  <Briefcase className="mr-1 h-3 w-3" />
-                  {job.employmentType.replace('-', ' ')}
-                </Badge>
-                <Badge variant="secondary" className="capitalize">
-                  <BarChart3 className="mr-1 h-3 w-3" />
-                  {job.experienceLevel}
-                </Badge>
-                {job.salaryMin && (
-                  <Badge variant="default">
-                    <DollarSign className="mr-0.5 h-3 w-3" />
-                    {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)}
-                  </Badge>
-                )}
-              </div>
-
-              {/* Tags */}
-              {job.tags.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {job.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
+                  <span className="flex items-center gap-1.5">
+                    <MapPin className="h-4 w-4" />
+                    {job.location}
+                  </span>
+                  {job.isRemote && (
+                    <span className="flex items-center gap-1.5 text-primary">
+                      <Wifi className="h-4 w-4" />
+                      Remote
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="h-4 w-4" />
+                    {formatTimeAgo(job.postedAt)}
+                  </span>
                 </div>
-              )}
 
-              {/* Action buttons */}
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={job.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={buttonVariants({ size: 'lg', className: 'flex items-center gap-2' })}
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  <span>Apply on Source</span>
-                </a>
-                <Button variant="outline" size="lg">
-                  <Bookmark className="h-4 w-4" />
-                  Save Job
-                </Button>
-              </div>
-            </header>
+                {/* Badges */}
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary" className="capitalize">
+                    <Briefcase className="mr-1 h-3 w-3" />
+                    {job.employmentType.replace('-', ' ')}
+                  </Badge>
+                  <Badge variant="secondary" className="capitalize">
+                    <BarChart3 className="mr-1 h-3 w-3" />
+                    {job.experienceLevel}
+                  </Badge>
+                  {job.salaryMin && (
+                    <Badge variant="default">
+                      <DollarSign className="mr-0.5 h-3 w-3" />
+                      {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)}
+                    </Badge>
+                  )}
+                </div>
 
-            {/* Description */}
-            <section className="rounded-xl border border-border bg-card p-6">
-              <h2 className="text-lg font-semibold text-foreground">Job Description</h2>
-              <div
-                className="mt-4 prose prose-sm prose-zinc max-w-none text-muted-foreground [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1"
-                dangerouslySetInnerHTML={{ __html: job.description }}
-              />
-            </section>
+                {/* Tags */}
+                {job.tags.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {job.tags.map((tag) => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
 
-            {/* Source info */}
-            <footer className="pt-1 text-center text-xs text-muted-foreground">
-              Source: {job.sourceName}
-            </footer>
-          </article>
+                {/* Action buttons */}
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  <a
+                    href={job.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={buttonVariants({ size: 'lg', className: 'flex items-center gap-2' })}
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    <span>Apply on Source</span>
+                  </a>
+                  <Button variant="outline" size="lg">
+                    <Bookmark className="h-4 w-4" />
+                    Save Job
+                  </Button>
+                </div>
+              </header>
+
+              {/* Description */}
+              <section className="rounded-xl border border-border bg-card p-6">
+                <h2 className="text-lg font-semibold text-foreground">Job Description</h2>
+                <div
+                  className="mt-4 prose prose-sm prose-zinc max-w-none text-muted-foreground [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1"
+                  dangerouslySetInnerHTML={{ __html: job.description }}
+                />
+              </section>
+
+              {/* Source info */}
+              <footer className="pt-1 text-center text-xs text-muted-foreground">
+                Source: {job.sourceName}
+              </footer>
+            </article>
+          </>
         )}
       </PageShell>
 

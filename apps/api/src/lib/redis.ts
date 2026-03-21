@@ -12,6 +12,8 @@ if (redisClient) {
 }
 
 export class CacheService {
+  private static readonly JOB_LIST_VERSION_KEY = 'jobs:list:version';
+
   static async get<T>(key: string): Promise<T | null> {
     if (!redisClient) return null;
     try {
@@ -50,6 +52,29 @@ export class CacheService {
       }
     } catch (err) {
       console.error(`Cache DELPATTERN error for pattern ${pattern}:`, err);
+    }
+  }
+
+  static async getListCacheVersion(): Promise<number> {
+    if (!redisClient) return 1;
+    try {
+      const raw = await redisClient.get(this.JOB_LIST_VERSION_KEY);
+      if (!raw) return 1;
+      const n = Number(raw);
+      return Number.isFinite(n) && n > 0 ? n : 1;
+    } catch (err) {
+      console.error('Cache get list version error:', err);
+      return 1;
+    }
+  }
+
+  static async bumpListCacheVersion(): Promise<number> {
+    if (!redisClient) return 1;
+    try {
+      return await redisClient.incr(this.JOB_LIST_VERSION_KEY);
+    } catch (err) {
+      console.error('Cache bump list version error:', err);
+      return 1;
     }
   }
 }

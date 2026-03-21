@@ -4,10 +4,12 @@ import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/unifiedConfig.js';
 import { AppError } from './errorHandler.js';
+import type { SubscriptionPlan } from '@jobagg/shared';
 
 export interface AuthPayload {
   userId: string;
   email: string;
+  subscriptionPlan?: SubscriptionPlan;
 }
 
 declare global {
@@ -58,4 +60,3 @@ export function optionalAuthMiddleware(req: Request, _res: Response, next: NextF
   }
   next();
 }
-

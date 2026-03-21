@@ -2,9 +2,9 @@
 // All Prisma queries for jobs live here. Never accessed directly from controllers.
 
 import { AppDataSource } from '../config/data-source.js';
-import { Job, EmploymentType, ExperienceLevel } from '../entities/Job.js';
+import { Job } from '../entities/Job.js';
 import type { JobFiltersInput } from '../validators/job.schema.js';
-import { Any, ILike } from 'typeorm';
+import { chunk } from '../utils/chunk.js';
 
 export class JobRepository {
   private repo = AppDataSource.getRepository(Job);
@@ -39,6 +39,10 @@ export class JobRepository {
 
     if (filters.isRemote !== undefined) {
       qb.andWhere('job.isRemote = :isRemote', { isRemote: filters.isRemote });
+    }
+
+    if (filters.arabOnly === true) {
+      qb.andWhere(':arabTag = ANY(job.tags)', { arabTag: 'arab-jobs' });
     }
 
     if (filters.employmentType) {
@@ -97,21 +101,44 @@ export class JobRepository {
   }
 
   async upsertMany(jobs: Partial<Job>[]) {
-    // TypeORM supports Bulk Upsert via QueryBuilder or raw save methods on POSTGRES via `ON CONFLICT`
-    const results = await Promise.allSettled(
-      jobs.map((job) =>
-        this.repo.createQueryBuilder()
-          .insert()
-          .into(Job)
-          .values(job)
-          .orUpdate(
-            ['title', 'description', 'salary', 'updatedAt'],
-            ['url'] // Assuming 'url' is meant to be a unique constraint
-          )
-          .execute()
-      )
-    );
-    return results.filter(r => r.status === 'fulfilled').length;
+    if (jobs.length === 0) return 0;
+
+    // Deduplicate by URL before touching DB.
+    const deduped = new Map<string, Partial<Job>>();
+    for (const job of jobs) {
+      if (!job.url) continue;
+      deduped.set(job.url, job);
+    }
+
+    const uniqueJobs = Array.from(deduped.values());
+    const batches = chunk(uniqueJobs, 1000);
+
+    for (const batch of batches) {
+      await this.repo.createQueryBuilder()
+        .insert()
+        .into(Job)
+        .values(batch)
+        .orUpdate(
+          [
+            'title',
+            'company',
+            'location',
+            'salary',
+            'source',
+            'description',
+            'postedAt',
+            'tags',
+            'employmentType',
+            'experienceLevel',
+            'isRemote',
+            'updatedAt',
+          ],
+          ['url'],
+        )
+        .execute();
+    }
+
+    return uniqueJobs.length;
   }
 
   async findQueuedForEnrichment(limit: number = 10) {

@@ -13,10 +13,39 @@ function optional(key: string, fallback: string): string {
   return process.env[key] ?? fallback;
 }
 
+function optionalNumber(key: string, fallback: number): number {
+  const v = process.env[key];
+  if (!v) return fallback;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
 export const config = {
   port: parseInt(optional('PORT', '3001'), 10),
   nodeEnv: optional('NODE_ENV', 'development'),
-  redisUrl: process.env.REDIS_URL,
+  redisUrl: (() => {
+    // Prefer full URL if provided
+    const url = process.env.REDIS_URL;
+    if (url) return url;
+
+    // Otherwise allow Redis Cloud-style discrete settings
+    const host = process.env.REDIS_HOST;
+    if (!host) return undefined;
+
+    const port = optionalNumber('REDIS_PORT', 6379);
+    const username = process.env.REDIS_USERNAME;
+    const password = process.env.REDIS_PASSWORD;
+    const tls = (process.env.REDIS_TLS ?? 'true').toLowerCase() === 'true';
+
+    const authPart = username
+      ? `${encodeURIComponent(username)}${password ? `:${encodeURIComponent(password)}` : ''}@`
+      : password
+        ? `:${encodeURIComponent(password)}@`
+        : '';
+
+    const scheme = tls ? 'rediss' : 'redis';
+    return `${scheme}://${authPart}${host}:${port}`;
+  })(),
   isDev: optional('NODE_ENV', 'development') === 'development',
   isProd: process.env['NODE_ENV'] === 'production',
 
@@ -42,5 +71,9 @@ export const config = {
 
   app: {
     frontendUrl: optional('FRONTEND_URL', 'http://localhost:3000'),
+  },
+
+  scrape: {
+    manualSecret: process.env['SCRAPE_SECRET'],
   },
 } as const;

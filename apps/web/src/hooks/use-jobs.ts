@@ -50,6 +50,7 @@ export function useSavedJobs() {
       const res = await apiClient.get<Job[]>('/api/jobs/saved/list');
       return res.data;
     },
+    enabled: !!apiClient.getToken(),
   });
 }
 

@@ -4,26 +4,18 @@ import type { Request, Response } from 'express';
 import type { SubscriptionPlan } from '@jobagg/shared';
 import { BaseController } from './BaseController.js';
 import type { JobService } from '../services/jobService.js';
-import type { UserRepository } from '../repositories/UserRepository.js';
 
 export class JobController extends BaseController {
   constructor(
     private readonly jobService: JobService,
-    private readonly userRepo: UserRepository,
   ) {
     super();
   }
 
   async listJobs(req: Request, res: Response): Promise<void> {
     try {
-      // Determine user's subscription plan (default FREE for anonymous)
-      let userPlan: SubscriptionPlan = 'FREE';
-      if (req.user?.userId) {
-        const user = await this.userRepo.findById(req.user.userId);
-        if (user) {
-          userPlan = user.subscriptionPlan as SubscriptionPlan;
-        }
-      }
+      // Prefer token claim so listing is not blocked on an extra DB read.
+      const userPlan: SubscriptionPlan = req.user?.subscriptionPlan ?? 'FREE';
       const result = await this.jobService.listJobs(req.query as never, userPlan);
       this.handlePaginatedSuccess(res, result.data, result.meta);
     } catch (error) {

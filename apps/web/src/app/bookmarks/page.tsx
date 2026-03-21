@@ -1,52 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/auth-provider';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PageShell } from '@/components/layout/PageShell';
 import { JobCard } from '@/components/jobs/JobCard';
-import type { Job } from '@jobagg/shared';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useSavedJobs } from '@/hooks/use-jobs';
 
 export default function BookmarksPage() {
-  const { isAuthenticated, token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: jobs = [], isLoading } = useSavedJobs();
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/login');
-      return;
     }
-
-    const fetchBookmarks = async () => {
-      try {
-        const res = await fetch('http://localhost:3001/api/jobs/saved/list', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) throw new Error('Failed to fetch bookmarks');
-
-        const json = await res.json();
-        setJobs(json.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBookmarks();
-  }, [isAuthenticated, token, router]);
+  }, [isAuthenticated, router]);
 
   if (!isAuthenticated) return null;
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen justify-between">
       <Header />
 
       <PageShell className="max-w-4xl">
@@ -60,8 +39,16 @@ export default function BookmarksPage() {
         </header>
 
         {isLoading ? (
-          <Card className="flex items-center justify-center p-10 text-sm text-muted-foreground">
-            Loading bookmarks…
+          <Card className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="h-8 w-24 rounded-full" />
+              </div>
+              <Skeleton className="h-24 w-full rounded-xl" />
+              <Skeleton className="h-24 w-full rounded-xl" />
+              <Skeleton className="h-24 w-full rounded-xl" />
+            </div>
           </Card>
         ) : jobs.length === 0 ? (
           <Card className="p-10 text-center">

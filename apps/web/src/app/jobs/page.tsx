@@ -11,6 +11,7 @@ import { Footer } from '@/components/layout/Footer';
 import { PageShell } from '@/components/layout/PageShell';
 import { JobList } from '@/components/jobs/JobList';
 import { JobFiltersSidebar } from '@/components/jobs/JobFilters';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function JobsPageContent() {
   const searchParams = useSearchParams();
@@ -29,8 +30,14 @@ function JobsPageContent() {
           : searchParams.get('isRemote') === 'false'
             ? false
             : undefined,
+      arabOnly:
+        searchParams.get('arabOnly') === 'true'
+          ? true
+          : searchParams.get('arabOnly') === 'false'
+            ? false
+            : undefined,
       page: parseInt(searchParams.get('page') ?? '1', 10),
-      limit: parseInt(searchParams.get('limit') ?? '20', 10),
+      limit: parseInt(searchParams.get('limit') ?? '40', 10),
     };
   }, [searchParams]);
 
@@ -50,8 +57,9 @@ function JobsPageContent() {
     if (newFilters.employmentType) params.set('employmentType', newFilters.employmentType);
     if (newFilters.experienceLevel) params.set('experienceLevel', newFilters.experienceLevel);
     if (newFilters.isRemote !== undefined) params.set('isRemote', String(newFilters.isRemote));
+    if (newFilters.arabOnly !== undefined) params.set('arabOnly', String(newFilters.arabOnly));
     if (newFilters.page && newFilters.page > 1) params.set('page', String(newFilters.page));
-    if (newFilters.limit && newFilters.limit !== 20) params.set('limit', String(newFilters.limit));
+    if (newFilters.limit && newFilters.limit !== 40) params.set('limit', String(newFilters.limit));
 
     router.push(`${pathname}?${params.toString()}`);
   }
@@ -110,7 +118,20 @@ function JobsPageContent() {
 export default function JobsPage() {
   return (
     <Suspense
-      fallback={<div className="px-4 py-10 text-sm text-muted-foreground">Loading jobs…</div>}
+      fallback={
+        <div className="px-4 py-10">
+          <div className="space-y-4">
+            <Skeleton className="h-6 w-44" />
+            <Skeleton className="h-10 w-2/3" />
+            <Skeleton className="h-4 w-1/2" />
+            <div className="mt-8 space-y-4">
+              <Skeleton className="h-28 w-full rounded-xl" />
+              <Skeleton className="h-28 w-full rounded-xl" />
+              <Skeleton className="h-28 w-full rounded-xl" />
+            </div>
+          </div>
+        </div>
+      }
     >
       <JobsPageContent />
     </Suspense>
