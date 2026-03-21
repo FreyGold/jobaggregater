@@ -76,7 +76,7 @@ function JobsPageContent() {
       <PageShell>
         <header className="mb-6 sm:mb-8">
           <div className="mb-3 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-            Search across 15+ sources
+            Search across 30+ sources
           </div>
           <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             Browse Jobs
@@ -86,7 +86,7 @@ function JobsPageContent() {
           </p>
         </header>
 
-        <section className="rounded-2xl bg-card/40 p-0 sm:p-2">
+        <section className="bg-card/40 p-0 sm:p-2">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr] lg:gap-8">
             {/* Filters Sidebar */}
             <div className="lg:sticky lg:top-20 lg:self-start">

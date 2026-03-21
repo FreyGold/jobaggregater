@@ -45,6 +45,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
   const activeCount = [
     filters.keyword,
     filters.location,
+    filters.arabOnly,
     filters.employmentType,
     filters.experienceLevel,
     filters.isRemote,
@@ -116,21 +117,56 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
       {/* Remote toggle */}
       <div className="space-y-1.5">
         <span className="text-xs font-medium text-muted-foreground">Remote</span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {[
             { label: 'All', value: undefined },
             { label: 'Remote', value: true },
             { label: 'On-site', value: false },
           ].map((opt) => (
-            <Button
+            <Badge
               key={String(opt.value)}
-              variant={filters.isRemote === opt.value ? 'default' : 'secondary'}
-              size="sm"
+              variant={filters.isRemote === opt.value ? 'default' : 'outline'}
+              className="cursor-pointer text-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onClick={() => updateFilter({ isRemote: opt.value })}
-              className="h-7 rounded-full px-3 text-xs font-medium shadow-none"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  updateFilter({ isRemote: opt.value });
+                }
+              }}
             >
               {opt.label}
-            </Button>
+            </Badge>
+          ))}
+        </div>
+      </div>
+
+      {/* Region toggle */}
+      <div className="space-y-1.5">
+        <span className="text-xs font-medium text-muted-foreground">Region</span>
+        <div className="flex flex-wrap gap-1.5">
+          {[
+            { label: 'All', value: undefined as boolean | undefined },
+            { label: 'Arab jobs only', value: true as boolean | undefined },
+          ].map((opt) => (
+            <Badge
+              key={String(opt.value)}
+              variant={filters.arabOnly === opt.value ? 'default' : 'outline'}
+              className="cursor-pointer text-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              onClick={() => updateFilter({ arabOnly: opt.value })}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  updateFilter({ arabOnly: opt.value });
+                }
+              }}
+            >
+              {opt.label}
+            </Badge>
           ))}
         </div>
       </div>
