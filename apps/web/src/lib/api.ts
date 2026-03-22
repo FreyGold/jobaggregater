@@ -2,7 +2,7 @@
 
 import type { ApiResponse, ApiErrorResponse } from '@jobagg/shared';
 
-const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
+const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] ?? 'https://jobaggregater-api.vercel.app/';
 
 class ApiClient {
   private token: string | null = null;
@@ -28,10 +28,7 @@ class ApiClient {
     return this.token;
   }
 
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {},
-  ): Promise<T> {
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...((options.headers as Record<string, string>) ?? {}),
