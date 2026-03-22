@@ -2,7 +2,7 @@
 
 import type { ApiResponse, ApiErrorResponse } from '@jobagg/shared';
 
-const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] ?? 'https://jobaggregater-api.vercel.app/';
+const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] ?? 'https://jobaggregater-api.vercel.app';
 
 class ApiClient {
   private token: string | null = null;

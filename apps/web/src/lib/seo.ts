@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 const SITE_NAME = 'JobAgg';
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://nimble-buttercream-897ec0.netlify.app/';
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://nimble-buttercream-897ec0.netlify.app';
 
 export function absoluteUrl(path: string) {
   if (!path) return SITE_URL;
