@@ -26,11 +26,14 @@ export class RemotiveScraper extends BaseScraper {
   async scrape(options?: { maxPages?: number }): Promise<JobCreateInput[]> {
     try {
       console.log(`[Scraper: ${this.name}] Fetching latest software-dev jobs from public API...`);
-      
-      const res = await fetch(this.searchEndpoint);
-      if (!res.ok) throw new Error(`Fetch jobs failed: ${res.statusText}`);
-      
-      const data = await res.json() as { jobs: RemotivePublicJob[] };
+
+      const data = await this.client
+        .get(this.searchEndpoint, {
+          responseType: 'json',
+          throwHttpErrors: false,
+        })
+        .json<{ jobs: RemotivePublicJob[] }>();
+
       const rawJobs = data.jobs || [];
 
       console.log(`[Scraper: ${this.name}] Successfully fetched ${rawJobs.length} jobs.`);
