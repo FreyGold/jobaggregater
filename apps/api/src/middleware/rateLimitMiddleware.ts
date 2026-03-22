@@ -1,8 +1,15 @@
 // ─── Rate Limit Middleware ────────────────────────────────────────
 
-import { rateLimit } from 'express-rate-limit';
+import { rateLimit, ipKeyGenerator } from 'express-rate-limit';
 import type { Request, Response, NextFunction } from 'express';
 import { SUBSCRIPTION_LIMITS } from '@jobagg/shared';
+
+function keyFor(req: Request) {
+  const userId = req.user?.userId;
+  // Use helper to normalize IPv6 (prevents bypass) and works behind proxies.
+  const ipKey = ipKeyGenerator(req.ip ?? '');
+  return userId ? `u:${userId}` : `ip:${ipKey}`;
+}
 
 // Pre-built limiters for each tier
 const limiters = {
@@ -11,7 +18,7 @@ const limiters = {
     max: SUBSCRIPTION_LIMITS.FREE.rateLimit,
     standardHeaders: true,
     legacyHeaders: false,
-    keyGenerator: (req: Request) => req.user?.userId || req.ip || 'anonymous',
+    keyGenerator: keyFor,
     message: {
       data: null,
       error: {
@@ -25,7 +32,7 @@ const limiters = {
     max: SUBSCRIPTION_LIMITS.PRO.rateLimit,
     standardHeaders: true,
     legacyHeaders: false,
-    keyGenerator: (req: Request) => req.user?.userId || req.ip || 'anonymous',
+    keyGenerator: keyFor,
     message: {
       data: null,
       error: {
@@ -39,7 +46,7 @@ const limiters = {
     max: SUBSCRIPTION_LIMITS.ENTERPRISE.rateLimit,
     standardHeaders: true,
     legacyHeaders: false,
-    keyGenerator: (req: Request) => req.user?.userId || req.ip || 'anonymous',
+    keyGenerator: keyFor,
     message: {
       data: null,
       error: {
