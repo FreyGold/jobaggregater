@@ -24,18 +24,16 @@ export class RemoteOKScraper extends BaseScraper {
     try {
       console.log(`[Scraper: ${this.name}] Starting to scrape...`);
       // Warning: RemoteOK blocks frequent requests / missing user-agent.
-      const response = await fetch(this.endpoint, {
+      const data = await this.client
+        .get(this.endpoint, {
         headers: {
           'User-Agent': 'JobAggregator/1.0 (https://github.com/your-username/jobaggregator)',
-          'Accept': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-      }
-
-      const data = (await response.json()) as any[];
+          'Accept': 'application/json',
+        },
+        responseType: 'json',
+        throwHttpErrors: false,
+      })
+      .json<any[]>();
       // RemoteOK API returns metadata in the first item of the array
       const jobs = data.filter(item => item.legal === undefined) as RemoteOKJob[];
       

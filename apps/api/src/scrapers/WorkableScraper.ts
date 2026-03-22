@@ -52,25 +52,26 @@ export class WorkableScraper extends BaseScraper {
   }
 
   private async fetchCompanyJobs(slug: string): Promise<JobCreateInput[]> {
-    const response = await fetch(`https://apply.workable.com/api/v3/accounts/${slug}/jobs`, {
-      method: 'POST',
+    const response = await this.client.post(`https://apply.workable.com/api/v3/accounts/${slug}/jobs`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Origin': 'https://apply.workable.com',
         'Referer': `https://apply.workable.com/${slug}/`,
       },
-      body: JSON.stringify({ query: '', location: [], department: [], worktype: [], remote: true }),
+      json: { query: '', location: [], department: [], worktype: [], remote: true },
+      responseType: 'json',
+      throwHttpErrors: false,
     });
 
-    if (!response.ok) {
-      if (response.status !== 404 && response.status !== 403) {
-        console.error(`[Scraper: ${this.name}] Failed ${slug}: ${response.status}`);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      if (response.statusCode !== 404 && response.statusCode !== 403) {
+        console.error(`[Scraper: ${this.name}] Failed ${slug}: ${response.statusCode}`);
       }
       return [];
     }
 
-    const data = (await response.json()) as any;
+    const data = response.body as any;
     const rawJobs: any[] = data.results || [];
 
     if (rawJobs.length === 0) return [];

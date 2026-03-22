@@ -10,19 +10,21 @@ export class HackerNewsScraper extends BaseScraper {
   async scrape(): Promise<JobCreateInput[]> {
     try {
       console.log(`[Scraper: ${this.name}] Starting to scrape HTML from ${this.endpoint}...`);
-      
-      const response = await fetch(this.endpoint, {
+
+      const response = await this.client.get(this.endpoint, {
         headers: {
           'User-Agent': 'JobAggregator/1.0',
-          'Accept': 'text/html'
-        }
+          'Accept': 'text/html',
+        },
+        responseType: 'text',
+        throwHttpErrors: false,
       });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch HTML: ${response.status} ${response.statusText}`);
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw new Error(`Failed to fetch HTML: ${response.statusCode}`);
       }
 
-      const html = await response.text();
+      const html = String(response.body ?? '');
       const $ = cheerio.load(html);
       
       const jobs: JobCreateInput[] = [];

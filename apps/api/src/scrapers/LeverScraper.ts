@@ -69,16 +69,19 @@ export class LeverScraper extends BaseScraper {
   }
 
   private async fetchCompanyJobs(slug: string): Promise<JobCreateInput[]> {
-    const response = await fetch(`https://api.lever.co/v0/postings/${slug}?mode=json`);
+    const response = await this.client.get(`https://api.lever.co/v0/postings/${slug}?mode=json`, {
+      responseType: 'json',
+      throwHttpErrors: false,
+    });
 
-    if (!response.ok) {
-      if (response.status !== 404) {
-        console.error(`[Scraper: ${this.name}] Failed to fetch ${slug}: ${response.status}`);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      if (response.statusCode !== 404) {
+        console.error(`[Scraper: ${this.name}] Failed to fetch ${slug}: ${response.statusCode}`);
       }
       return [];
     }
 
-    const rawJobs = (await response.json()) as any[];
+    const rawJobs = response.body as any[];
 
     if (!Array.isArray(rawJobs)) {
       return [];

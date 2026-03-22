@@ -88,17 +88,20 @@ export class GreenhouseScraper extends BaseScraper {
   }
 
   private async fetchCompanyJobs(slug: string): Promise<JobCreateInput[]> {
-    const response = await fetch(`https://boards-api.greenhouse.io/v1/boards/${slug}/jobs?content=true`);
+    const response = await this.client.get(`https://boards-api.greenhouse.io/v1/boards/${slug}/jobs?content=true`, {
+      responseType: 'json',
+      throwHttpErrors: false,
+    });
 
-    if (!response.ok) {
+    if (response.statusCode < 200 || response.statusCode >= 300) {
       // 404 means the slug doesn't exist / company not on Greenhouse — ignore silently
-      if (response.status !== 404) {
-        console.error(`[Scraper: ${this.name}] Failed to fetch ${slug}: ${response.status}`);
+      if (response.statusCode !== 404) {
+        console.error(`[Scraper: ${this.name}] Failed to fetch ${slug}: ${response.statusCode}`);
       }
       return [];
     }
 
-    const data = (await response.json()) as any;
+    const data = response.body as any;
     const rawJobs: any[] = data.jobs || [];
 
     const displayName = slug

@@ -48,15 +48,17 @@ export class WeWorkRemotelyScraper extends BaseScraper {
   }
 
   private async scrapeFeed(feedUrl: string, tags: string[]): Promise<JobCreateInput[]> {
-    const response = await fetch(feedUrl, {
+    const response = await this.client.get(feedUrl, {
       headers: { 'User-Agent': 'JobAggregator/1.0' },
+      responseType: 'text',
+      throwHttpErrors: false,
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch RSS: ${response.status}`);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw new Error(`Failed to fetch RSS: ${response.statusCode}`);
     }
 
-    const xml = await response.text();
+    const xml = String(response.body ?? '');
     const $ = cheerio.load(xml, { xmlMode: true });
     const jobs: JobCreateInput[] = [];
 

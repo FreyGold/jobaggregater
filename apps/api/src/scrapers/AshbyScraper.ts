@@ -63,24 +63,26 @@ export class AshbyScraper extends BaseScraper {
   }
 
   private async fetchCompanyJobs(slug: string): Promise<JobCreateInput[]> {
-    const response = await fetch(
+    const response = await this.client.get(
       `https://api.ashbyhq.com/posting-api/job-board/${slug}`,
       {
         headers: {
           'User-Agent': 'Mozilla/5.0',
           Accept: 'application/json',
         },
+        responseType: 'json',
+        throwHttpErrors: false,
       }
     );
 
-    if (!response.ok) {
-      if (response.status !== 404 && response.status !== 403) {
-        console.error(`[Scraper: ${this.name}] Failed ${slug}: ${response.status}`);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      if (response.statusCode !== 404 && response.statusCode !== 403) {
+        console.error(`[Scraper: ${this.name}] Failed ${slug}: ${response.statusCode}`);
       }
       return [];
     }
 
-    const data = (await response.json()) as any;
+    const data = response.body as any;
     // Ashby returns { jobs: [...], apiVersion: '...' }
     const rawJobs: any[] = data.jobs || [];
 

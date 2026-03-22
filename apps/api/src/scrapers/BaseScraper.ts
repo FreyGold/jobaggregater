@@ -87,23 +87,18 @@ export abstract class BaseScraper implements IScraper {
         directStatus = directRes.statusCode;
         directHtml = String(directRes.body ?? '');
       } else {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 30000);
-        try {
-          const directRes = await fetch(url, {
-            headers: {
-              'User-Agent':
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-              'Accept-Language': 'en-US,en;q=0.9',
-              ...headers,
-            },
-            signal: controller.signal,
-          });
-          directStatus = directRes.status;
-          directHtml = await directRes.text();
-        } finally {
-          clearTimeout(timeout);
-        }
+        const directRes = await this.client.get(url, {
+          headers: {
+            'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept-Language': 'en-US,en;q=0.9',
+            ...headers,
+          },
+          responseType: 'text',
+          throwHttpErrors: false,
+        });
+        directStatus = directRes.statusCode;
+        directHtml = String(directRes.body ?? '');
       }
 
       const directBlocked = this.isBlockedResponse(directHtml);
