@@ -1,9 +1,11 @@
-import Redis from 'ioredis';
+import * as IORedisModule from 'ioredis';
 import { config } from '../config/unifiedConfig.js';
+
+const RedisCtor = IORedisModule.Redis ?? IORedisModule.default;
 
 // Initialize Redis only if REDIS_URL is provided, else fallback to a mock instance or disable caching
 export const redisClient = config.redisUrl 
-  ? new Redis(config.redisUrl)
+  ? new RedisCtor(config.redisUrl)
   : null;
 
 if (redisClient) {
