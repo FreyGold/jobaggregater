@@ -59,7 +59,10 @@ export const config = {
   },
 
   cors: {
-    origin: optional('CORS_ORIGIN', 'http://localhost:3000,http://localhost:8081'),
+    origin: optional(
+      'CORS_ORIGIN',
+      'http://localhost:3000,http://localhost:8081,https://nimble-buttercream-897ec0.netlify.app/',
+    ),
   },
 
   stripe: {
@@ -70,7 +73,7 @@ export const config = {
   },
 
   app: {
-    frontendUrl: optional('FRONTEND_URL', 'http://localhost:3000'),
+    frontendUrl: optional('FRONTEND_URL', 'https://nimble-buttercream-897ec0.netlify.app/'),
   },
 
   scrape: {
