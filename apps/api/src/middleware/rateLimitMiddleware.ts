@@ -1,8 +1,11 @@
 // ─── Rate Limit Middleware ────────────────────────────────────────
 
-import { rateLimit, ipKeyGenerator } from 'express-rate-limit';
+import * as expressRateLimit from 'express-rate-limit';
 import type { Request, Response, NextFunction } from 'express';
 import { SUBSCRIPTION_LIMITS } from '@jobagg/shared';
+
+const createRateLimit = expressRateLimit.rateLimit;
+const { ipKeyGenerator } = expressRateLimit;
 
 function keyFor(req: Request) {
   const userId = req.user?.userId;
@@ -13,7 +16,7 @@ function keyFor(req: Request) {
 
 // Pre-built limiters for each tier
 const limiters = {
-  FREE: rateLimit({
+  FREE: createRateLimit({
     windowMs: 60 * 1000,
     max: SUBSCRIPTION_LIMITS.FREE.rateLimit,
     standardHeaders: true,
@@ -27,7 +30,7 @@ const limiters = {
       },
     },
   }),
-  PRO: rateLimit({
+  PRO: createRateLimit({
     windowMs: 60 * 1000,
     max: SUBSCRIPTION_LIMITS.PRO.rateLimit,
     standardHeaders: true,
@@ -41,7 +44,7 @@ const limiters = {
       },
     },
   }),
-  ENTERPRISE: rateLimit({
+  ENTERPRISE: createRateLimit({
     windowMs: 60 * 1000,
     max: SUBSCRIPTION_LIMITS.ENTERPRISE.rateLimit,
     standardHeaders: true,
@@ -61,7 +64,7 @@ const limiters = {
  * Global rate limiter — applies FREE tier limits to all requests.
  * For per-user tier-based limiting, use `tieredRateLimit` after auth.
  */
-export const globalRateLimit = rateLimit({
+export const globalRateLimit = createRateLimit({
   windowMs: 60 * 1000,
   max: SUBSCRIPTION_LIMITS.FREE.rateLimit,
   standardHeaders: true,
