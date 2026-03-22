@@ -51,15 +51,25 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      target: dev
+    command: sh -c "pnpm install --frozen-lockfile && pnpm --filter @jobagg/web dev"
     ports:
       - '3000:3000'
+    volumes:
+      - .:/app
+      - web_node_modules:/app/node_modules
+      - pnpm_store:/pnpm/store
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=3000
       - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     depends_on:
       - api
 
 volumes:
   postgres_data:
   redis_data:
+  web_node_modules:
+  pnpm_store:

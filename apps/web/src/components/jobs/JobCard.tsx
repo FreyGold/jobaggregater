@@ -84,7 +84,7 @@ export function JobCard({ job, isSaved = false, onSave, onUnsave }: JobCardProps
                 <span className="text-xs font-medium text-primary">{salaryText}</span>
               )}
               {job.tags.slice(0, 3).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs">
+                <Badge key={tag} variant="outline" className="text-xs capitalize">
                   {tag}
                 </Badge>
               ))}

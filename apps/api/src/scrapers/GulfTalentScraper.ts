@@ -110,11 +110,14 @@ export class GulfTalentScraper extends BaseScraper {
         `&page=${page}`;
 
       try {
-        const response = await this.client.get(url, {
-          responseType: 'text',
+        const html = await this.fetchHtml(url, {
+          sourceName: this.name,
+          headers: {
+            'Accept-Language': 'en-US,en;q=0.9',
+          },
         });
+        if (!html) break;
 
-        const html = response.body as string;
         const $ = cheerio.load(html);
         let found = 0;
 

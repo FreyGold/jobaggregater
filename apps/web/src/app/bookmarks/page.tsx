@@ -25,7 +25,7 @@ export default function BookmarksPage() {
   if (!isAuthenticated) return null;
 
   return (
-    <main className="min-h-screen justify-between">
+    <main className="min-h-screen flex flex-col justify-between">
       <Header />
 
       <PageShell className="max-w-4xl">

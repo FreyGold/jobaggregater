@@ -70,28 +70,27 @@ export class WuzzufScraper extends BaseScraper {
       const url = `https://wuzzuf.net/search/jobs/?q=${encodeURIComponent(keyword)}&start=${start}`;
 
       try {
-        const response = await fetch(url, {
+        const html = await this.fetchHtml(url, {
+          sourceName: this.name,
           headers: {
-            'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
           },
         });
+        if (!html) break;
 
-        if (!response.ok) break;
-
-        const html = await response.text();
         const $ = cheerio.load(html);
         let found = 0;
 
-        // Wuzzuf job cards
-        $('div.css-1gatmva, div.css-pkv5jg, div[class*="JobCard"]').each((_, el) => {
-          const titleEl = $(el).find('h2 a, a[class*="JobTitle"]');
+        // Wuzzuf currently renders cards with dynamic class names.
+        // Anchoring on the stable job URL pattern is much more resilient.
+        $('a[href*="/jobs/p/"]').each((_, el) => {
+          const titleEl = $(el);
           const title = titleEl.text().trim();
           const href = titleEl.attr('href') || '';
-          const company = $(el).find('a[class*="CompanyName"], div[class*="company"] a').first().text().trim();
-          const location = $(el).find('span[class*="Location"], span[class*="location"]').text().trim();
-          const jobType = $(el).find('span[class*="Type"], div[class*="type"] span').first().text().trim();
+          const card = titleEl.closest('div.css-pkv5jc, div[class*="pkv5"], div[class*="css-"]');
+          const company = card.find('a[href*="/jobs/careers/"]').first().text().trim().replace(/\s*-\s*$/, '');
+          const location = card.find('span.css-16x61xq, span[class*="location"], span[class*="Location"]').first().text().trim();
+          const jobType = card.find('a[href*="/a/Full-Time"], a[href*="/a/Part-Time"], a[href*="/a/Internship"], a[href*="/a/Contract"]').first().text().trim();
 
           const jobUrl = href.startsWith('http') ? href : `https://wuzzuf.net${href}`;
 
@@ -104,7 +103,7 @@ export class WuzzufScraper extends BaseScraper {
               .substring(0, 24);
           }
 
-          const snippet = $(el).find('div.css-16vc97v, div[class*="JobSnippet"]').text().trim();
+          const snippet = card.find('div[class*="description"], div[class*="Description"]').first().text().trim();
 
           if (title && sourceId && !seenIds.has(sourceId)) {
             seenIds.add(sourceId);

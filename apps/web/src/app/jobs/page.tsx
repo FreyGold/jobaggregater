@@ -22,6 +22,7 @@ function JobsPageContent() {
     return {
       keyword: searchParams.get('keyword') ?? undefined,
       location: searchParams.get('location') ?? undefined,
+      source: searchParams.get('source') ?? undefined,
       employmentType: (searchParams.get('employmentType') as any) ?? undefined,
       experienceLevel: (searchParams.get('experienceLevel') as any) ?? undefined,
       isRemote:
@@ -54,6 +55,7 @@ function JobsPageContent() {
     const params = new URLSearchParams();
     if (newFilters.keyword) params.set('keyword', newFilters.keyword);
     if (newFilters.location) params.set('location', newFilters.location);
+    if (newFilters.source) params.set('source', newFilters.source);
     if (newFilters.employmentType) params.set('employmentType', newFilters.employmentType);
     if (newFilters.experienceLevel) params.set('experienceLevel', newFilters.experienceLevel);
     if (newFilters.isRemote !== undefined) params.set('isRemote', String(newFilters.isRemote));
@@ -75,9 +77,6 @@ function JobsPageContent() {
 
       <PageShell>
         <header className="mb-6 sm:mb-8">
-          <div className="mb-3 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-            Search across 30+ sources
-          </div>
           <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             Browse Jobs
           </h1>

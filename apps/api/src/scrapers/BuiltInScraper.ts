@@ -7,6 +7,32 @@ export class BuiltInScraper extends BaseScraper {
   readonly name = 'Built In (Remote)';
   private readonly endpoint = 'https://builtin.com/jobs/remote';
 
+  private async fetchJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const res = await this.client.get(jobUrl, { responseType: 'text' });
+      const html = res.body as string;
+      const $ = cheerio.load(html);
+
+      // BuiltIn job pages typically include the content in one of these containers.
+      // We keep a couple of fallbacks to survive minor DOM changes.
+      const container =
+        $('[data-id="job-description"]').first() ||
+        $('[data-testid="job-description"]').first() ||
+        $('.job-description').first() ||
+        $('main').first();
+
+      if (!container || container.length === 0) return '';
+
+      // Remove noisy widgets/sidebars if present.
+      container.find('script,noscript,style,svg').remove();
+
+      const descHtml = container.html()?.trim() ?? '';
+      return descHtml;
+    } catch {
+      return '';
+    }
+  }
+
   async scrape(): Promise<JobCreateInput[]> {
     try {
       console.log(`[Scraper: ${this.name}] Starting to scrape BuiltIn HTML...`);
@@ -57,7 +83,8 @@ export class BuiltInScraper extends BaseScraper {
                 url: link,
                 sourceId: sourceId,
                 sourceName: this.name,
-                description: `${title} at ${company}. Scraped from BuiltIn.`,
+                // Set to empty here; we'll fill it after collecting the list.
+                description: '',
                 postedAt: new Date().toISOString(),
                 tags: ['tech', 'builtin'],
                 employmentType: 'full-time' as EmploymentType,
@@ -73,6 +100,13 @@ export class BuiltInScraper extends BaseScraper {
           console.error(`Failed to fetch BuiltIn page ${page}:`, err.message);
           break;
         }
+      }
+
+      // Enrich descriptions (best-effort; avoids placeholder text)
+      for (const job of jobs) {
+        if (!job.url) continue;
+        const desc = await this.fetchJobDescription(job.url);
+        if (desc) job.description = desc;
       }
 
       console.log(`[Scraper: ${this.name}] Successfully scraped ${jobs.length} jobs.`);

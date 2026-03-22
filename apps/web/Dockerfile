@@ -1,10 +1,17 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 WORKDIR /app
+
+FROM base AS dev
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+EXPOSE 3000
+
+FROM base AS builder
 COPY . .
 
 # Install dependencies using cache

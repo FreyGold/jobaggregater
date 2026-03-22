@@ -31,7 +31,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const { data: job, isLoading, isError } = useJob(id);
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen justify-between flex flex-col">
       <Header />
 
       <PageShell className="max-w-3xl">
@@ -152,7 +152,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 {job.tags.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {job.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
+                      <Badge key={tag} variant="outline" className="text-xs capitalize">
                         {tag}
                       </Badge>
                     ))}
@@ -187,9 +187,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               </section>
 
               {/* Source info */}
-              <footer className="pt-1 text-center text-xs text-muted-foreground">
-                Source: {job.sourceName}
-              </footer>
+              {((job as any).sourceName || (job as any).sourceId || (job as any).source) && (
+                <footer className="pt-1 text-center text-xs text-muted-foreground">
+                  Source: {(job as any).sourceName ?? (job as any).source ?? (job as any).sourceId}
+                </footer>
+              )}
             </article>
           </>
         )}

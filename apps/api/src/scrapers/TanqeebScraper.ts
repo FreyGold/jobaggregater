@@ -63,7 +63,7 @@ const TANQEEB_CATEGORIES = [
 ];
 
 const TANQEEB_COUNTRIES = [
-  { name: 'Saudi Arabia', slug: 'saudi-arabia' },
+  { name: 'Saudi Arabia', slug: 'saudi' },
   { name: 'United Arab Emirates', slug: 'uae' },
   { name: 'Egypt', slug: 'egypt' },
   { name: 'Qatar', slug: 'qatar' },
@@ -75,7 +75,7 @@ const TANQEEB_COUNTRIES = [
   { name: 'Iraq', slug: 'iraq' },
   { name: 'Morocco', slug: 'morocco' },
   { name: 'Tunisia', slug: 'tunisia' },
-  { name: 'Algeria', slug: 'algeria' },
+  { name: 'Algeria', slug: 'algerie' },
   { name: 'Libya', slug: 'libya' },
   { name: 'Sudan', slug: 'sudan' },
   { name: 'Yemen', slug: 'yemen' },
@@ -137,45 +137,43 @@ export class TanqeebScraper extends BaseScraper {
     const jobs: JobCreateInput[] = [];
 
     for (let page = 1; page <= PAGES; page++) {
-      const url = `https://${country.slug}.tanqeeb.com/en/jobs/search?keywords=${encodeURIComponent(keyword)}&page=${page}`;
+      const url = `https://${country.slug}.tanqeeb.com/jobs/search?keywords=${encodeURIComponent(keyword)}&page=${page}`;
 
       try {
-        const response = await this.client.get(url, {
+        const html = await this.fetchHtml(url, {
+          sourceName: this.name,
           headers: {
-            'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
-              '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept-Language': 'en-US,en;q=0.9,ar;q=0.8',
           },
-          responseType: 'text',
         });
+        if (!html) break;
 
-        const html = response.body as string;
         const $ = cheerio.load(html);
         let found = 0;
 
-        $('.job-title')
-          .closest('.card')
+        $('a.card-list-item[href*="/jobs/"]')
           .each((_, el) => {
-            const titleEl = $(el).find('h2 a, a.job-title, h3 a, a[class*="title"]').first();
+            const card = $(el);
+            const titleEl = card.find('h2.hover-title, h2, h3').first();
             const title = titleEl.text().trim();
-            const href = titleEl.attr('href') || '';
-            const company = $(el)
-              .find('span.company, div[class*="company"], span[class*="employer"]')
+            const href = card.attr('href') || '';
+            const company = card
+              .find('span.job-meta-company, span.company, div[class*="company"], span[class*="employer"]')
               .first()
               .text()
               .trim();
-            const location = $(el)
-              .find('span[class*="location"], span.location, div[class*="location"]')
+            const location = card
+              .find('span.job-meta-item, span[class*="location"], span.location, div[class*="location"]')
               .first()
               .text()
               .trim();
-            const dateText = $(el)
-              .find('span.date, time, span[class*="date"]')
+            const dateText = card
+              .find('div.job-date, span.date, time, span[class*="date"]')
               .first()
               .text()
               .trim();
 
-            const jobUrl = href.startsWith('http') ? href : `https://www.tanqeeb.com${href}`;
+            const jobUrl = href.startsWith('http') ? href : `https://${country.slug}.tanqeeb.com${href}`;
 
             // Generate source ID
             const idMatch = href.match(/\/(\d+)(?:\/|$)/);
@@ -189,8 +187,8 @@ export class TanqeebScraper extends BaseScraper {
             if (title && sourceId && !seenIds.has(sourceId)) {
               seenIds.add(sourceId);
               found++;
-              const snippet = $(el)
-                .find('p[class*="description"], div[class*="snippet"], div[class*="description"]')
+              const snippet = card
+                .find('div.job-description, p[class*="description"], div[class*="snippet"], div[class*="description"]')
                 .text()
                 .trim();
 

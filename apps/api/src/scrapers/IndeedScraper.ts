@@ -107,17 +107,13 @@ export class IndeedScraper extends BaseScraper {
         `&start=${start}`;
 
       try {
-        const response = await fetch(url, {
+        const html = await this.fetchHtml(url, {
+          sourceName: this.name,
           headers: {
-            'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept-Language': 'en-US,en;q=0.9',
           },
         });
-
-        if (!response.ok) break;
-
-        const html = await response.text();
+        if (!html) break;
         const $ = cheerio.load(html);
         let found = 0;
 
