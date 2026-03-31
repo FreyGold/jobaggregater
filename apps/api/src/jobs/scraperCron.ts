@@ -1,5 +1,6 @@
 import cron from 'node-cron';
 import { CacheService } from '../lib/redis.js';
+import { logInfo, logError, logWarn } from '../lib/logger.js';
 import { scraperRegistry } from '../scrapers/ScraperRegistry.js';
 import { jobRepository } from '../repositories/JobRepository.js';
 import type { Job } from '../entities/Job.js';
@@ -23,28 +24,29 @@ async function processJobs(jobsToSave: JobCreateInput[]) {
   }));
 
   const newOrUpdated = await jobRepository.upsertMany(mappedJobs);
-  console.log(`✅ Scrape batch processed ${newOrUpdated} jobs.`);
+  logInfo('Scrape batch processed', { newOrUpdated, total: jobsToSave.length });
   await CacheService.bumpListCacheVersion();
 }
 
 export const startScraperCron = () => {
   // LinkedIn scraper: every 1 hour.
   const runLinkedInScraper = async () => {
-    console.log('⏰ Running 1-hour LinkedIn scraper cron...');
+    logInfo('Starting LinkedIn scraper cron');
     try {
       const linkedIn = scraperRegistry.get('linkedin');
       if (linkedIn) {
         const results = await linkedIn.scrape();
         await processJobs(results);
+        logInfo('LinkedIn scraper cron completed', { jobsCollected: results.length });
       }
     } catch (error) {
-      console.error('❌ LinkedIn scraper failed:', error);
+      logError('LinkedIn scraper cron failed', error as Error);
     }
   };
 
   // API scrapers: every 3 hours.
   const runAPIScraper = async () => {
-    console.log('⏰ Running 3-hour API scraper cron...');
+    logInfo('Starting API scraper cron');
     try {
       const apiScrapers = ['remotive', 'remoteok', 'hackernews', 'weWorkRemotely'];
       const sources = apiScrapers
@@ -55,12 +57,16 @@ export const startScraperCron = () => {
 
       const allJobs: JobCreateInput[] = [];
       results.forEach((res, i) => {
-        if (res.status === 'fulfilled') allJobs.push(...res.value);
-        else console.error(`❌ [Scraper: ${sources[i]?.name}] Error:`, res.reason);
+        if (res.status === 'fulfilled') {
+          allJobs.push(...res.value);
+        } else {
+          logWarn('API scraper failed', { scraper: sources[i]?.name, error: String(res.reason) });
+        }
       });
       await processJobs(allJobs);
+      logInfo('API scraper cron completed', { totalJobsCollected: allJobs.length, sourceCount: sources.length });
     } catch (error) {
-      console.error('❌ API scraper cron failed:', error);
+      logError('API scraper cron failed', error as Error);
     }
   };
 

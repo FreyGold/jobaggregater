@@ -2,7 +2,9 @@
 
 import express, { type Application } from 'express';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
 import { config } from './config/unifiedConfig.js';
+import { specs } from './config/swagger.js';
 import { AppDataSource, initializeDatabase } from './config/data-source.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { globalRateLimit } from './middleware/rateLimitMiddleware.js';
@@ -55,6 +57,15 @@ app.use(async (_req, _res, next) => {
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+// ─── API Documentation ───────────────────────────────────────────
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayOperationId: true,
+  },
+  customCss: '.swagger-ui .topbar { display: none }',
+}));
 
 // ─── Routes ──────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
