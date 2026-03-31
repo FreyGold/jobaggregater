@@ -21,7 +21,7 @@ export class RemotiveScraper extends BaseScraper {
   readonly name = 'Remotive';
 
   // Using the public API which includes full HTML descriptions
-  private readonly searchEndpoint = 'https://remotive.com/api/remote-jobs?category=software-dev&limit=200';
+  private readonly searchEndpoint = 'https://remotive.com/api/remote-jobs?category=software-dev&limit=100';
 
   async scrape(options?: { maxPages?: number }): Promise<JobCreateInput[]> {
     try {

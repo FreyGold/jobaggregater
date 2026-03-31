@@ -54,7 +54,7 @@ export default function HomePage() {
 
               {/* Search */}
               <div className="mx-auto mt-12 max-w-2xl">
-                <div className="  border bg-card p-4 shadow-xl backdrop-blur-md transition-shadow hover:shadow-2xl">
+                <div className="rounded-3xl border bg-card p-4 shadow-xl backdrop-blur-md transition-shadow hover:shadow-2xl">
                   <SearchBar size="lg" />
                 </div>
               </div>
@@ -68,7 +68,7 @@ export default function HomePage() {
                 ].map(({ icon: Icon, value, label }) => (
                   <div
                     key={label}
-                    className="flex flex-col items-center justify-center   bg-primary/5 p-6 shadow-sm ring-1 ring-inset ring-primary/10 transition-all hover:bg-primary/10 hover:ring-primary/20"
+                    className="flex flex-col items-center justify-center rounded-xl bg-primary/5 p-6 shadow-sm ring-1 ring-inset ring-primary/10 transition-all hover:bg-primary/10 hover:ring-primary/20"
                   >
                     <Icon className="mx-auto h-6 w-6 text-primary" />
                     <div className="mt-4 text-3xl font-bold tracking-tight text-foreground">
@@ -118,7 +118,7 @@ export default function HomePage() {
                 ].map(({ icon: Icon, title, desc }) => (
                   <div
                     key={title}
-                    className="group relative border border-border bg-card p-10 text-center shadow-sm transition-all hover:shadow-md hover:ring-2 hover:ring-primary/20"
+                    className="group relative rounded-xl border border-border bg-card p-10 text-center shadow-sm transition-all hover:shadow-md hover:ring-2 hover:ring-primary/20"
                   >
                     <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
                       <Icon className="h-7 w-7 text-primary" />

@@ -12,12 +12,7 @@ import { GreenhouseScraper } from './GreenhouseScraper.js';
 import { LeverScraper } from './LeverScraper.js';
 import { AshbyScraper } from './AshbyScraper.js';
 
-// New Arab / Regional Scrapers
-import { IndeedScraper } from './IndeedScraper.js';
-import { WuzzufScraper } from './WuzzufScraper.js';
-import { BaytScraper } from './BaytScraper.js';
-import { GulfTalentScraper } from './GulfTalentScraper.js';
-import { TanqeebScraper } from './TanqeebScraper.js';
+
 
 class ScraperRegistry {
   private readonly scrapers: Map<string, BaseScraper> = new Map();
@@ -30,15 +25,7 @@ class ScraperRegistry {
     this.register(new LinkedInScraper());
     this.register(new BuiltInScraper());
     this.register(new WeWorkRemotelyScraper());
-    this.register(new GreenhouseScraper());
-    this.register(new LeverScraper());
-    this.register(new AshbyScraper());
-
-    this.register(new IndeedScraper());
-    this.register(new WuzzufScraper());
-    this.register(new BaytScraper());
-    this.register(new GulfTalentScraper());
-    this.register(new TanqeebScraper());
+    // ATS platforms removed from auto-rotation (can be re-added later)
   }
 
   register(scraper: BaseScraper): void {

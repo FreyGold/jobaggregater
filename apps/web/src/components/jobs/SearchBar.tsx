@@ -2,11 +2,12 @@
 
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import { useDebounce } from '@/hooks/use-debounce';
+import { Search, Loader2, X } from 'lucide-react';
 
 interface SearchBarProps {
   placeholder?: string;
@@ -20,22 +21,33 @@ export function SearchBar({
   size = 'default',
 }: SearchBarProps) {
   const [query, setQuery] = useState(defaultValue);
+  const debouncedQuery = useDebounce(query, 400);
+  const router = useRouter();
+  const isFirstRender = useRef(true);
 
   // Sync with prop when it changes (e.g. URL navigation)
   useEffect(() => {
     setQuery(defaultValue);
   }, [defaultValue]);
-  const router = useRouter();
 
-  const handleSearch = useCallback(() => {
-    if (query.trim()) {
-      router.push(`/jobs?keyword=${encodeURIComponent(query.trim())}`);
-    } else {
+  // Auto-search when debounced query changes
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    const trimmed = debouncedQuery.trim();
+    if (trimmed) {
+      router.push(`/jobs?keyword=${encodeURIComponent(trimmed)}`);
+    } else if (defaultValue) {
+      // Only navigate to /jobs if we had a previous query (clearing the search)
       router.push('/jobs');
     }
-  }, [query, router]);
+  }, [debouncedQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isLarge = size === 'lg';
+  const isSearching = query !== debouncedQuery && query.trim().length > 0;
 
   return (
     <div className="flex w-full">
@@ -51,25 +63,27 @@ export function SearchBar({
           placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              handleSearch();
-            }
-          }}
-          className={`rounded-r-none border-r-0 pl-12 ${
-            isLarge ? 'h-14 text-base rounded-l-xl' : 'h-11 rounded-l-lg'
+          className={`pl-12 pr-10 ${
+            isLarge ? 'h-14 text-base rounded-xl' : 'h-11 rounded-lg'
           }`}
         />
+        {/* Right side: loading spinner or clear button */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center">
+          {isSearching ? (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          ) : query.length > 0 ? (
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={() => setQuery('')}
+              className="h-6 w-6 rounded-full"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          ) : null}
+        </div>
       </div>
-      <Button
-        onClick={handleSearch}
-        className={`rounded-l-none border-l-0 ${
-          isLarge ? 'h-14 px-8 rounded-r-xl text-base' : 'h-11 px-6 rounded-r-lg'
-        }`}
-      >
-        Search
-      </Button>
     </div>
   );
 }

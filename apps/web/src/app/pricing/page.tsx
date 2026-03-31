@@ -99,7 +99,7 @@ export default function PricingPage() {
 
                         <CardHeader className="pb-8 pt-8 px-8">
                           <div className="flex items-center gap-2 mb-4">
-                            <div className={`  p-3 ${isPopular ? 'bg-primary/10' : 'bg-muted'}`}>
+                            <div className={`rounded-xl p-3 ${isPopular ? 'bg-primary/10' : 'bg-muted'}`}>
                               <Icon
                                 className={`h-6 w-6 ${isPopular ? 'text-primary' : 'text-muted-foreground'}`}
                               />

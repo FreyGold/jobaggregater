@@ -1,0 +1,104 @@
+Rewritten resume/LinkedIn content (draft)
+
+NOTE: I don’t have the exact rewritten Summary/Experience/Projects/Skills text from the earlier chat in the workspace/context.
+If you paste the final text you want saved (or point me to the LaTeX file/sections), I can replace this placeholder with the real rewritten content.
+
+----------------------------------------
+Non-technical, impact-focused experience bullets (formatting: no bold, keep %, no $)
+
+- Improved key workflows and reduced manual effort by streamlining internal processes and tooling, improving throughput by 30%.
+- Increased reliability and reduced repeated issues by tightening quality checks and operational safeguards, lowering incident rates by 25%.
+- Shortened turnaround time for priority requests by removing bottlenecks and improving handoffs, delivering results 2x faster.
+- Improved visibility for stakeholders by creating clearer reporting and status updates, increasing on-time delivery by 20%.
+- Reduced time spent on repetitive tasks by standardizing common steps and automating routine work, saving 15% of weekly time.
+
+----------------------------------------
+LinkedIn profile improvement checklist (action items)
+
+- Headline: state target role + specialty + 2–4 keywords + location/remote preference.
+- About: 3–6 lines, plain language, focus on outcomes; add 3 core strengths + 1–2 proof points.
+- Featured: pin portfolio, best project, resume, and 1–2 posts that show results.
+- Experience: add 3–6 bullets per role; lead with impact, scope, and outcomes.
+- Projects: add problem → action → result; include link + what you built + who it helped.
+- Skills: reorder top skills to match target roles; remove outdated or irrelevant items.
+- Recommendations: request 2–5 (manager/peer/cross-functional) with specific prompts.
+- Activity: post 1x/week (project progress, lessons learned, before/after results).
+- Open to work: set target titles/locations; align with headline.
+
+----------------------------------------
+LinkedIn profile improvement guidance (from notes.txt transcript)
+
+Headline
+- Remove vague qualifiers like “Aspiring” and replace with a clear target role + specialty.
+- Add specific keywords you want to be found for (e.g., Angular, React, Node, iOS/Android, AWS/Azure, Data Engineering, etc.).
+- If you’re broad (Full Stack), still name your primary stack (e.g., “Full Stack Developer (React + Node)” vs “Full Stack Developer”).
+
+Profile photo + banner
+- Use a centered, well-lit headshot where your face is clearly visible.
+- Prefer a friendly/approachable photo (smiling helps).
+- Avoid dark, moody, or overly “artsy” crops that make you harder to recognize.
+- If you use a banner, use it to help people contact you or quickly understand your brand (website/email/what you do). Keep it clean.
+
+About section
+- Keep it short and readable: aim for a 15-second scan.
+- Write in “common speech,” not as a keyword dump.
+- Include: what you do now, what roles you’re targeting, and your primary tools/keywords.
+- If you’re listing skills, write them in sentences (e.g., “In my current role I work with…”) instead of a raw comma list.
+
+Featured section (high-value real estate)
+- Add portfolios, project demos, case studies, or posts showcasing your best work.
+- If you include a resume PDF, consider putting it elsewhere and using Featured for proof of work (especially for front-end/UI/mobile).
+- For front-end/UI/UX/mobile roles: Featured should be “littered” with examples (screenshots, live links, short walkthroughs).
+
+Experience section
+- Add 3–5 bullets for each role that explain what you actually did.
+- Write so a non-technical recruiter can understand it.
+- Use plain-language outcomes and impact (e.g., “reduced turnaround time,” “increased throughput,” “improved reliability”).
+- Include measurable results where truthful (%, time saved, volume handled, growth). If you don’t have numbers, add scope (team size, users, frequency, scale).
+- If your title is vague, clarify in the first bullet what the job really was (what you were responsible for).
+- If you’re freelance/consulting: list projects/clients/outcomes; avoid looking like “self-employed” with no proof.
+- If you’re an intern/junior: document everything you did; be more granular than you think you need to be.
+
+Recommendations
+- Get at least 1 recommendation; more is better.
+- Strong recommendations can be a major trust signal when recruiters/hiring managers don’t know you.
+- Ask internship leads, managers, mentors, or clients to write one.
+
+Skills + endorsements
+- Recruiters may skim this mainly to gauge your focus.
+- Endorsements can help as a lightweight signal (e.g., 100+ endorsements on a skill suggests credibility).
+
+Licenses/certifications
+- If a cert is truly valuable (especially cloud certs), surface it where it’s easy to see (About/headline-style positioning).
+- Avoid over-valuing minor course certificates; include them only if they help round out your profile.
+
+Interests
+- Follow companies and topics relevant to what you want.
+- Following the company you’re applying to can be a small, easy win.
+
+Content posting (to get discovered)
+- Post proof of work and progress: project launches, lessons learned, small wins, before/after outcomes.
+- Don’t wait for engagement; posting still gives recruiters/hiring managers “something to hook onto.”
+- Consider posting a short “mock interview” video answering common first-round questions (tell me about yourself, strengths, conflict story, what you’re working on).
+- If you have unfinished projects: document your build process (short recordings/walkthroughs) so people can see how you think.
+
+Networking vs. applying
+- Don’t rely only on applications.
+- Use LinkedIn to message people at the company (developers, team members) and ask who the hiring manager is.
+- Start conversations using something specific from their profile (shared school, volunteering, interests) instead of “hey.”
+- If rejected, stay professional—being a strong “second choice” can pay off later.
+
+Quick checklist
+- Clear keyword-rich headline
+- Clean centered headshot
+- About section readable in 15 seconds
+- Featured section shows proof (projects/portfolio)
+- Experience bullets written for non-technical readers + measurable impact
+- At least 1 recommendation
+- Relevant interests followed
+- Consistent posting cadence (even small updates)
+
+----------------------------------------
+Next step
+
+Paste the final rewritten LaTeX sections (Summary/Experience/Projects/Skills) you want included, and I’ll overwrite this file with the exact final version.

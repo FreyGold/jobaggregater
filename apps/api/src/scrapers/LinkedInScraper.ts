@@ -96,8 +96,8 @@ const ARAB_COUNTRIES = [
   { name: 'Jordan', location: 'Jordan' },
 ];
 
-// 10 pages × 25 results per page = 250 results max per category-country pair
-const PAGES_PER_CATEGORY = 10;
+// 2 pages × 25 results per page = 50 results max per category-country pair
+const PAGES_PER_CATEGORY = 2;
 
 export class LinkedInScraper extends BaseScraper {
   readonly key = 'linkedin';

@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function JobCardSkeleton() {
   return (
     <Card>
-      <CardContent className="p-5">
+      <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-3">
             <Skeleton className="h-5 w-48" />
@@ -23,8 +23,8 @@ export function JobCardSkeleton() {
             </div>
           </div>
           <div className="flex flex-col gap-1.5">
-            <Skeleton className="h-8 w-8 rounded-md" />
-            <Skeleton className="h-8 w-8 rounded-md" />
+            <Skeleton className="size-11 rounded-md" />
+            <Skeleton className="size-11 rounded-md" />
           </div>
         </div>
       </CardContent>

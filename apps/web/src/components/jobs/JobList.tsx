@@ -2,6 +2,7 @@
 
 'use client';
 
+import { useCallback } from 'react';
 import type { Job, PaginationMeta } from '@jobagg/shared';
 import { JobCard } from './JobCard';
 import { JobCardSkeleton } from './JobCardSkeleton';
@@ -31,6 +32,14 @@ export function JobList({
   onUnsave,
   onPageChange,
 }: JobListProps) {
+  // Memoize callbacks to prevent re-renders of memoized JobCard
+  const handleSave = useCallback((jobId: string) => {
+    onSave?.(jobId);
+  }, [onSave]);
+
+  const handleUnsave = useCallback((jobId: string) => {
+    onUnsave?.(jobId);
+  }, [onUnsave]);
   // Loading state
   if (isLoading) {
     return (
@@ -45,7 +54,7 @@ export function JobList({
   // Error state
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center   border border-destructive/20 bg-destructive/5 p-12 text-center shadow-sm shadow-black/5">
+      <div className="flex flex-col items-center justify-center rounded-xl border border-destructive/20 bg-destructive/5 p-12 text-center shadow-sm shadow-black/5">
         <p className="text-sm font-medium text-destructive">Failed to load jobs</p>
         <p className="mt-1 text-xs text-muted-foreground">
           Please check your connection and try again.
@@ -57,7 +66,7 @@ export function JobList({
   // Empty state
   if (!jobs || jobs.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center   border border-border bg-card p-16 text-center shadow-sm shadow-black/5">
+      <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-card p-16 text-center shadow-sm shadow-black/5">
         <Inbox className="h-10 w-10 text-muted-foreground/40" />
         <p className="mt-4 text-sm font-medium text-foreground">No jobs found</p>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -71,7 +80,7 @@ export function JobList({
     <div className="space-y-4">
       {/* Results / actions */}
       {meta && (
-        <div className="flex flex-col gap-2   border border-border bg-card p-4 shadow-sm shadow-black/5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4 shadow-sm shadow-black/5 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm text-muted-foreground">
             <div>
               Showing <span className="font-medium text-foreground">{jobs.length}</span> of{' '}
@@ -102,8 +111,8 @@ export function JobList({
           key={job.id}
           job={job}
           isSaved={savedJobIds.has(job.id)}
-          onSave={onSave}
-          onUnsave={onUnsave}
+          onSave={handleSave}
+          onUnsave={handleUnsave}
         />
       ))}
 

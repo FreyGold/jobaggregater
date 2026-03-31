@@ -28,11 +28,29 @@ async function processJobs(jobsToSave: JobCreateInput[]) {
 }
 
 export const startScraperCron = () => {
-  // Unified scrape loop: all sources every 12 hours.
-  const runAllScrapers = async () => {
-    console.log('⏰ Running 12-hour scraper cron...');
+  // LinkedIn scraper: every 1 hour.
+  const runLinkedInScraper = async () => {
+    console.log('⏰ Running 1-hour LinkedIn scraper cron...');
     try {
-      const sources = scraperRegistry.getAll();
+      const linkedIn = scraperRegistry.get('linkedin');
+      if (linkedIn) {
+        const results = await linkedIn.scrape();
+        await processJobs(results);
+      }
+    } catch (error) {
+      console.error('❌ LinkedIn scraper failed:', error);
+    }
+  };
+
+  // API scrapers: every 3 hours.
+  const runAPIScraper = async () => {
+    console.log('⏰ Running 3-hour API scraper cron...');
+    try {
+      const apiScrapers = ['remotive', 'remoteok', 'hackernews', 'weWorkRemotely'];
+      const sources = apiScrapers
+        .map((key) => scraperRegistry.get(key))
+        .filter((s) => s !== undefined) as any[];
+      
       const results = await Promise.allSettled(sources.map((s) => s.scrape()));
 
       const allJobs: JobCreateInput[] = [];
@@ -42,10 +60,13 @@ export const startScraperCron = () => {
       });
       await processJobs(allJobs);
     } catch (error) {
-      console.error('❌ 12-hour scraper failed:', error);
+      console.error('❌ API scraper cron failed:', error);
     }
   };
 
-  // Every 12 hours at minute 0.
-  cron.schedule('0 */12 * * *', runAllScrapers);
+  // LinkedIn every 1 hour at minute 0.
+  cron.schedule('0 * * * *', runLinkedInScraper);
+  // API scrapers every 3 hours.
+  cron.schedule('0 */3 * * *', runAPIScraper);
+  // setTimeout(runLinkedInScraper, 0);
 };

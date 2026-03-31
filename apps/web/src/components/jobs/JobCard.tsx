@@ -2,6 +2,7 @@
 
 'use client';
 
+import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import type { Job } from '@jobagg/shared';
 import { formatSalary, formatTimeAgo } from '@jobagg/shared';
@@ -26,12 +27,40 @@ interface JobCardProps {
   onUnsave?: (jobId: string) => void;
 }
 
-export function JobCard({ job, isSaved = false, onSave, onUnsave }: JobCardProps) {
+function JobCardComponent({ job, isSaved = false, onSave, onUnsave }: JobCardProps) {
   const salaryText = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);
+  
+  // Optimistic state for bookmark
+  const [optimisticSaved, setOptimisticSaved] = useState(isSaved);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Sync optimistic state when isSaved prop changes (API response)
+  useEffect(() => {
+    setOptimisticSaved(isSaved);
+  }, [isSaved]);
+
+  const handleBookmarkClick = () => {
+    // Optimistic update
+    const willSave = !optimisticSaved;
+    setOptimisticSaved(willSave);
+    setIsAnimating(true);
+
+    // Reset animation after it completes
+    const timer = setTimeout(() => setIsAnimating(false), 600);
+
+    // Call the actual mutation
+    if (willSave) {
+      onSave?.(job.id);
+    } else {
+      onUnsave?.(job.id);
+    }
+
+    return () => clearTimeout(timer);
+  };
 
   return (
     <Card className="group hover:border-primary/20 hover:shadow-md">
-      <CardContent className="p-5">
+      <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           {/* Left: Job Info */}
           <div className="min-w-0 flex-1">
@@ -96,15 +125,28 @@ export function JobCard({ job, isSaved = false, onSave, onUnsave }: JobCardProps
             <Button
               variant="ghost"
               size="icon"
-              className="size-9 hover:bg-muted/70"
-              onClick={() => (isSaved ? onUnsave?.(job.id) : onSave?.(job.id))}
-              aria-label={isSaved ? 'Unsave job' : 'Save job'}
-              title={isSaved ? 'Unsave job' : 'Save job'}
+              className={cn(
+                "size-9 hover:bg-muted/70 transition-all",
+                isAnimating && "scale-125"
+              )}
+              onClick={handleBookmarkClick}
+              aria-label={optimisticSaved ? 'Unsave job' : 'Save job'}
+              title={optimisticSaved ? 'Unsave job' : 'Save job'}
             >
-              {isSaved ? (
-                <BookmarkCheck className="h-4 w-4 text-primary" />
+              {optimisticSaved ? (
+                <BookmarkCheck 
+                  className={cn(
+                    "h-4 w-4 text-primary transition-all duration-300",
+                    isAnimating && "scale-110 animate-pulse"
+                  )}
+                />
               ) : (
-                <Bookmark className="h-4 w-4" />
+                <Bookmark 
+                  className={cn(
+                    "h-4 w-4 transition-all duration-300",
+                    isAnimating && "scale-110 animate-pulse"
+                  )}
+                />
               )}
             </Button>
 
@@ -127,3 +169,15 @@ export function JobCard({ job, isSaved = false, onSave, onUnsave }: JobCardProps
     </Card>
   );
 }
+
+// Memoized component with custom comparison
+export const JobCard = memo(
+  JobCardComponent,
+  (prevProps, nextProps) => {
+    // Only re-render if job ID or saved status changed
+    return (
+      prevProps.job.id === nextProps.job.id &&
+      prevProps.isSaved === nextProps.isSaved
+    );
+  }
+);

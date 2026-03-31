@@ -7,6 +7,7 @@ import { Search, Crown } from 'lucide-react';
 import { buttonVariants, Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { ThemeCustomizer } from '@/components/theme-customizer';
 import { useAuth } from '@/providers/auth-provider';
 import { useCurrentSubscription } from '@/hooks/use-subscription';
 
@@ -15,10 +16,10 @@ export function Header() {
   const { data: currentSub } = useCurrentSubscription();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center">
       <div className="container mx-auto flex h-16 items-center px-4">
         <Link href="/" className="mr-6 flex items-center gap-2">
-          <div className="flex rounded-md bg-primary p-1.5 text-primary-foreground">
+          <div className="flex rounded-lg bg-primary p-1.5 text-primary-foreground">
             <Search className="h-5 w-5" />
           </div>
           <span className="hidden text-base font-semibold tracking-tight text-foreground md:inline-block">
@@ -28,18 +29,18 @@ export function Header() {
 
         {/* Navigation */}
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <Link href="/jobs" className="text-foreground/60 transition-colors hover:text-foreground">
+          <Link href="/jobs" className="text-foreground/60 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 rounded-sm">
             Browse Jobs
           </Link>
           <Link
             href="/pricing"
-            className="text-foreground/60 transition-colors hover:text-foreground"
+            className="text-foreground/60 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 rounded-sm"
           >
             Pricing
           </Link>
           <Link
             href="/about"
-            className="text-foreground/60 transition-colors hover:text-foreground"
+            className="text-foreground/60 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 rounded-sm"
           >
             About
           </Link>
@@ -47,6 +48,7 @@ export function Header() {
 
         <div className="ml-auto flex items-center space-x-4">
           <ThemeToggle />
+          <ThemeCustomizer />
 
           {isAuthenticated ? (
             <div className="flex items-center gap-4">

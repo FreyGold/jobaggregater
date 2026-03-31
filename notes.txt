@@ -1,0 +1,1579 @@
+ uh to finally make that happen yeah live so
+0:25
+i'm going to let me close this close this and this
+0:32
+and i'm giving a second for people to come in uh the last the last one we had about 30 or so
+0:37
+people so nice i'm talking about if i'm doing tech the numbers get higher if i'm jerking
+0:43
+nobody wants to hear recruiters we're like the worst people are so damned about us i think i think this is very
+0:49
+valuable for a lot of people because obviously you're trying to get a job and uh
+0:55
+people just don't know what you're really looking for right so i that's why i'm loving this
+1:00
+right now is because we can bridge that gap hey how you doing welcome welcome i see some people are already popping in
+1:06
+that's a good sign nice people are more interested let me get this last thing
+1:11
+i'm bringing back raising the roof bringing back raise on the roof oh you got a lot of work ahead of you but
+1:17
+all right a lot of work out of me i'll let you do that
+1:22
+all right so we've got several profiles here if you have questions do not hesitate in
+1:29
+putting them in the chat i will get to them uh in any way that i can today i am with
+1:36
+taylor taylor is a recruiter extraordinaire he has helped many people land jobs in tech
+1:43
+and he is fashion staff he has all hell with that shirt
+1:48
+but i am very pleased to have you here with me today thank you for taking some time out of your day i genuinely appreciate that i hope we
+1:54
+can answer all of your questions and i've got several profiles that i'm going to be going through and if uh you want your profile to be
+2:00
+viewed uh put your linkedin profile in the comments and we'll go through it so i'll ask you a couple questions that i normally ask before we get into that
+2:07
+yeah and what are certain things that a candidate can put on their linkedin profile that stands out to you
+2:12
+like what's your like gotcha yeah yeah so i've been pretty loud about this um and again danny i appreciate danny
+2:18
+have me on um i like saw him post this on linkedin i was like oh i'm gonna slide into his dms
+2:24
+and then here we are so and and that goes to i guess my next thing talking about linkedin and i've
+2:29
+been really loud about this um again if you want to give me a follow on twitter at tds and do a lot of education around
+2:34
+the job search and um the the first thing is is i'm really bullish about linkedin so thank you for
+2:40
+asking me that question did not you know you were gonna ask me that question so this is perfect um so the first thing is so this is a
+2:46
+little hack that i actually have shared last week and i had a really good interview
+2:52
+with a national software school grad about this so recruiters when we search on linkedin
+2:57
+we actually don't click on your profile unless your title says what you do
+3:04
+and so uh with that being said i mean the title is kind of what's under your picture in linkedin
+3:10
+right and so like if you're an aspiring software developer like that doesn't get me to click
+3:16
+on your because i don't know like what do you want to do.net do you want to do react you want to do java like give me those specifics right
+3:23
+aspiring.net developer finishing bootcamp right i think those are extremely important to articulate
+3:28
+that in the title because what happens is us recruiters search and there's like a hundred and
+3:34
+fifty profiles that pop up like we're not gonna go through every single one so what we do is we scan the titles so that's the first thing um the second
+3:41
+thing i would say is um you're i've had some conversations about this um people think it differently
+3:47
+again i always want to say i'm only one person i'm only one recruiter so don't come out of this and say well taylor says this so
+3:53
+this is what i need to do um but i think the one thing is is your linkedin should be a summary of your resume so if you're in tech that what i would
+4:00
+do is every position i would have three bullet points first bullet point is talk to me what about what you do like
+4:07
+you're talking to a family member let's face it we all talk to our family members differently about what we do
+4:12
+um even though my mom thinks i help fix laptops i do not mom i help people find li or i help find
+4:19
+people to fix laptops so that's the first thing explain me right i'm developing the red
+4:24
+notification dot on facebook when you click the notifications like that's what i do okay great i understand that
+4:29
+second thing is is i would list basically a summary of the main applications or projects you've worked
+4:36
+on recently right so hey i'm working on you know these two main projects utilizing react and redux
+4:41
+right so that's really important the third thing i would do is is have a really a technologies use
+4:47
+summary so that's front to back technologies um that you have worked with in your specific position
+4:53
+because what that does is that allows recruiters to um catch on those keywords right you
+5:00
+have to have enough keywords to get the recruiters attracted to your profile but then you need
+5:06
+not a lot of keywords so the recruiter can understand what you do from a functional level as well so those are
+5:11
+kind of the two kind of you know big things i've been preaching last few weeks on twitter that makes perfect sense now let me ask
+5:18
+you this so i'm of the mindset that um
+5:23
+and you you could correct me if i'm wrong i normally tell people drop aspiring and if you're a developer
+5:29
+put developer like but be very specific about what you're looking for yes because aspiring is not helping you
+5:35
+on any keyword searches no one was looking for who's the aspiring developer in memphis yeah i'm not searching aspiring yeah
+5:42
+no so i always say like if you know how to make website you're already a developer at that point like as soon as you can create a actual
+5:49
+website where the jobs out or not you're a developer so now you need to be listing out the languages that you're specif
+5:54
+like you're specializing in right for example if you're a net developer put dot net developer don't put back end
+5:59
+developer with nothing specific behind it because you're not gonna pop up in anything so uh do you agree with that
+6:05
+yeah 100 agree with that i i think it's a i think it's a blend i mean you kind of have to play the game right a lot of people like oh i hate
+6:12
+you know the keyword jargon listen i get it but you have to play the game in a sense you have to get people you
+6:17
+have to get people recruiters attracted to your profile and the way to do that is obviously to use those keywords
+6:24
+absolutely and so uh one question that we have yeah i i pulled up his um linkedin
+6:31
+profile so we'll go ahead and do his linkedin i love it that's great because uh we've got
+6:37
+several people in here and we'll probably get some more in a bit but i'm going to go ahead and share this screen
+6:44
+and we've got several profiles um pulled up that we're going to go through i love it let me close these messages
+6:51
+this is a great idea man again i mean props to you and kind of what you're doing i think this is this is so cool uh
+6:56
+i i may steal this so i hope that's okay go ahead you know i'm more than more than married if people are getting help out of it
+7:03
+and to be honest the goal is getting people jobs and that's it for me my whole like the last
+7:09
+year and a half has been obsessed with the idea of getting people into the jobs that they want so good now
+7:14
+if i have the ability instead of me doing all the hard work i can show them exactly what i've been doing this whole time then
+7:21
+you know it's helping people outside of memphis because my whole focus has always been
+7:26
+the city of memphis but if i can focus on you know people in india and in sri lanka we had some
+7:33
+people in here from italy and london and you know we're getting the whole world at this point might as well help as many people as we can
+7:39
+well and i think too i'm going to pick back on you real quick and we'll get to will's linkedin i think it's so good
+7:44
+with what you're saying because i think now especially during covet times right like i'm going to be totally honest with you danny
+7:50
+i don't think i would have met you if it hasn't been for covid right like like like being at home being more
+7:56
+virtual covering more more ground like i i have a text message platform if people
+8:02
+want direct job tip advice shoot me a text 615-235-5650
+8:11
+but i 615-235-5650 this community through text messaging because there's linkedin there's twitter there's facebook their instagram like
+8:17
+let me just get the information directly to you and i have people from washington text me i've never met anybody from washington before
+8:23
+but they've gotten on the platform we've been able to kind of spitball on how to write a resume or linkedin and so again props to
+8:29
+you and kind of what you're doing in the community as well man i appreciate that uh i have a question for you yep and
+8:34
+um i'm gonna ask every i'm trying to ask several questions to all the recruiters and hiring managers to see what's like the
+8:41
+most common things so statistically there's this statistic out there that says the average hiring manager recruiter
+8:47
+spends about six seconds on a resume before they decide whether they want to invest more time in it or to move on to
+8:53
+another do you think industry wise that this is a common practice and do you think this is something that you
+8:59
+do as well uh i wouldn't say six seconds but it's pretty quick i mean i i would say um you know i've
+9:05
+been recruiting overall now for about nine years i've been recruiting just um engineers probably for the last six
+9:11
+seven um you know i ran the numbers the other day i've met close to 4 000 engineers now
+9:16
+um during my time and so like i've gotten to the point where obviously i can you know look at a resume pretty quickly
+9:23
+i would say it's pretty fast though which is why it's important right will right i love what will has software engineer mern stack right to be totally
+9:30
+honest with you i would take away full stack developer and just expound out what mirn is right because i'm gonna be honest with you
+9:35
+recruiters for the most part again i'm one recruiter we don't search mern right we want to know reactions we want
+9:41
+to know express you want to know [ __ ] right we're not searching those that mirn
+9:47
+wording so but again right it's just it's it's it is an eyeball
+9:53
+glance absolutely okay and and that is why i always say
+9:59
+you know especially in your linkedin and your resumes you need to give the information make it
+10:06
+so easy that they can access it that now they're interested in discovering more but if you make it hard and they
+10:13
+have to work for it a lot of times they're going to pass over it not knowing that you've even listed it there and we had several profiles
+10:19
+earlier that we did where they had the information in completely hard to reach places and we'll see how these resumes are and
+10:26
+these linkedins i mean are but not just looking at will's uh first glance what do you think about
+10:33
+it so far i'm going to have you rate every profile we go through as well i love putting this well first off i think will
+10:39
+uh great head shot right like a good headshot cannot be overstated understated
+10:46
+you need to have a good one right like danny yours is solid man yours is consistent
+10:52
+right yeah that beautiful face right 10 out of 10 danny's face but but like when i saw danny on on twitter
+11:00
+and then i connected with danny on linkedin i was like oh same like i know who that is because
+11:05
+it's the same picture right and so will really good white background good smile great facial hair you know
+11:12
+really really good stands out i i see nothing wrong with that and then again right going with the
+11:18
+software engineer mern stack i would just say software engineer uh targeting
+11:24
+you know [ __ ] express react node opportunities i agree with that and just to piggyback
+11:31
+on the headshot you don't need a professional camera you can literally have a smartphone just dress up for the
+11:37
+part you know is that the way you want to go bathroom selfies man yeah no bathroom no toothpaste right no toothpaste on on
+11:44
+the windows or anything like that pretty much all right so overall minus this we gotta we got a
+11:50
+good landing spot i like it all right we're at the about section now now my question with you on about
+11:56
+are you of the camp where you think it needs to be short and sweet or do you prefer to be long and um
+12:04
+detail-filled yeah uh so i mine is long and detailed phil i need
+12:10
+to fix mine because it drives me nuts because i know for a fact i get tired reading of my own so i would
+12:15
+say honestly we need to shorten this up even more right so like listen will
+12:20
+i know you're probably passionate man you don't need to tell me that right like i know you probably have a never
+12:26
+ending drive because like you're probably newer in your career right like again these are all fluff words the the
+12:33
+thing is is hacking linkedin and getting your everything needs to be like two or three
+12:38
+bullet points that's it right so if i were the about section i you know depending on where you're at in your crowd be like
+12:44
+five years of overall uh software experience um two years of angular 2 plus with a
+12:50
+strong emphasis on typescript and targeting ui front-end
+12:56
+specific roles right so the about should have right it's like writing a paragraph and
+13:01
+how they did it in college right so you have like it's like a pyramid right very broad and then more targeted
+13:07
+right so your abroad should be overall years of experience outlining how many years of experience you have within the specific technology
+13:12
+or technology that you want to pursue and then what type of role are you targeting
+13:18
+sure uh how much can a dev put in a linkedin title without being too spam all right we got a question and this
+13:25
+seems uh really relevant yeah how much can a dev put in a linkedin title without being too spammy
+13:32
+like being a tech lead full stack dev docker professional i guess that would be a bit much would
+13:37
+that make sense um i mean i would say again put what's in your title that you want to be called
+13:45
+for right so so so if you want to get called for
+13:51
+you know a a tech lead spot right yeah i'd put that technology lead
+13:56
+focusing on devops with an emphasis in docker that that's exactly the way i would
+14:02
+approach that myself something different and we're about to argue no
+14:08
+you're knifing pretty similarly man all right so our advice on the about is to shorten
+14:14
+this up a bit get rid of the fill of words uh so now we're in the hey
+14:19
+i gotta give a shout out to my buddy kyle he's on here it's all about that word and that's right kyle i do love kyle kyle we we go way back
+14:27
+just a couple months but no kyle kyle is awesome i love him yeah uh we talk all the time on twitter
+14:33
+and i probably give him more headaches than it's deserved no i appreciate him nonetheless
+14:38
+but uh so we're in the featured section i'm a big believer well let me get you so he
+14:44
+has a list of recommendations here do you think um this is an awesome feature section or
+14:49
+do you think he can approve what is your advice or so i i think this is great man again danny i'm so stoked you're doing
+14:56
+this because i think linkedin right now is just it's it's where everyone's attention should be i think twitter and linkedin is where
+15:02
+it needs it needs to be and i think a whole another conversation for networking and and i have some other podcasts
+15:07
+and material if anybody wants to reach out from that perspective but i think linkedin right now i'll tell you this on linkedin i
+15:13
+didn't use twitter until about march so linkedin has been my only focus for over a year and a half
+15:18
+and that is literally how i've helped almost 70 people land their jobs into that's blown up man the power of the networking that you can
+15:24
+do on the site is unlike any other it's so underrated and one thing i'll say is i'm not
+15:30
+someone that fills out applications i i can honestly tell you i turned down six jobs before i accepted my job in
+15:35
+tech i might have filled out two or three applications everything i did was networking with hiring managers and
+15:42
+recruiters and getting myself into interview one like i would talk i would network i'd
+15:47
+sell myself and my profile obviously gets a lot of attention but i mean honestly like once you build up that network and
+15:53
+people are like as a especially as a hiring manager they don't need to see your application they know what you're about at that point
+15:59
+and if they're interested they want to call you in i'm sorry that's why i like linkedin man i'm not kidding you one of my
+16:04
+buddies who actually moved up to nashville to be in a band with um so i was a drummer
+16:09
+um and uh he messaged me the other day he's a data scientist up in
+16:14
+upstate new york he messaged me the other day and goes hey man i just got an interview request
+16:20
+because of my engagement with a hiring manager on linkedin i was like it works like that's it
+16:25
+that's literally it you're my one case study i'm gonna go retire now because the thing is is like like that's
+16:31
+what i've been preaching like we're all stuck at home right now what is the one way to network and it's through linkedin
+16:36
+being involved in meaningful conversations so that being said let me get back to your original question so the featured
+16:41
+portion so the feature portion here in my mind should be where your portfolio goes
+16:47
+right so code samples github um a place where i can go and click
+16:54
+uh to something to show your work right so for me your references should be at the bottom
+17:00
+of your linkedin where there is a reference tab right so if so if i was you know
+17:06
+somebody who is so if i was recruiting well i wouldn't click on this letter recommendation i would scroll all the way down to this bottom and look at it
+17:12
+what i would want to see from will right here is a sample of anything he's done right so let's say he's let's say he's a designer ui ux heavy
+17:19
+front-end i want to see what he's done right if you're more of a back-end right i still want to see like a project that
+17:25
+you've been a part of even though i can't read code even though like but again i would have your github here
+17:30
+somewhere where a manager can click through and get to more of your work
+17:37
+i agree with that yeah you do uh and to be honest one thing i always say about the featured section
+17:42
+this to me is the most valuable piece of real estate you have on your profile
+17:47
+100 especially because just like taylor agrees with me you've got about six seconds to make an
+17:53
+impression we'll say six to ten to fifteen whatever it's a very small final amount of time that you have
+17:59
+to get the attention and hook them right yep so why would you waste this very valuable real estate right
+18:06
+here on the most blandest thing that you can put why not showcase the things that you've achieved
+18:13
+the things that you're making like in a good way not not you know like oh 100 days of code
+18:19
+100 days of code is not for linkedin like you're not putting what you're working on because as a in my opinion as a manager hiring
+18:26
+manager if you were to view that you would say oh he's still a work in progress as opposed to a strong asset that i can
+18:33
+bring on my team linkedin is a place where you show your strengths keep your weaknesses for twitter don't put them here
+18:39
+like keep all your work in progresses don't don't put that here but um another question i want to ask you um
+18:47
+and how much do you think follower count matters on a platform like not at all none
+18:54
+i completely agree with you and the reason why i ask you that is like five or five now between danny and i
+18:59
+we're we're on the same page i already know we're like we you know the same things that i know and we're this is like hey you do x y z
+19:06
+this is gonna be how we get you as close to a job as possible but i get people all the time saying well recruiters or managers they're not
+19:13
+going to pay attention to me because i only have like 20 followers on linkedin your follower
+19:18
+your follower account does not equate to your value as an employee and an asset to a company if
+19:24
+the two do not mix the only thing i would say that increases with your follower
+19:29
+account is the opportunity to present yourself in front of new people because i always say you never know
+19:36
+where one conversation will lead you if you have a thousand followers there's more potential at that point
+19:41
+that you can have more single conversations that could lead somewhere as opposed to a hundred but outside of that follower count is
+19:48
+completely irrelevant in the grand scheme and you should definitely showcase all of your work there
+19:53
+yep great okay and we're at the experience section so what do we think about this
+19:58
+uh let's see here so first off i think um
+20:07
+i think for my title so here is here is one thing that i have gone back
+20:12
+and forth with um with with the title and and i'm gonna
+20:17
+get into some hot water with this i know this and i'm not saying lie on your linkedin never lie but i
+20:23
+still think keywords are incredibly important right so here web project coordinator like what
+20:29
+does that mean right i'm not searching web project coordinators right so if i'm looking at this like one
+20:36
+there's no tech in here i'm just reading it right now there's no tech and like
+20:42
+i i don't really know like onboarding clients to commercial
+20:48
+and benefits administration platforms by employing fantastic communication and problem solving skills like i don't know what
+20:54
+does that mean right like like what is like what does this company do and and how do you work
+21:01
+in with this company like you wouldn't explain to your parents that you cr create and implement new internal
+21:07
+workflows and i i so just to piggyback on this
+21:13
+yeah i say tailor your job description and job title to universal
+21:20
+industry standards so let's say you're a software engineer but your company gave you a title of
+21:26
+technology engineer extraordinaire no one knows what the second title means but if you know that title means you're
+21:32
+a software engineer list that right or if you're a front-end engineer and you're
+21:37
+you know your company gave you like this very unique title make it what the industry standard is
+21:43
+because one that's exactly what recruiters are actually looking for but two those are the keywords that they're
+21:49
+searching for and three i don't work at your company i st and i'm with you i have no clue what a
+21:55
+web project coordinator is yeah so that helps nobody in the situation beside yourself
+22:01
+you don't know how many opportunities you could be losing just by having that title and here's another thing too and i want to i want to harp on this with a service
+22:07
+representative for 24 hour fitness so i'm really big i have a junior dev newsletter um that i send out every month um you
+22:14
+know i i've i've spoken at national software school you know a lot of times and and i'm really passionate about helping junior
+22:20
+developers find their first job and unfortunately because of because we're a staffing company and
+22:27
+most hiring managers don't pay staffing companies to find junior talent because there's so much of it out there i can't help junior developers and so i
+22:33
+really try to give back as much as humanly possible all that being said i talk about this a
+22:39
+lot even in a non-coding gig i need comparisons and i need quantitative information right so for 24
+22:46
+hour fitness let's say that you had a record month and assigned 30 new 30 new
+22:53
+30 new members in one month and the average is 10. for me that's pretty cool
+23:00
+right because like for me if i'm looking at your information i'm like dang well i know that has
+23:05
+nothing to do with coding but he's got some pretty good people skills if he's able to sign 3x the amount of members
+23:12
+than usual but again it's it's comparative right like if you tell me i grew the company
+23:18
+to five million dollars in revenue okay well what were you at four and a half
+23:23
+yeah right it's like you have to give me some comparison but even with non-technical positions give me one or two bullet points about
+23:29
+what you did but be quantitative and show people skills right let's be honest danny's a hiring manager like
+23:35
+you want people who are chill who know how to work with people right and you can figure that out if
+23:41
+will here says i broke the record in the amount of members i signed for the month of february
+23:46
+2019. absolutely uh what one thing i always say about that is your job description is
+23:54
+not where you actually write what you did but what you actually achieved so for example what we
+24:01
+did with one previous profile with daniel he was a waiter at piccadilly well he had nothing written there
+24:06
+but in in the big description that he had written it was like half a page long one of the things that he had written
+24:12
+was he had uh an award for uh customer service well
+24:17
+to me that means he's customer focused he's focused on delivering the end product
+24:22
+these are things that you need to be listening because as a an employer they're going to love reading that that your customer focus
+24:28
+because obviously money is only coming from one place customers it's not coming from anywhere else so if you focus on the customer you're focused on the
+24:34
+end product so i mean even as a 24-hour fitness i worked at a uh french riviera spa i don't know if
+24:40
+they have that out there it's it's all out of business now though but and it's not out of business because i left right it was rocking when i was
+24:46
+there but uh you know for me i used to always say you know i'd go door-to-door selling
+24:52
+memberships even though i didn't have to and that was how i made you know a ton of money but uh for you need to list something
+25:00
+that someone's gonna because even if you have the lowest position of low you did something to maintain that job
+25:06
+and i'm sure you did something slightly outside of what was expected of you all you gotta do is list that that's it all right so we've got this
+25:13
+part done now we have the education so uc davis continuing professional education cert uh santa rosa junior
+25:19
+college i mean here's the deal i mean listen we have clients that education's big but for the most part it's not big i
+25:26
+mean this is this is a whole i mean this is a whole another session that you and i could chop on but i i just the education
+25:33
+it is what it is if you have it great if you don't not a big deal just put it um um you know i would say this may be
+25:39
+another thing you put the in the about section right if you have a bs in cs or msncs right that's where you put in the about section but i don't
+25:45
+really look at education yeah and so now what's your opinion on
+25:50
+certs so it's it's so funny i've had so many conversations about certs lately i don't
+25:56
+think certs matter unless you're in the cloud certs are kind of a dying breed that i'm seeing right no one goes and gets their
+26:03
+microsoft developer certification anymore just because there's so many developers now i think if you're
+26:09
+gonna spend how many hundreds or thousands of dollars just save your money and go take on free work to put it in your portfolio um you know
+26:17
+people are like oh don't take on free work listen i tweeted that a while back and it went crazy i get it right there's
+26:23
+both sides of the store and i totally understand that if you're at a position where you can spend money on a cert you're at a
+26:28
+position where you can take on free work here's my whole thing with certs and it's slightly on the same point as you
+26:36
+it can't hurt sure yeah i mean it's it's literally like prayer right it
+26:42
+can't love that love that hurt to pray and it can't hurt to throw in a cert and i mean either
+26:49
+they skip over or they look at it and say oh he did something or she did something yeah i would say the only cert that really
+26:56
+may weigh in is if you've got like a top top top level cert it may make someone pause for a second
+27:02
+clouds are back that i'm saying yeah for example oracle i would say you know
+27:09
+something like that otherwise i don't think it's worth i would never pay for a cert personally
+27:15
+right like or especially like a youtube cert or like a udemy cert like i've got a couple udemy search on mine
+27:20
+just to fill out the section but honestly i know no one's like oh he took a udemy course this guy
+27:25
+yeah i know something yeah no no but the only thing where i see traction because there's not enough saturation yet
+27:31
+is the cloud certs because i i think there there's not enough engineers out there
+27:36
+that are totally proficient they just kind of use it because they're they've been in the environment they really haven't dug into it so
+27:42
+you know if you can bring the azure certs especially azure i'm seeing a lot of aws fatigue right now
+27:48
+just just in the market you know i i think i think if you want to pursue especially if you're more on the
+27:53
+database engineering side of things um i i think everything's moving to the cloud i would look at that it's not a
+27:59
+waste of money for cloud certs um just my two cents on there on that side of things okay
+28:06
+and skills and endorsements now from your side how important is this
+28:12
+nah i mean i eyeball it to see like like if i don't know you i eyeball
+28:18
+it um to see maybe where your focus is but um
+28:27
+but here's another thing too right if you have over 100 endorsements on node i probably know
+28:32
+you're pretty good at node yeah so yeah i mean i mean or have a lot
+28:38
+of friends yeah exactly uh but for the most part no i'm not too concerned with that uh so what about
+28:46
+like recommendations does that matter at all as well yes so the recommendations is huge right so so that's what i was saying i think
+28:52
+recommendation is incredibly important it's an incred it's not talked about enough i think you have to have
+28:57
+recommendations at least one the more the better if i go to a developer's profile that i don't know
+29:03
+and you have 5 10 15 recommendations on linkedin like quite
+29:10
+frankly i hope my mom's not watching but like you're the [ __ ] i mean to be totally honest with you like especially because not many people
+29:17
+have it that if you have a ton of recommendations i'm like ah this guy or girl gets it
+29:23
+okay and what do you feel about the interest section do you actually go through that or no
+29:29
+okay see that's the way i felt the last hiring manager is like i actually looked through the interest interest uh one thing that she looks for
+29:37
+is are you actually following companies that are relevant and are you even following the company
+29:43
+i'm hiring for because if you are you just got yourself extra points without realizing
+29:49
+i guess i should take off my um fortran follower then yeah all right so we're done with this
+29:56
+profile well hey man great great profile man seriously i i think there's some tweaks but i
+30:01
+think uh i i think you're crushing it all right so on a scale of one to ten where are we rating don't do this man i
+30:07
+think a seven seven well here's other thing too is people have asked us to be brutally honest because
+30:12
+this is very valuable feedback for them and they're not gonna get anywhere else so it's a seven we got slight room for
+30:19
+improvement but i think we're i agree with you i think we're on the ball i would just add i would shorten this up a little bit
+30:24
+i love this though i just want to know what you do but see i see man danny's i argue with
+30:29
+you like what is that is that what you're working on is that what you want to work on like what are those souls i wouldn't yeah i wouldn't have it
+30:35
+exactly like this i would have it written out in actual conversation yes but i feel like this is he's written
+30:42
+everything to match the keyword but i would write out like in my current job i do uh javascript html css
+30:48
+and java and in my previous job i did ajax whatever it may be yeah yeah but i wouldn't write it out exactly like this
+30:55
+but now i will say in my resume uh and we could do a whole thing on that too but there's so much
+31:02
+just there's so much so i hate the uh like you know the summary that
+31:08
+people have in their resumes i don't like the summary so what i have done and you could be i could be wrong on this but i've listed
+31:15
+every language that i know and like that i work in and i'm proficient in and for me i felt like
+31:20
+this has helped me pass ats software a lot more than uh traditional applications
+31:26
+that works that's where my and and i'll share my um resume template for you to you danny
+31:32
+after this call um but i think um uh i i that's where my last bullet point of
+31:40
+every position you put a technologies used and that technologies use category is your full
+31:45
+tech stack from front to back and that usually gets you through the ats all right
+31:51
+so we're that's good to know because some people are like oh don't do that and some people like that you have to you
+31:57
+have to get you got to play the game all right so here we have todd appleby
+32:03
+he's from australia nice todd i want to make it down to australia i went to new zealand last year i need to go to
+32:08
+australia all right so no banner this is the generic brand from linkedin um
+32:14
+just looking at the uh he works at hp so uh working looking at this and the
+32:19
+only reason i know this i spoke to him the other day just looking at this first impressions what do we think
+32:25
+uh i'd like a little better picture um and something where you're smiling i i
+32:30
+think you're a good looking dude man like let's let's show those pearly whites and and let's make you know a little bit more warming a little warm
+32:38
+um you know because it's a dark moody again i'm just picking i mean you can leave that picture it'll be totally
+32:44
+fine i'm just you know providing some feedback yeah i would at the very least at least center it
+32:51
+yeah at least center but i get it man you want to be artistic you want to have that like left third i i get that i get it see
+32:58
+just say here's yeah exactly this is linkedin is not social media
+33:05
+linkedin is how do i make connections and network with people that brings value to the conversation you
+33:12
+never know where one conversation can lead to a six-figure job so why would you want to play with that
+33:17
+money trying to be artsy or unique yeah i i think it's just not made for this platform i wouldn't do that
+33:23
+personally yeah all right so we have his about section system administrator i.t engineering
+33:28
+data center maintenance what do we think um i like it
+33:36
+um i i think i need more keywords right systems you like windows you linux
+33:41
+um like what flavor of linux what type of engineering devops right data center give me some
+33:49
+more i don't know enough about data center keywords lan wayne rock i don't know um wireless network installation
+33:57
+i don't i'm i'm i don't search wireless network i search tools and technologies right so right here
+34:03
+you know again uh 15 plus years of overall systems administration
+34:08
+focused on linux with an emphasis in windows it engineering focused on python and
+34:15
+ruby for scripting um with an emphasis in aws cloud architecture data center installation with i don't
+34:22
+know any keywords with data center stuff um and then wireless network installation
+34:27
+experience with blah blah yeah personally i would just make this another two lines or so and just write it out
+34:34
+like you're not helping yourself here you're shooting yourself in the foot for no reason i would just add a little bit and make
+34:40
+it common speech like i did xyz basically what you were saying just add a little bit it doesn't need to
+34:45
+be long small and brief my my opinion is your about section should read in 15 seconds
+34:52
+i love that all right so we're at experience so these are obviously has a ton of
+34:58
+experience but uh no description of the job titles what do you think um
+35:04
+yeah so definitely want um you know technical solutions consultant
+35:12
+i need some buzzwords right i'm not i'm not searching technical solutions
+35:17
+and for for like like i'm not searching that right so what what is that is it a is it a
+35:22
+net architect is it is it a data center architect is it a linux architect is it what is that um i
+35:28
+think i need a summary right again three bullet points tell me what you do when i look at this like okay this guy
+35:34
+has it's more on the system side i i don't know what a technical solutions consultant is uh i'll message him see and i just come
+35:41
+up with no point a lot of people get mad at recruiters from messaging them about positions that don't make sense that's probably because
+35:46
+your profile doesn't help us right right hey man i you know listen
+35:52
+i i you know i i see you do some like cobalt stuff or no hey did you do cobalt because
+35:58
+because in that recruiter's mind systems made me in cobol yeah and it's like
+36:03
+no dude i don't do cobalt why'd you message me well i don't know because you just have systems i don't know what else you do
+36:10
+yeah i agree with that uh he has a lot of experience so that he
+36:15
+does a lot i feel bad well i mean it's it's it's not feel bad
+36:21
+because i told him pretty much the same thing that we're discussing now you've given no information on what you do so if i'm if i find you
+36:29
+keyword is if if i find you because you're not matching any of the keywords i'm looking for
+36:34
+so if i find you right i'm going to look at your experience saying well at least i know he knows something
+36:40
+right so now i can hit him with a general uh request to have a conversation i don't
+36:45
+know where the conversation is gonna go but at least it'll give me the opportunity to dig in more because it's not like he has a resume here either
+36:51
+it's just this so obviously when you go here it's just technical officer help desk that it's
+36:56
+just very general terms but at least i can reach out to them say well can we further go through this right here education uh
+37:05
+insert from vm uh i mean listen i like that right but
+37:11
+honestly i would put your licenses insert in the about section yeah right i'm vs something like this
+37:17
+yeah i'm vmware vsphere certified right because because if we find hey listen taylor i need a vm
+37:23
+vmware engineer with that vsphere cert right like like i need i need i need to
+37:30
+see that's top of your profile yeah all right endorsements
+37:35
+history courses and interest all right so overall what are we thinking overall i mean here's a deal right i
+37:42
+would still say seven out of ten i i think honestly maybe even six out of ten because there's just
+37:47
+no information around what what you do like i literally don't know what you do i i don't and that's not good
+37:54
+yeah don't don't hesitate to be brutally honest because they can take that however they want sure but the constructive criticism
+38:01
+instead of sugar coating it will help a lot of people because we've got some we got some profiles coming up but you know six out of 10. i chose some
+38:09
+for sure all right thank you todd i appreciate you being a part of that thank you todd don't hate me i love you
+38:14
+all right we've got daniel he's from ghana nice daniel same thing uh genetic
+38:20
+background from linkedin he listed himself as self-employed uh so what do we think off of here
+38:26
+so first off i can't see his face right right it's a whole body listen man great suit great tie your tie is hitting you
+38:33
+perfectly on the belt props to you on that that's very important but i can't see your face
+38:38
+so yeah so i love the photo i just wish it was zoomed in more same same again solid suit solid tie
+38:45
+i need to see your face all right and so now we'll go down here and it's straight into his experience
+38:51
+uh so here is so i'm really glad you picked this profile danny because i don't think okay first off so the title
+38:57
+aspiring friend and web developer one take out aspiring two what tech are you trying to go after you go after
+39:03
+angular you're gonna have to react view ember what are you going after like put that up there um so do that uh
+39:11
+i think so the self-employed so this is a fascinating thing and i'm glad you picked this profile because not many individuals know how to
+39:17
+notate their self-employment right and so here what i would do i'm
+39:23
+fine with you self-employed honestly hey say it i would just call yourself a consultant
+39:29
+right i don't know what it is i think it's just it's it's just my brain and how it works and i know
+39:34
+it's a lot of other people's brains too it's a consultant i.t consultant sounds better than self-employed
+39:40
+self-employed sounds like hey uh you know i've been like not really working i just call myself self-employed
+39:47
+to a consultant means you're actually doing work right and so i would put one i agree with that except
+39:53
+his description i'm a newbie in front end web dev right
+40:00
+but my thing is is it is he working on any projects right now that's my theory of no and again
+40:08
+this is all we have to go off of makes sense my impression was he's not working or doing anything
+40:14
+in web dev he's learning right now and so he put himself as a self-employed uh developer to get some experience
+40:21
+going yeah i so for me here so so that's the
+40:26
+case then i would then okay so then self-employed apprenticeship works
+40:32
+um what i would do is i would try to list any side project you have going on and if you dominate side projects start
+40:38
+asking right i think a lot of people are like where do i start i don't know anybody i say open up your phone book but it's
+40:45
+not your phone book like open up your contacts i mean i haven't even picked up a phone book forever but
+40:50
+open up the context on your phone and just scroll through right like hey so and so works for a church
+40:58
+uh hey do you like church always needs free help always and it's like hit him up or you need to
+41:04
+hit up like a local ymca or something like that like somebody needs a payment shopify
+41:10
+portal set up right volunteer your time and put that on your linkedin asap
+41:15
+i agree with that uh so and then we have his interest so we're lacking a lot
+41:23
+yeah i would i would say probably like four out of ten um you know four four yeah four out of
+41:29
+ten i i think you need to have more meat and kind of your your self-employed right i mean you've
+41:36
+been doing that for a year like what what have you been doing the last year i need to know that any
+41:41
+anybody needs to know that take out the aspirin get a better linkedin picture get a reference right get a
+41:47
+recommendation and uh you know again throw up a link to
+41:53
+your github or personal project right if you're an aspiring front and web developer i need to see some front-end ui
+42:01
+websites yeah for me personally the only one thing i would say uh put up some
+42:08
+content uh yeah let me ask you this because this is a good question that we just got because i was about to go on something i
+42:13
+said i don't know your opinion on this how good is it to put out content on linkedin like well here we go
+42:20
+you go ahead first and i'm going to go first because you're the king of this i really feel like i really feel like
+42:25
+i'm in the presence of a king right now in regards to content and so i feel like you need to answer
+42:30
+this question first my opinion is you need to put out content for several reasons
+42:37
+one that is going to help you get found by several people especially if you're showing things that
+42:42
+you've achieved things that you're strong things that you are like for example if you say like oh i just
+42:48
+finished this website and react well if a recruiter sees that they know
+42:53
+you've actually done something in react and now that gears them to check out your profile even if you weren't on
+42:59
+their list or on their radar that for me has been very strong and i also am a very firm
+43:05
+believer in i'm a big believer in this you to hook somebody you need to give them something
+43:12
+to be hooked by and here's a great example i'll give you haven't you ever
+43:17
+wanted to check out a new restaurant and you're like well what are the reviews on this place is this even good or is this a hole in the wall and you
+43:23
+find out they have a facebook page right and there's no likes there's nothing on these photos but they're posting
+43:29
+pictures of their food so now you know as you scroll oh well they got this dish they got dishes well
+43:34
+i don't really like lobster oh well they got steak oh they know there's no engagement on these posts but they know
+43:40
+someone someday somewhere is going to see it and i need to give them enough meat and potatoes to want to be interested in
+43:47
+finding out hey he's making me hungry i need to go eat now we're going to cut this store i'm going to go find some lobster rolls this mistake
+43:53
+well you know i i didn't get fat by accident i i know how to put some weight on some stuff but honestly that's my belief on
+44:01
+content you need to have enough that if a recruiter or a hiring manager finds your profile they look through a couple posts and see
+44:07
+things that you've done so for example on me uh for example the last
+44:12
+manager she's only known me for five days in that five days just casually scrolling through my profile
+44:17
+she's found out i speak at prisons that i've helped almost 70 people land jobs in tech that i've spoken at google things like that and just a couple posts
+44:24
+and she's now realized okay i need to know this person now i'm not saying everyone's going to have something like that where they
+44:30
+could say oh i spoke at a prison or spoke whatever but they can have like oh i spearheaded a project at work or i helped this
+44:36
+initiative you know make sense or i help bring these customers on board whatever achievement it is
+44:42
+post it yeah linkedin is a place think about it as if you're trying to make a dating profile but it's for a job
+44:48
+like what can i show the best style of myself to get that person to be interested in
+44:54
+me so good yeah i think i think many reasons one and and if you
+44:59
+guys want to check out i have my own podcast guidance counselor 2.0 and i have another podcast with two
+45:05
+of my buddies from raleigh and tampa uh unicorn the unicorn finders um and we actually we actually gave a
+45:13
+presentation on personal brand um at vaco's global conference
+45:18
+back in october when we used to travel those were the days and um and i'm really passionate about
+45:25
+and people like ah personal brand i hear it right personal brand is just your reputation right what is your reputation and what
+45:30
+are you putting out on the market and for me like this is the very first time i've ever met danny but i knew danny was an incredible
+45:36
+individual who is big on positivity and helping others and the only way i knew that is because the content he's put out
+45:42
+and then lo and behold we're 45 minutes into this and we're gelling and the reason for at least a hopper gelling but and but the reason for that
+45:50
+is because i knew because of his content so you absolutely need to be putting out
+45:55
+content and i talk about this the national software school for me i put out a post about hacking linkedin
+46:00
+i think every job seeker should do their first interview on video and put it on linkedin
+46:05
+because here's the deal job interviews the first interview is like tell me who you are tell me about yourself some of my
+46:11
+favorite hobbies tell me your most successful time tell me about a time you've been in turmoil or conflict
+46:17
+and how did you figure it out what are you working on now i think you should do a mock interview with yourself with your camera selfie style
+46:24
+20 15 20 minutes post on linkedin and just do that once a month the same video once
+46:29
+a month because i will tell you this the organic reach on linkedin if danny so if i like one of danny's posts
+46:35
+my five thousand followers see danny's post all five well five thousand of the ones that are on linkedin at the time yeah
+46:41
+right people don't understand that so you're you're able to cover so much more ground
+46:47
+as a job seeker because more people are seeing your information so i i couldn't be more passionate about putting content out linkedin
+46:54
+i i yeah i mean uh and here's the other thing too it
+46:59
+doesn't cost anything like yeah it literally costs you nothing it's free why not do it like that's right and a lot of
+47:06
+people get caught up in well people aren't liking it people aren't viewing it sure put it out there when i when i created my linkedin
+47:12
+profile i literally worked at a gas station yeah so
+47:18
+my background in case you don't know and for the viewers i was a professional chicken fryer like
+47:24
+i fried chicken and gas stations and yeah i did that for 10 years
+47:30
+and so i went to a meetup and i asked the same question everybody asked at a meet-up how do you get the first job in
+47:35
+tech and you have the exact same answer over and over again like a broken record oh man it's so hard
+47:42
+it's so hard but if you get that first job every job after that it's easy it's so easy i thought that
+47:49
+was the worst answer someone could tell me because not only did you demotivate and demoralize me you've given me zero action items to work on
+47:55
+but then i quickly realized everybody else at the meetup heard the exact same answer
+48:00
+no one knew how to break in and i realized okay i'm a loud mouth person i'm willing
+48:07
+to go talk as much as i need to in order to build this network of hiring managers
+48:13
+and recruiters so i literally started cold messaging cold emailing and cold uh talking to people that never met me before and at
+48:19
+that time they're like who is this danny guy and now they're like oh i knew danny from the beginning but
+48:25
+you know now i've given them a reason to know me whereas before i was reaching out and this leads me to
+48:32
+uh a question right now that we're gonna ask i'm gonna reword this question though but do i'm a big believer in i don't
+48:40
+like filling out applications and the before i turn accepted my job in tech i turned down
+48:46
+six jobs and i've helped countless people i'm not really big on applications i
+48:52
+truly believe one conversation can lead you anywhere right so i'm a big believer in network network
+48:58
+network how do you feel about that do you think someone needs to spend all their time doing applications or do you think networking can be great
+49:05
+i'll tell you what man i just just kindred spirits i'm so glad we connected i'm i'm big on this i think you should
+49:12
+stop what you're doing now st and stop what you're doing now listen to us and then after you listen to us
+49:18
+stop submitting your resume to job postings period and here and people like oh crap well
+49:25
+then what do i do a few things first off really leverage recruiters right you need to be
+49:30
+interviewing recruiters like you interview for jobs find yourself three to four of us and
+49:37
+again i have these videos on youtube you can check them out let me get more details but basically interview recruiters like you interview
+49:43
+clients after that let them go to work for you then what you do is if you see a company that has a job posting up
+49:49
+let's say acme widget company admin widget company has a job up for junior developer immediately go into linkedin go to the
+49:55
+search bar type in acme widget company press enter there's going to be let's say 300 people pop up
+50:01
+go to the search feature it's very simple go to search feature on linkedin for the specific city you're in
+50:07
+so nashville for me next time whenever we can travel now i'm coming to memphis we're hanging out but um but basically um
+50:15
+search it search the people and start dming people
+50:21
+at the company acme widget company every developer hey so and so i saw you have a job posting up like who
+50:26
+do i need to talk to well actually daryl is actually the hiring manager i i'm actually on his team
+50:32
+how about just go ahead and introduce you all okay that'd be great hey daryl introduction's done you have a phone
+50:37
+call boom and he'll now he may say hey i need you to submit your resume that's fine sometimes right and this is one of the
+50:44
+things i break down on my podcast unicorn finders but you know sometimes you have to go
+50:49
+through the process sometimes companies have vms's or ats's applicant tracking systems or vendor management systems in
+50:55
+place you have to play the game a little bit but try to always make human connection
+51:02
+i and the thing about that like oh god i i can't talk all day about this
+51:08
+i know the same like what i do but it's so true and what's funny is you know i posted about this the other
+51:14
+day on twitter and i had so many people saying oh don't message a hiring manager don't
+51:20
+message a recruiter what are you talking about but i think what's important is your opening message shouldn't be hey
+51:27
+how you doing because nobody's replying to that you need to go
+51:32
+in with a specific purpose and outline it and one thing i do like for example i
+51:38
+like knowing hiring managers because maybe i'm not looking for a job with them today but i want to leave that door open and i
+51:45
+want a network so when i look for a job i'm not depending on one person i'm reaching out to 150. yeah so
+51:53
+for me i started messaging hiring managers and i'm like oh i'm big on volunteering i see that you also volunteered at the
+52:00
+mission down in downtown memphis for the homeless shelter what did you think about your experience there i haven't
+52:06
+volunteered at that particular place do you think that place is better than this i've given them a question they're going
+52:11
+to reply they realize that we're like-minded and that we're enjoying the same thing
+52:17
+so outside of professionalism maybe this is a chance for us to bring our power together and work at the same place as a
+52:23
+volunteer yeah i mean i i i don't be creepy right like don't hey
+52:29
+like i get a lot of haze hey i don't pay that's weird right so like hey like look
+52:35
+at their interest hey i you know i see i see you went to the university of south carolina right so did i like how
+52:40
+about the gamecocks this year right i can talk gamecock football for an entire afternoon and so but it's like find something on
+52:47
+their profile that connects you with them and start the conversation there and then we started talking about my other podcast
+52:53
+about like having empathy in the job search right like if you get rejected the hiring manager
+53:00
+goes hey listen like you're not a fit hey you know what thank you for speaking with me i really really
+53:06
+appreciate it right because i will tell you this a lot of times in this market usually people's first choices go
+53:12
+somewhere else and so if you're their second choice and you don't burn the place down after you get rejected you're you're going to
+53:18
+get a pretty good look next time all right let's jump on the road profiles because you know i got a hard
+53:24
+stop and i got a for those of you that are following if you want to jump into a meet-up after this i'm doing a meet-up in new york
+53:31
+group of people so we got raul here we got web ui ux designer uh this is the
+53:37
+first look what do we think about this um think twice code once love that i
+53:42
+mean sure right i'm all about some motivation headline stuff uh great profile pic very suave love the haircut i wish i
+53:49
+could pull that off my hair is too thin great head of hair props to you um you know web ui ux designer
+53:55
+javascript programmer uh yeah like it um you know i
+54:00
+what what type of javascript right i'm a lowly recruiter but i also know there's many you know different frameworks within the
+54:05
+javascript ecosystem so you know are you working on view i mean what are you working on right now but
+54:11
+overall i dig it i dig it all right here's the about section
+54:18
+i can zoom in somewhere now you're fine i have my contacts in i usually wear glasses uh and so like they're a little dry
+54:24
+right now so i apologize to everybody i feel like a crazy person um second year information management
+54:30
+i'm not going to read all that no you're good i got it yeah i mean it looks good i mean i i like it i know exactly where he's at
+54:36
+right he's a second year information management person he's been doing ui ux design i dig it specialties jam stack you know
+54:42
+i like it i think this is a decent about section again if
+54:48
+you have any projects this is where i would want to see it right like like again if you're anything front
+54:54
+end ui ux your profile needs to be littered with either examples or portfolios or testimonies
+55:03
+hey you know so-and-so yeah so-and-so came in and redid my you
+55:10
+know ui ux and increased click through by a thousand percent
+55:15
+all right featured it's no i t i don't know why that's there yeah i would fix that asap i would i
+55:22
+would featured i did this is where i would have portfolios or any sort of uh project experience
+55:27
+there yeah again this is the most valuable piece of real estate
+55:32
+profile education he's currently in college for his bachelor's it looks like or he graduated
+55:37
+and started in 2018. they started graduate see i think that means you graduate we need we need information there because
+55:44
+we don't know if you're still in school exactly graduated yeah so i would definitely
+55:50
+go on that a little bit uh so he has education but he has no job experience he looks like or if he does he hasn't listed anything
+55:56
+right i mean i would i would still say so again the way i'm grading this right 10 out of 10 absolutely call 5 out of 10
+56:02
+i'm probably going to pass on you anything north of 5 out of 10. i'm probably going to call you this guy's probably 5 out of 10 i'm probably not
+56:07
+going to call you um i don't have enough information i don't have time to message you and try to get all this information from you
+56:13
+yeah there's there's literally not enough information to make any determination nope uh so raul i hope uh thank you for
+56:19
+being a part of this and i hope this is constructive criticism to help you out with this yes all right so i'm gonna throw my profile
+56:27
+into this oh no you're not no you're not so i did this the same for the last video
+56:34
+uh it's basically because uh i think in my opinion that this is a pretty good profile it gets a lot of
+56:40
+traction and so you know if and i love feedback so if there's things i could work on i definitely want to work on it
+56:45
+yeah so now to give you information i had to remove uh this used to have my phone number on
+56:52
+there i had to remove that because the internet and i had to remove my company information because
+56:58
+the internet people were literally contacting my company and saying yeah i know danny uh let me get a job there
+57:04
+and no way yeah it's the internet you know that comes with twitter well i mean it's twitter man you
+57:11
+know people turn around yeah but uh that's not a challenge by the way
+57:17
+please don't go out there trying to find out where i work oh yeah uh but uh first impressions off
+57:22
+of this what do we think yeah i mean yeah i i like i you know i love the header right i know
+57:29
+canvas kind of a an app that that's gaining some traction i didn't know about until recently i'm kind of late to that train but yeah that
+57:34
+was cool yeah i mean so i love so right so right now if i so i didn't know danny started you know
+57:41
+before four o'clock central today and i knew he was in memphis i knew that he was really active because
+57:48
+in the community memphis chapter founder um i don't know what gdg means i i don't know
+57:54
+if there's a way to expound on that and or just summarize that would be google
+57:59
+developers group but that's so long it would take up all the real estate that makes sense but if you just google
+58:04
+gdg memphis we're the first thing that pops up okay kind of want to have it like that um and then you know he has his website
+58:11
+love that email to contact him literally first initial and again right i love this you know my
+58:17
+thing is software engineer like danny i would love like what what are you programming the most net java
+58:23
+yeah uh so i'm a java developer so it really it said software engineer uh java developer at this company but
+58:30
+once i removed that title i just kind of just removed everything yeah other than that i mean it's fine again you're not once i start looking for a
+58:36
+job again i'll fix it correct correct correct all right so we got that now my about section uh
+58:44
+experience founder we're demonstrating this we're working uh skilled in uh negotiations honestly
+58:50
+if i were you i would put like have helped 70 people get jobs um
+58:55
+you know really active in local chapter stuff with google dev maybe this is where you expound on what gdg means um
+59:02
+you know really kind of hit some high points that are very attractive to you know
+59:08
+because again i'm sure you're wanting to speak as well um with all these events all over the world right so i mean you know again i mean
+59:15
+you know we all submit our we all submit our profiles to pay-per-call or whatever right so again that's where i would have it right
+59:21
+i've spoken at google um part of the google dev you know community in memphis
+59:27
+um i've helped over 70 people get jobs over the last year like that's where i would probably put some
+59:32
+of that good juicy information right there see that's what i do with my featured section so
+59:38
+look at that look at that is when i was a speaker at google and i was speaking to their employees
+59:43
+this is when i spoke at a prison then i have this post where i i'm a big morning
+59:49
+person i hate mornings i really hate them but i know what i can achieve by waking up in the morning
+59:55
+so i wake up at 4am daily not because i like to or because it's cool but that's my time because my house sleeps
+1:00:02
+until seven so from four a.m to seven that is a time where i work on myself i'm a big
+1:00:08
+believer in to be successful in life work at your job
+1:00:13
+but work harder on yourself because your job is giving you a specific task to do something whereas when you work on
+1:00:20
+yourself that's when you're building your value because a job can tell me what they're going to pay me but they don't tell me
+1:00:26
+what i'm worth so for me i i believe in quantifying and building my worth and the time that i allocate to myself
+1:00:33
+so that's why i do that then i have this where i've been able to talk
+1:00:39
+then my stupid dance thing that people like i did there i put that there as well but for the
+1:00:44
+most part this is what you see uh and i feel like that's working the valuables yeah
+1:00:50
+and i believe this is my what i call quote unquote convert in section because once you see this i've
+1:00:55
+already peaked your interest of like all right he spoke at a prison he spoke what's going on here i love it uh i love
+1:01:00
+it and then um we got the i end up in 515 searches look at that views man look at
+1:01:06
+them views that's what i'm talking about right well that's why i say this because i know like it's bringing i think people
+1:01:12
+need this one look at mine i'm gonna feel very insecure here hold on
+1:01:17
+i don't show that to be braggadocios we just went over i'm sorry danny's like 3x me so there's that that
+1:01:24
+makes me feel great all right good job danny uh and then here yeah i mean obviously
+1:01:30
+you're trying to keep your company private i mean again right i'd probably say i would want to see you know what does your company do at a high level what are
+1:01:35
+you doing at a high level what tech you're using etc etc but again they're trying to keep that locked down
+1:01:41
+yeah so for me what i did here uh and this is why i kind of mentioned this to
+1:01:46
+people i had no experience in tech and i was coming from gas stations i would show up to job interviews
+1:01:51
+smelling like chicken i needed to give them a reason to consider me so what i did was i volunteered at a meetup group
+1:02:00
+and i used that experience of that volunteering with that meetup group uh here so the first meetup group i
+1:02:06
+worked with was called code connector and i was a leader so i put that there to be at least to show them
+1:02:12
+something that i'm passionate about tech and i'm interested i'm actively working towards it uh and i'm a big person that believes in
+1:02:18
+volunteering so this kind of lined up with that and then i show that so that was my goal
+1:02:24
+to kind of um get them interested in what i was doing what are your thoughts on this is that a bad idea i love it
+1:02:31
+looks good and so then we'll go down here so i got my certs and then i've got you know where i
+1:02:36
+worked at uh uh not work but volunteered at a food mission law fit all that good stuff and the
+1:02:42
+reason why i'm very big on volunteering is number one
+1:02:47
+you're helping your community why wouldn't you want to number two you're networking when you're
+1:02:53
+there because people that volunteer they're not all like homeless people aren't volunteering for homeless people
+1:02:58
+people with jobs are volunteering to help homeless people so if they've got jobs you're networking with other people
+1:03:04
+that are doing that but number three if you volunteer that's on your resume for 20 years like
+1:03:09
+it doesn't matter right why don't you volunteer for a couple of you know weeks and then throw it on the resume so you're helping
+1:03:16
+literally three sections of people you're helping the people you volunteer with you're helping your community helping yourself like there's nothing you could do in
+1:03:22
+this universe that will help everyone and make you look good at the same time
+1:03:28
+so dangerous and then i have my endorsements i have my
+1:03:34
+recommendations i love it i don't know i got the languages and the interest so overall what are we thinking
+1:03:40
+i listen i'd call you i i'd say i'd say 10 out of 10 9 out of 10. that works all right
+1:03:47
+uh we've got a couple people uh don't you don't you need to go we can do this again well uh
+1:03:54
+we've we've only got two more profiles i want to jump on real fast all right so we got this one real fast
+1:04:00
+so this is nabil parker uh freelance flutter developer from india what are we thinking uh nabil
+1:04:08
+um let's let's get a little bit more of a professional headshot it looks like you kind of just woke up maybe um other than that you got great
+1:04:16
+hair hanging if you can pull that yeah the towel hanging yeah so let's get a professional picture
+1:04:21
+selfie it up again don't have to be super nice but just not maybe in a bathroom or wherever you're at
+1:04:26
+um freelance flutter developer i like that you have the keyword flutter i know that's the thing i would also add mobile
+1:04:32
+right because you want to encompass more because i know people are are open to calling people who don't
+1:04:38
+have flutter for mobile gigs who want to get into flutter right and so i would maybe say freelance
+1:04:44
+flutter slash mobile developer the about section about looks good
+1:04:52
+some other skills javascript python but my main focus is fluttering dart i love that he put his main focus
+1:04:57
+also what he can do i dig it that's good it's short i read it i didn't get distracted because it wasn't long
+1:05:03
+and then so we we definitely skipped our whole featured section which i would suggest but uh freelancing yeah i mean if you're
+1:05:09
+mobile your mobile holy cow like you need to have some featured if you've done
+1:05:14
+like a calculator app and flutter that needs to be featured uh
+1:05:20
+no descriptions or anything what do we think about that again i need descriptions right i mean if you're freelance
+1:05:26
+to me that means you are getting on you have projects going on but if you have no
+1:05:31
+projects going on i i don't know what's worse people calling themselves freelance that have no
+1:05:36
+projects or people who have projects and don't portray them correctly
+1:05:43
+yeah i'll quickly explain for me my four steps to getting a job in tech or to getting clients or whatever it may
+1:05:50
+be you got to have a badass linkedin profile there's no way around it you need to have a great portfolio site
+1:05:56
+you need to have great portfolio items you have to have the resume obviously but uh the portfolio site needs to be
+1:06:03
+attractive to non-technical people because majority of hiring managers know
+1:06:09
+nothing about development they're not looking at the code but if it can be pleasing to the eye now
+1:06:14
+they're like oh this is someone this looks decent i should give them a call your portfolio items need to be very
+1:06:22
+tech heavy because those are what the managers are looking at to see your level in the code so now
+1:06:28
+they're like going through the code base they're checking out your github but in order to get to that stage you
+1:06:34
+need to impress the person that knows nothing about tech and to do that to get them to get to your portfolio site
+1:06:40
+you got to get them on linkedin and show them what you can do yeah and then we talk about marketing
+1:06:46
+and top of the funnel versus bottom of the funnel and trying to get people through that's a whole nother conversation but
+1:06:51
+danny danny just spits some truth so i'm i agree with him on that can you answer the first question asked
+1:06:57
+what is the first question i don't know what's the first question uh first question get a better picture
+1:07:02
+no they asked in the chat can you answer the first question asked what is the first question asked i
+1:07:08
+i don't know the first question asked i think we i think we hit up the i think the first thing was shot what about it i
+1:07:14
+think i think at least at least that's how i'm referring to it all right so uh we've got this one right here sweet
+1:07:21
+five out of ten let's let's get some again mobile ui ux if you're front end facing consumer
+1:07:28
+facing i need to have some portfolio work in there all right so we've got aksha jane uh
+1:07:34
+he's from india software engineer intern at whatever student developer at whatever
+1:07:39
+and full stack developer yeah so again no keywords here right i i don't know like if i look at this i
+1:07:45
+i don't know what language you specialize in or want to specialize in but great headshot though what do you
+1:07:51
+think about this background i mean it is what it is it it's just a lot but it doesn't it doesn't
+1:07:57
+i don't know the whole header thing is just kind of math for me in general but but but i think i think if you're going to do a header i think to really
+1:08:04
+bump your profiles do do what danny did right like have all the ways to to connect with you in
+1:08:09
+in that header i think that's big you don't have to do that but i would say for me the only thing
+1:08:16
+i'll say this is so messy here that i'm not noticing this i would i
+1:08:21
+would change the image personally but i mean you do whatever you want different strokes are different folks
+1:08:26
+all right we've got the about section what do we think
+1:08:33
+again i still don't i don't see any specific tech right i have a strong development skills in javascript
+1:08:39
+and related full stack development that doesn't mean anything to me there's full stack development in a ton of different languages right give me
+1:08:44
+specifics um so
+1:08:49
+you know again but make it short right as you know currently in college targeting javascript opportunities
+1:08:57
+currently working on a school project all right and so we have our feature set here we go here we go his resume and then his
+1:09:04
+github github's great love the github if you have any side projects put put them here but this is good i
+1:09:10
+think what this is one of the few profiles aside from yours that have leveraged the featured section the way it should
+1:09:15
+be so props now here's one thing i will say i like the way your featured section
+1:09:20
+looks one thing i would change i and this could be just me but i think
+1:09:26
+there are a million places you could put your resume on your profile i wouldn't put it in this section
+1:09:31
+instead i would show something that you've done that will get views like did you make a
+1:09:36
+website did you make it whatever it may be i would put that there instead and i'd put your resume right on like here and of course you
+1:09:43
+have nothing explaining your current position so i would what do you think about the uh
+1:09:49
+yeah i mean listen if you're an intern if you're doing any intern work any free work you need to write as like i
+1:09:57
+breathed 17 times in an hour while coding react like it needs to get
+1:10:02
+so granular because it is your one position to get you in the door somewhere else i would be just ocd when it comes to
+1:10:11
+documenting everything you've done in your internship so he asks what do you what do the guys
+1:10:16
+with little to no project show make their linkedin profile stand out like mine i'm a freelancer with unfinished projects
+1:10:22
+but we will finish in a few months dude i think right now with the platforms like twitch like i
+1:10:29
+think you're streaming on stream yard that we're streaming on like i think if i were you i would
+1:10:36
+live record yourself working on your projects and posting them because again i'm not a
+1:10:44
+developer but recruiting engineers for last six seven years i know hiring managers want to know how
+1:10:50
+you came about a problem and solved it more than anything else and so if you can there is no right now
+1:10:56
+everyone's sitting at home everyone's got zoom everyone's got video document yourself out loud right talk through how you are
+1:11:04
+coding things and put it up on you like them i also i'm just skimming through because i
+1:11:10
+don't want us to kill too much time so your volunteer experience i love it uh you did this perfectly uh definitely keep up with that skills
+1:11:17
+endorsements your courses i would your projects is great yeah and your interest so overall what
+1:11:24
+are we rating this profile here i mean i would i i would say i would say it's a 6 out of 10. like
+1:11:30
+i think this gets you in the door i think your profile gets you in the door for sure but i definitely need some more information
+1:11:35
+all right we got uh kecka lee and he's from connecticut nice first off love the header it's
+1:11:41
+really pretty i love that so do i actually that was the first thing i said yeah really cool great head shot too man
+1:11:46
+smiling look happy i want to be your friend that yeah perfect uh we're looking at
+1:11:52
+the about section um
+1:11:59
+yeah i dig it you know all i see is embedded um but you know you know you're you're full
+1:12:06
+stack right what is full again what is full stack get descriptive for me
+1:12:12
+yeah i would have the the keywords like what do you know what are you working on yeah so we've jumped straight into
+1:12:18
+the experience so i'm guessing by the lack of activity as well you've never made a post
+1:12:23
+so i would kind of uh look at that all right so experience yeah so here
+1:12:31
+um again i want to know since this isn't so assembly tech if it's not
+1:12:36
+specifically development i want to know stuff that i can understand
+1:12:41
+right i don't know what like as i say routing sheets i feel like i'm in an eye doctor appointment because i need to put
+1:12:47
+my glasses on but like like i don't know i i don't know what those are
+1:12:52
+i don't know what you know what is continuous improvement look for the company like get write your profile
+1:12:59
+the way that you would describe it to your parents i i don't know how else to say it better
+1:13:04
+but like if the way because recruiters aren't like we're not technical
+1:13:10
+right if you can write your profile like hey i help assembly technicians they work on
+1:13:16
+the carpet that are installed in churches and what i do is i go in and i help them
+1:13:23
+increase sending out 15 loads of trucks of carpet to churches a week
+1:13:28
+to 25 loads of truck of trucks of carpets per week right like for me that's so much easier
+1:13:34
+to understand than apply information from blueprints routing sheets mil specs and verbal
+1:13:40
+instructions to complete assemblies what does that mean i have no idea what that means
+1:13:46
+i agree thanks man uh all right and so he was an office
+1:13:52
+assistant at the university which is awesome he was an intern which is awesome uh i have a question for you do you
+1:13:58
+think it is important for someone to list every job that they've ever had or do you think like they should um they
+1:14:05
+can limit certain positions if it has nothing to do with anything yeah i think i think limit i think especially for
+1:14:10
+junior folks and then getting out of college i think you need i i i think you need obviously your
+1:14:17
+internships and i think you need because i want to see if you're involved in college or not um
+1:14:23
+[Music] but i wouldn't like go back to like you know your senior year in high school
+1:14:28
+right all right and we got the uni uh education university then we got the skills and endorsements
+1:14:35
+uh you know for me if if you're if you're coming out of college i would and you're
+1:14:40
+in and get a technical degree i would put that in your head or on your linkedin like like bs degree in engineering
+1:14:49
+all right and then we have our interest so uh i i need a reference from this guy on
+1:14:56
+his on his internship definitely get a reference or two from your internship um but i this this profile gets in the door six
+1:15:03
+out of ten yeah and i would say definitely post a couple things like of
+1:15:08
+things that you've accomplished so you can have your activity feed but also your featured section because you've never made a post as of yet
+1:15:14
+so you're not showing up on anything i i would fix that and our very last profile that we're doing
+1:15:19
+uh this is karen oza what are we thinking so far he's from
+1:15:26
+india uh you know i'm fine with the header it's fine i mean you know i would i would
+1:15:31
+maybe put your email up there so i can reach out to you quickly um you know profile maybe give me a smile
+1:15:39
+right um but i dig it professional looking i can see your face which is good um front end developer again what type
+1:15:45
+of front end right are we more designed more development if we're development are we you know what languages
+1:15:52
+all right people just are missing out too much on the title i i think that's the most underrated thing that no one
+1:15:57
+talks about uh and the thing for me is and i think
+1:16:03
+maybe it's because i've had the insight where i got to mess with some tools that veiko has so
+1:16:08
+like uh searching for people i realized if you've got your language here that's the first thing that they're popping up
+1:16:14
+on that dice app and things like that so well i'm actually speaking at coda palooza next month um
+1:16:20
+and virtually and literally all i'm doing one session is i'm breaking down the back end of
+1:16:27
+what recruiters see so people can make their profiles look good all right so this is the about section
+1:16:33
+what do you think about this okay so there we go angular so you're targeting angular you should put that in the title
+1:16:39
+um honestly don't mind this um i know exactly how do you feel about emojis i don't mind it's different i
+1:16:46
+mean how many people use it i'm fine i mean literally so if i didn't i don't know
+1:16:51
+karen from anybody else and for me i know exactly what he's looking for by this angular typescript bootstrap css html
+1:17:00
+and responsive websites i got it that makes sense i get what he does so perfect
+1:17:06
+all right and then we have our featured section youngest member uh of a newsletter team that's pretty
+1:17:11
+cool that's pretty cool good accomplishment and he's got his resume there personally i'll put that resume somewhere else but otherwise this
+1:17:18
+looks great all right we're at experience so this is an internship
+1:17:24
+uh eight month internship and the style works for recipe api and all
+1:17:30
+that good stuff that's cool uh that's the only job he's ever had what do you think um
+1:17:35
+yeah it looks good um you know again i again the big thing is i want to know
+1:17:41
+more about um you know what you've done at a high
+1:17:46
+level right so like what is like what projects are you working on in layman's terms
+1:17:52
+and what tools you're using in those projects um but aside from that
+1:17:58
+i like it it's not bad i i know the tech you're using i just want more of like the non-technical stuff like
+1:18:05
+actual achievements like you've done something if you were
+1:18:10
+there for eight months you did something correct was it correct i wasn't just working in rest api like
+1:18:15
+you built something you achieved something there's something quantitative that you did in order to receive a paycheck what the
+1:18:22
+hell was it that's what you need to put right there and we've got your education uh
+1:18:27
+and he and see you did that here like you volunteered you managed promotions like you need to use this
+1:18:36
+yeah like this is the kind of thing that we're looking for you need to put that same idea with this
+1:18:42
+in your about section i like it so this is great uh skills endorsements angular web developer javascript
+1:18:48
+here i'll give you one there you go boom
+1:18:54
+danny there you go look at that all right what a guy i got oh my god project's going on
+1:19:00
+and we've got the interest so i mean i i say i know this just got him a job yeah i
+1:19:05
+mean six and a half seven out of ten i mean i i think your portfolio gave a little more achievables i think you can get a recommendation you know if
+1:19:12
+you're doing web design stuff or you know um you know responsive website that needs to go on your featured any projects or whatnot so
+1:19:19
+yeah again six and a half seven this is probably one of the better better profiles that i've looked at yeah i i agree this
+1:19:25
+is definitely a very good profile uh just a couple things to work on but otherwise this is great and i don't see
+1:19:31
+this stopping you from getting a job i did just some tweaks here and there will have you exactly where you need to be
+1:19:37
+all right i love it all right so i thank everyone for being here with us several of you have
+1:19:44
+been here for the whole hour and twenty remember at the beginning of this call where i said hey crazy man i was just gonna hang on here
+1:19:50
+for like 20 minutes and we were gonna part ways but yeah as soon as we started chat i knew that wasn't gonna happen
+1:19:56
+yeah no i genuinely enjoyed this conversation taylor and uh i think we hit on everything that we
+1:20:01
+needed to hit on great i i actually don't mind if we do this again i think there's a lot more that we
+1:20:07
+could cover and especially if uh because i've got several resumes but it has personal information i want to take that out but then we can go over
+1:20:14
+some resumes and things like that huge i think it's huge okay perfect uh thank you all for being
+1:20:19
+here with us please please please check out taylor on twitter uh linkedin eharmony
+1:20:26
+and anywhere else that we can get you follow taylor he's got his podcast he's got his youtube channel check him out um i'm definitely going to
+1:20:32
+have him on again for sure and i'm probably going to get him on an episode of my podcast as well we need to
+1:20:38
+get that on there so um if you need any of us please check us out thank you for being here with us and
+1:20:43
+reach out to us on twitter yeah thank you thank you thank you i'm ending the broadcast

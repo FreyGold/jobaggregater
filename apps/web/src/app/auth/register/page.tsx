@@ -4,15 +4,19 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { createMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Sign Up — JobAgg',
-};
+export const metadata = createMetadata({
+  title: 'Sign Up',
+  description: 'Create a JobAgg account to save jobs and track applications.',
+  path: '/auth/register',
+  noIndex: true,
+});
 
 export default function RegisterPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
-      <div className="w-full max-w-md   border border-border bg-card p-8">
+      <div className="w-full max-w-md rounded-xl border border-border bg-card p-8">
         <h1 className="text-2xl font-bold text-foreground">Create your account</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Join JobAgg to save jobs, set alerts, and track your applications.

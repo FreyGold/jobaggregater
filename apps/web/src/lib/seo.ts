@@ -1,15 +1,20 @@
 import type { Metadata } from 'next';
 
 const SITE_NAME = 'JobAgg';
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://nimble-buttercream-897ec0.netlify.app';
+const DEFAULT_SITE_URL = 'https://nimble-buttercream-897ec0.netlify.app';
+
+export function getSiteUrl() {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || DEFAULT_SITE_URL;
+  return raw.endsWith('/') ? raw.slice(0, -1) : raw;
+}
 
 export function absoluteUrl(path: string) {
-  if (!path) return SITE_URL;
+  const siteUrl = getSiteUrl();
+  if (!path) return siteUrl;
   try {
-    return new URL(path, SITE_URL).toString();
+    return new URL(path, siteUrl).toString();
   } catch {
-    return SITE_URL;
+    return siteUrl;
   }
 }
 
@@ -20,15 +25,16 @@ export function createMetadata(input: {
   noIndex?: boolean;
   image?: string;
 }): Metadata {
+  const siteUrl = getSiteUrl();
   const url = absoluteUrl(input.path ?? '/');
-  const ogImage = absoluteUrl(input.image ?? '/og.png');
+  const ogImage = absoluteUrl(input.image ?? '/opengraph-image');
 
   const title = input.title.includes(SITE_NAME) ? input.title : `${input.title} | ${SITE_NAME}`;
 
   return {
     title,
     description: input.description,
-    metadataBase: new URL(SITE_URL),
+    metadataBase: new URL(siteUrl),
     alternates: {
       canonical: url,
     },
