@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useMemo, Suspense, useCallback } from 'react';
+import { useMemo, Suspense, useCallback, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { JobFilters } from '@jobagg/shared';
 import { useJobs, useSaveJob, useSavedJobs } from '@/hooks/use-jobs';
@@ -15,16 +15,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { LayoutList, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-/**
- * Returns an ISO string for 24 hours ago from now.
- * e.g. if it's 3:30 PM, returns yesterday at 3:30 PM
- */
-function getLast24HoursISO(): string {
-  const now = new Date();
-  const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  return twentyFourHoursAgo.toISOString();
-}
-
 type TabValue = 'all' | 'today';
 
 // ─── Premium Tab Switcher ─────────────────────────────────────────
@@ -35,10 +25,18 @@ function PremiumTabSwitcher({
   value: TabValue;
   onChange: (v: TabValue) => void;
 }) {
+  const [pressedTab, setPressedTab] = useState<TabValue | null>(null);
+
   const tabs = [
     { id: 'all' as const, label: 'All Jobs', icon: LayoutList },
     { id: 'today' as const, label: "Today's Jobs", icon: Sparkles },
   ];
+
+  const handlePress = (id: TabValue) => {
+    setPressedTab(id);
+    onChange(id);
+    setTimeout(() => setPressedTab(null), 200);
+  };
 
   return (
     <div className="relative flex w-fit items-center p-1 bg-muted/40 backdrop-blur-md rounded-2xl border border-border/50 shadow-inner group">
@@ -54,9 +52,10 @@ function PremiumTabSwitcher({
         <button
           key={id}
           type="button"
-          onClick={() => onChange(id)}
+          onClick={() => handlePress(id)}
           className={cn(
-            "relative z-10 flex min-w-[140px] items-center justify-center gap-2.5 py-2.5 px-6 text-sm font-semibold transition-all duration-200 rounded-xl",
+            "relative z-10 flex min-w-[140px] items-center justify-center gap-2.5 py-2.5 px-6 text-sm font-semibold transition-all duration-150 rounded-xl",
+            pressedTab === id ? "scale-95" : "scale-100",
             value === id 
               ? "text-foreground" 
               : "text-muted-foreground hover:text-foreground/80 hover:bg-white/5"
@@ -100,13 +99,25 @@ function JobsPageContent() {
           : searchParams.get('arabOnly') === 'false'
             ? false
             : undefined,
-      // If today tab is active, override with last 24 hours
-      dateFrom: activeTab === 'today' ? getLast24HoursISO() : (searchParams.get('dateFrom') ?? undefined),
+      // Don't calculate dateFrom here anymore - let the backend handle tab=today
+      dateFrom: searchParams.get('dateFrom') ?? undefined,
       page: parseInt(searchParams.get('page') ?? '1', 10),
       limit: parseInt(searchParams.get('limit') ?? '40', 10),
     };
     return base;
-  }, [searchParams, activeTab]);
+  }, [
+    searchParams.get('keyword'),
+    searchParams.get('location'),
+    searchParams.get('source'),
+    searchParams.get('employmentType'),
+    searchParams.get('experienceLevel'),
+    searchParams.get('isRemote'),
+    searchParams.get('arabOnly'),
+    searchParams.get('dateFrom'),
+    searchParams.get('page'),
+    searchParams.get('limit'),
+    activeTab,
+  ]);
 
   const { data, isLoading, isError } = useJobs(filters);
   const { data: savedJobs } = useSavedJobs();
@@ -143,12 +154,11 @@ function JobsPageContent() {
   }, [pathname, activeTab, router]);
 
   function handleTabChange(tab: TabValue) {
-    // When switching away from 'today' tab, clear dateFrom explicitly
+    // Reset to page 1, don't manipulate dateFrom anymore - backend handles tab
     const resetFilters = { 
       ...filters, 
       page: 1,
-      // Clear dateFrom when switching to 'all' tab (today tab will re-inject it)
-      dateFrom: tab === 'today' ? getLast24HoursISO() : undefined
+      dateFrom: undefined,
     };
     syncToUrl(resetFilters, tab);
   }

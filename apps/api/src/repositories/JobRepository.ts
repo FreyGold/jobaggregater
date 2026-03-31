@@ -5,6 +5,7 @@ import { AppDataSource } from '../config/data-source.js';
 import { Job } from '../entities/Job.js';
 import type { JobFiltersInput } from '../validators/job.schema.js';
 import { chunk } from '../utils/chunk.js';
+import { parseSalary } from '../utils/salaryParser.js';
 
 export class JobRepository {
   private repo = AppDataSource.getRepository(Job);
@@ -25,12 +26,16 @@ export class JobRepository {
       });
     }
 
-    if (filters.salaryMin && !filters.salaryMax) {
-       // Since salary is unfortunately a string right now, filtering by numbers directly on it via DB is tricky.
-       // Real-world we'd split salary into min/max numeric fields. 
-       // For now, this condition is approximated or we just ignore if it's text.
-       // Let's assume we do a rough LIKE match or omit strict bounds if table layout isn't suited.
-       // If keeping exact field mappings, `salary` string doesn't support GTE.
+    if (filters.salaryMin) {
+      qb.andWhere('job.salaryMax >= :salaryMin', { salaryMin: filters.salaryMin });
+    }
+
+    if (filters.salaryMax) {
+      qb.andWhere('job.salaryMin <= :salaryMax', { salaryMax: filters.salaryMax });
+    }
+
+    if (filters.salaryCurrency) {
+      qb.andWhere('job.salaryCurrency = :currency', { currency: filters.salaryCurrency });
     }
 
     if (filters.source) {
@@ -84,7 +89,10 @@ export class JobRepository {
   }
 
   async findById(id: string) {
-    return this.repo.findOne({ where: { id } });
+    return this.repo.createQueryBuilder('job')
+      .leftJoinAndSelect('job.source', 'source')
+      .where('job.id = :id', { id })
+      .getOne();
   }
 
   async search(keyword: string, limit: number = 20) {
@@ -107,7 +115,17 @@ export class JobRepository {
     const deduped = new Map<string, Partial<Job>>();
     for (const job of jobs) {
       if (!job.url) continue;
-      deduped.set(job.url, job);
+      
+      // Parse salary into numeric fields
+      const parsed = parseSalary(job.salary as string);
+      const enrichedJob = {
+        ...job,
+        salaryMin: parsed.min,
+        salaryMax: parsed.max,
+        salaryCurrency: parsed.currency,
+      };
+      
+      deduped.set(job.url, enrichedJob);
     }
 
     const uniqueJobs = Array.from(deduped.values());
@@ -124,6 +142,9 @@ export class JobRepository {
             'company',
             'location',
             'salary',
+            'salaryMin',
+            'salaryMax',
+            'salaryCurrency',
             'source',
             'description',
             'postedAt',

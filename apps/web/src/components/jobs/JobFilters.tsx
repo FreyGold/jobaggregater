@@ -242,7 +242,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
               <Button
                 variant="ghost"
                 size="icon-xs"
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full z-10 active:translate-y-0"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full z-10 !active:translate-y-0"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

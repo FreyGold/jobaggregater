@@ -42,6 +42,8 @@ class ApiClient {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers,
+      // Enable HTTP caching for GET requests
+      cache: options.method === 'GET' || !options.method ? 'default' : undefined,
     });
 
     const data = await response.json();

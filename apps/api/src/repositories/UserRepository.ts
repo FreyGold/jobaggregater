@@ -54,11 +54,11 @@ export class UserRepository {
   }
 
   async getSavedJobs(userId: string) {
-    return this.savedJobRepo.find({
-      where: { userId },
-      relations: ['job'],
-      order: { createdAt: 'DESC' },
-    });
+    return this.savedJobRepo.createQueryBuilder('saved')
+      .leftJoinAndSelect('saved.job', 'job')
+      .where('saved.userId = :userId', { userId })
+      .orderBy('saved.createdAt', 'DESC')
+      .getMany();
   }
 
   async saveJob(userId: string, jobId: string) {

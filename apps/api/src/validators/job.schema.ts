@@ -7,6 +7,7 @@ export const jobFiltersSchema = z.object({
   location: z.string().optional(),
   salaryMin: z.coerce.number().optional(),
   salaryMax: z.coerce.number().optional(),
+  salaryCurrency: z.string().optional(),
   source: z.string().optional(),
   isRemote: z
     .enum(['true', 'false'])
@@ -20,6 +21,7 @@ export const jobFiltersSchema = z.object({
   experienceLevel: z.string().optional(),
   dateFrom: z.string().optional(),
   dateTo: z.string().optional(),
+  tab: z.enum(['all', 'today']).default('all').optional(),
   tags: z
     .string()
     .transform((v) => v.split(','))

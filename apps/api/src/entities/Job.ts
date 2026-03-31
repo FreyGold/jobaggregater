@@ -45,6 +45,15 @@ export class Job {
   @Column({ type: 'varchar', nullable: true })
   salary!: string;
 
+  @Column({ type: 'integer', nullable: true })
+  salaryMin!: number | null;
+
+  @Column({ type: 'integer', nullable: true })
+  salaryMax!: number | null;
+
+  @Column({ type: 'varchar', nullable: true, length: 10 })
+  salaryCurrency!: string | null;
+
   @Column({ type: 'varchar', unique: true })
   url!: string;
 

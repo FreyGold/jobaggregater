@@ -9,13 +9,7 @@ import { buildQueryString, type Job, type JobFilters, type PaginationMeta } from
 
 // ─── List Jobs ───────────────────────────────────────────────────
 export function useJobs(filters: JobFilters = {}) {
-  // Detect if this is a "today's jobs" query by checking if dateFrom is recent
-  const isTodaysJobs = useMemo(
-    () => filters.dateFrom ? isDateFromToday(filters.dateFrom) : false,
-    [filters.dateFrom]
-  );
-  
-  // Create a stable query key based on actual filter values (memoized to prevent recreating on every render)
+  // Create a stable query key based on actual filter values
   const queryKey = useMemo(
     () => [
       'jobs',
@@ -43,15 +37,6 @@ export function useJobs(filters: JobFilters = {}) {
       filters.limit,
     ]
   );
-
-  // Memoize query options to prevent refetch on option changes
-  const queryOptions = useMemo(
-    () => ({
-      staleTime: isTodaysJobs ? 2 * 60 * 1000 : 30 * 1000,
-      gcTime: isTodaysJobs ? 2 * 60 * 1000 : 5 * 60 * 1000,
-    }),
-    [isTodaysJobs]
-  );
   
   return useQuery({
     queryKey,
@@ -60,20 +45,7 @@ export function useJobs(filters: JobFilters = {}) {
       const res = await apiClient.get<Job[]>(`/api/jobs${qs}`);
       return { jobs: res.data, meta: res.meta as PaginationMeta };
     },
-    ...queryOptions,
   });
-}
-
-// Helper to check if dateFrom is from "today" (within last 24 hours)
-function isDateFromToday(dateFromISO: string): boolean {
-  try {
-    const dateFrom = new Date(dateFromISO);
-    const now = new Date();
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    return dateFrom >= twentyFourHoursAgo;
-  } catch {
-    return false;
-  }
 }
 
 // ─── Single Job ──────────────────────────────────────────────────

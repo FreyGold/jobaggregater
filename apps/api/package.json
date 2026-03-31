@@ -39,6 +39,7 @@
     "@types/pg": "^8.18.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "winston": "^3.19.0"
   }
 }
