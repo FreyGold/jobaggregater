@@ -1,15 +1,48 @@
-// ─── Subscription Success Page ───────────────────────────────────
+// --- Subscription Success Page ---
 
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle, ArrowRight, Loader2 } from 'lucide-react';
+import { useCurrentSubscription } from '@/hooks/use-subscription';
 
 export default function SubscriptionSuccessPage() {
+  const { data: subscription, isLoading } = useCurrentSubscription();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const planName = subscription?.plan || 'Pro';
+  const getPlanDescription = (plan: string) => {
+    switch (plan) {
+      case 'ENTERPRISE':
+        return 'Enjoy unlimited job results, advanced analytics, priority support, and dedicated assistance.';
+      case 'PRO':
+        return 'Enjoy unlimited job results, advanced filters, and priority support.';
+      default:
+        return 'Your subscription is now active.';
+    }
+  };
+
+  if (!mounted || isLoading) {
+    return (
+      <main className="flex min-h-screen flex-col">
+        <Header />
+        <section className="flex flex-1 items-center justify-center px-4 py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </section>
+        <Footer />
+      </main>
+    );
+  }
+
   return (
     <main className="flex min-h-screen flex-col">
       <Header />
@@ -20,12 +53,11 @@ export default function SubscriptionSuccessPage() {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
               <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
             </div>
-            <CardTitle className="text-2xl">Welcome to Pro!</CardTitle>
+            <CardTitle className="text-2xl">Welcome to {planName}!</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">
-              Your subscription is now active. Enjoy unlimited job results, advanced filters, and
-              priority support.
+              {getPlanDescription(planName)}
             </p>
             <div className="flex flex-col gap-2 pt-2">
               <Link href="/jobs" className={buttonVariants()}>

@@ -6,13 +6,15 @@ import { useMemo, Suspense, useCallback, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { JobFilters } from '@jobagg/shared';
 import { useJobs, useSaveJob, useSavedJobs } from '@/hooks/use-jobs';
+import { useCurrentSubscription } from '@/hooks/use-subscription';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PageShell } from '@/components/layout/PageShell';
 import { JobList } from '@/components/jobs/JobList';
 import { JobFiltersSidebar } from '@/components/jobs/JobFilters';
+import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { LayoutList, Sparkles } from 'lucide-react';
+import { LayoutList, Sparkles, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type TabValue = 'all' | 'today';
@@ -77,6 +79,7 @@ function JobsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const { data: subscription } = useCurrentSubscription();
 
   const activeTab = (searchParams.get('tab') ?? 'all') as TabValue;
 
@@ -174,8 +177,16 @@ function JobsPageContent() {
 
       <PageShell>
         <header className="mb-10 mt-4 flex flex-col items-center text-center">
-          <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold uppercase tracking-widest text-primary animate-pulse">
-            Live Feed
+          <div className="mb-4 flex items-center justify-center gap-3 flex-wrap">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold uppercase tracking-widest text-primary animate-pulse">
+              Live Feed
+            </div>
+            {subscription && (
+              <Badge variant={subscription.plan === 'FREE' ? 'secondary' : 'default'} className="gap-1 text-xs">
+                {subscription.plan !== 'FREE' && <Crown className="h-3 w-3" />}
+                {subscription.plan === 'FREE' ? 'Free' : subscription.plan}
+              </Badge>
+            )}
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl max-w-3xl leading-[1.1]">
             Find your next <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">career move</span>

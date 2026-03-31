@@ -8,13 +8,17 @@ import { Footer } from '@/components/layout/Footer';
 import { PageShell } from '@/components/layout/PageShell';
 import { JobCard } from '@/components/jobs/JobCard';
 import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSavedJobs } from '@/hooks/use-jobs';
+import { useCurrentSubscription } from '@/hooks/use-subscription';
+import { Crown } from 'lucide-react';
 
 export default function BookmarksPage() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { data: jobs = [], isLoading } = useSavedJobs();
+  const { data: subscription } = useCurrentSubscription();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -29,13 +33,21 @@ export default function BookmarksPage() {
       <Header />
 
       <PageShell className="max-w-4xl">
-        <header className="mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            Saved Jobs
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Keep a shortlist of roles you want to revisit.
-          </p>
+        <header className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Saved Jobs
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Keep a shortlist of roles you want to revisit.
+            </p>
+          </div>
+          {subscription && (
+            <Badge variant={subscription.plan === 'FREE' ? 'secondary' : 'default'} className="gap-1 text-xs whitespace-nowrap">
+              {subscription.plan !== 'FREE' && <Crown className="h-3 w-3" />}
+              {subscription.plan === 'FREE' ? 'Free' : subscription.plan}
+            </Badge>
+          )}
         </header>
 
         {isLoading ? (
