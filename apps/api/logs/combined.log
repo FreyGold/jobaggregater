@@ -1,0 +1,12 @@
+2026-04-02 12:47:21 [info]: Fetched jobs from database {
+  "service": "job-aggregator-api",
+  "jobCount": 20,
+  "total": 136563,
+  "plan": "FREE"
+}
+2026-04-02 12:47:21 [info]: Job list operation completed {
+  "service": "job-aggregator-api",
+  "plan": "FREE",
+  "duration": "2629ms",
+  "resultCount": 20
+}

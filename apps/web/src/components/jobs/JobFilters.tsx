@@ -171,10 +171,10 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
         </h2>
         {activeCount > 0 && (
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={clearAll}
-            className="h-7 px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="h-7 px-2 text-xs font-medium"
           >
             Clear all
           </Button>
@@ -221,7 +221,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
           <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Posted After
           </Label>
-          <div className="relative">
+          <div className="relative flex items-center">
             <Popover open={dateCalendarOpen} onOpenChange={setDateCalendarOpen}>
               <PopoverTrigger
                 render={
@@ -251,7 +251,11 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
                     }
                     setDateCalendarOpen(false);
                   }}
-                  disabled={(d) => d > new Date() || d < new Date('2024-01-01')}
+                  disabled={(d) => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    return d > today || d < new Date('2024-01-01');
+                  }}
                   initialFocus
                 />
               </PopoverContent>
@@ -260,7 +264,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
               <Button
                 variant="ghost"
                 size="icon-xs"
-                className="absolute right-1 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full transition-colors hover:bg-muted active:scale-95"
+                className="absolute right-1 h-8 w-8 rounded-full transition-colors hover:bg-muted active:translate-y-0"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

@@ -135,25 +135,8 @@ export class BuiltInScraper extends BaseScraper {
         }
       }
 
-      // Enrich descriptions with better error handling and logging
-      console.log(`[Scraper: ${this.name}] Fetching descriptions for ${jobs.length} jobs...`);
-      let enrichedCount = 0;
-      
-      for (const job of jobs) {
-        if (!job.url) continue;
-        const desc = await this.fetchJobDescription(job.url);
-        if (desc && desc.length > 100) {
-          job.description = desc;
-          enrichedCount++;
-        }
-        
-        // Add delay to be polite
-        await new Promise(resolve => setTimeout(resolve, 800));
-      }
-      
-      console.log(`[Scraper: ${this.name}] Successfully enriched ${enrichedCount}/${jobs.length} descriptions.`);
-
       console.log(`[Scraper: ${this.name}] Successfully scraped ${jobs.length} jobs.`);
+      // Note: Description enrichment is available on-demand via enrichJobDescription API
       return jobs;
     } catch (error) {
       console.error(`[Scraper: ${this.name}] Error scraping jobs:`, error);
@@ -191,5 +174,54 @@ export class BuiltInScraper extends BaseScraper {
       return 'executive';
     }
     return 'mid';
+  }
+
+  /**
+   * Scrape full job description from individual job page
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl, { sourceName: this.name });
+      if (!html) throw new Error('Failed to fetch job page');
+
+      const $ = cheerio.load(html);
+      
+      // Remove noise
+      $('script,style,nav,header,footer,aside,button,form').remove();
+      
+      // Try common description selectors on BuiltIn
+      const selectors = [
+        'div[class*="description"]',
+        'div[class*="job-description"]',
+        'div[class*="job-details"]',
+        'div[class*="job-content"]',
+        'article',
+        'main',
+      ];
+
+      for (const selector of selectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          const text = element.text().trim();
+          if (text && text.length > 100) {
+            return text;
+          }
+        }
+      }
+
+      // Fallback: get all paragraph text
+      const allText = $('body').text().trim();
+      if (allText.length > 150) {
+        return allText.substring(0, 5000); // Cap at 5000 chars
+      }
+
+      throw new Error('Could not extract description from job page');
+    } catch (error) {
+      console.error(
+        `[BuiltInScraper] Failed to scrape description from ${jobUrl}:`,
+        error,
+      );
+      throw error;
+    }
   }
 }

@@ -85,11 +85,63 @@ export class HackerNewsScraper extends BaseScraper {
       });
 
       console.log(`[Scraper: ${this.name}] Successfully scraped ${jobs.length} jobs.`);
+      // Note: Description enrichment is available on-demand via enrichJobDescription API
       return jobs;
 
     } catch (error) {
       console.error(`[Scraper: ${this.name}] Error scraping:`, error);
       return [];
+    }
+  }
+
+  /**
+   * Scrape full job description from HackerNews job posting
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      // HN job postings can be external URLs or item?id= links
+      if (!jobUrl.includes('news.ycombinator.com/item')) {
+        // External URL - try generic scraping
+        const html = await this.fetchHtml(jobUrl);
+        if (!html) return '';
+
+        const $ = cheerio.load(html);
+        
+        // Generic content selectors
+        const selectors = [
+          'article',
+          '[role="main"]',
+          'main',
+          '.content',
+          '.job-description',
+        ];
+
+        for (const selector of selectors) {
+          const element = $(selector).first();
+          if (element.length > 0) {
+            element.find('script,style,nav,header,footer,button').remove();
+            const descHtml = element.html()?.trim();
+            if (descHtml && descHtml.length > 200) {
+              return descHtml;
+            }
+          }
+        }
+      } else {
+        // HN item page - extract comment text
+        const html = await this.fetchHtml(jobUrl);
+        if (!html) return '';
+
+        const $ = cheerio.load(html);
+        const commentText = $('.comment .commtext').first().html()?.trim();
+        if (commentText && commentText.length > 100) {
+          return commentText;
+        }
+      }
+
+      return '';
+    } catch (error) {
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      return '';
     }
   }
 }

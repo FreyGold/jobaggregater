@@ -99,7 +99,12 @@ export class LeverScraper extends BaseScraper {
       url: job.hostedUrl,
       sourceId: `lever-${job.id}`,
       sourceName: this.name,
-      description: job.description || `${job.text} at ${displayName}. Team: ${job.categories?.team || 'Unknown'}. Commitment: ${job.categories?.commitment || 'Unknown'}.`,
+      // Lever API provides both 'description' (plain text) and 'descriptionHtml' (HTML)
+      // Prefer HTML for rich formatting, fallback to plain text, then placeholder
+      description: 
+        job.descriptionHtml || 
+        job.description || 
+        `${job.text} at ${displayName}. Team: ${job.categories?.team || 'Unknown'}. Commitment: ${job.categories?.commitment || 'Unknown'}.`,
       postedAt: new Date(job.createdAt).toISOString(),
       tags: ['tech', slug],
       employmentType: this.mapCommitment(job.categories?.commitment),
@@ -138,5 +143,42 @@ export class LeverScraper extends BaseScraper {
     if (lower.includes('contract')) return 'contract' as EmploymentType;
     if (lower.includes('intern')) return 'internship' as EmploymentType;
     return 'full-time' as EmploymentType;
+  }
+
+  /**
+   * Scrape full job description from Lever job page
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl);
+      if (!html) return '';
+
+      const cheerio = await import('cheerio');
+      const $ = cheerio.load(html);
+
+      // Lever job pages use these selectors
+      const descriptionSelectors = [
+        '.posting-description',
+        '.description',
+        '[class*="description"]',
+        '.content',
+      ];
+
+      for (const selector of descriptionSelectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          element.find('script,style,nav,button').remove();
+          const descHtml = element.html()?.trim();
+          if (descHtml && descHtml.length > 100) {
+            return descHtml;
+          }
+        }
+      }
+
+      return '';
+    } catch (error) {
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      return '';
+    }
   }
 }

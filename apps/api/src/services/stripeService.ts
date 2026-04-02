@@ -3,12 +3,25 @@
 import Stripe from 'stripe';
 import { config } from '../config/unifiedConfig.js';
 import { AppError } from '../middleware/errorHandler.js';
+import { logInfo, logWarn, logError } from '../lib/logger.js';
 import { UserSubscriptionPlan, UserSubscriptionStatus } from '../entities/User.js';
 import type { UserRepository } from '../repositories/UserRepository.js';
 
-const stripe = config.stripe.secretKey
-  ? new Stripe(config.stripe.secretKey, { apiVersion: '2024-12-18.acacia' as any })
-  : null;
+// Debug: Log Stripe configuration status
+const isStripeConfigured = Boolean(config.stripe.secretKey);
+console.log(
+  `[StripeService] Stripe ${isStripeConfigured ? 'configured' : 'not configured'} - pricing will ${isStripeConfigured ? 'include' : 'exclude'} stripe price IDs`,
+);
+
+let stripe: Stripe | null = null;
+try {
+  stripe = config.stripe.secretKey
+    ? new Stripe(config.stripe.secretKey, { apiVersion: '2024-12-18.acacia' as any })
+    : null;
+} catch (err) {
+  console.warn('[StripeService] Failed to initialize Stripe client:', (err as Error).message);
+  stripe = null;
+}
 
 function getStripe(): Stripe {
   if (!stripe) {
@@ -21,7 +34,23 @@ export class StripeService {
   constructor(private readonly userRepository: UserRepository) {}
 
   isConfigured(): boolean {
-    return Boolean(stripe);
+    // Check if Stripe client is initialized AND price IDs are set
+    if (!stripe) {
+      return false;
+    }
+
+    // Price IDs must be set (not empty)
+    if (!config.stripe.proPriceId || !config.stripe.enterprisePriceId) {
+      return false;
+    }
+
+    return true;
+  }
+
+  isPriceIdValid(priceId: string | undefined): boolean {
+    // Validate price ID format (must start with 'price_')
+    if (!priceId) return false;
+    return priceId.toString().startsWith('price_');
   }
 
   private resolvePlanFromPriceId(priceId?: string | null): UserSubscriptionPlan | null {
@@ -52,15 +81,35 @@ export class StripeService {
     const user = await this.userRepository.findByIdFull(userId);
     if (!user) throw new AppError(404, 'User not found', 'USER_NOT_FOUND');
 
-    if (user.stripeCustomerId) return user.stripeCustomerId;
+    // If customer ID exists, verify it's still valid in Stripe
+    if (user.stripeCustomerId) {
+      try {
+        await getStripe().customers.retrieve(user.stripeCustomerId);
+        return user.stripeCustomerId;
+      } catch (error: any) {
+        // Customer doesn't exist in Stripe anymore, create a new one
+        logWarn('Stored Stripe customer no longer exists, creating new one', {
+          userId,
+          oldCustomerId: user.stripeCustomerId,
+          error: error.message,
+        });
+      }
+    }
 
+    // Create new customer
     const customer = await getStripe().customers.create({
       email,
       metadata: { userId },
     });
 
+    // Update database with new customer ID
     await this.userRepository.updateSubscription(userId, {
       stripeCustomerId: customer.id,
+    });
+
+    logInfo('Created new Stripe customer', {
+      userId,
+      customerId: customer.id,
     });
 
     return customer.id;
@@ -73,8 +122,28 @@ export class StripeService {
       ? config.stripe.proPriceId
       : config.stripe.enterprisePriceId;
 
+    // Validate price ID
     if (!priceId) {
-      throw new AppError(400, `Price not configured for plan: ${plan}`, 'PRICE_NOT_CONFIGURED');
+      throw new AppError(
+        400, 
+        `Price not configured for plan: ${plan}. Set STRIPE_PRICE_${plan}_ID in .env`, 
+        'PRICE_NOT_CONFIGURED'
+      );
+    }
+
+    // Validate price ID format (must be 'price_xxx' not a number)
+    if (!priceId.toString().startsWith('price_')) {
+      logError('Invalid Stripe price ID format', {
+        plan,
+        priceId,
+        expected: 'price_xxx format from Stripe Dashboard',
+      });
+      throw new AppError(
+        400,
+        `Invalid price ID for ${plan}: "${priceId}". Price IDs must start with "price_". ` +
+        `Get the correct ID from https://dashboard.stripe.com/test/products`,
+        'INVALID_PRICE_ID'
+      );
     }
 
     const session = await getStripe().checkout.sessions.create({
@@ -152,7 +221,7 @@ export class StripeService {
         break;
       }
 
-      case 'customer.subscription.deleted': {
+case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription;
         const user = await this.userRepository.findByStripeCustomerId(
           subscription.customer as string,
@@ -162,6 +231,33 @@ export class StripeService {
             subscriptionPlan: UserSubscriptionPlan.FREE,
             subscriptionStatus: UserSubscriptionStatus.CANCELED,
             stripeSubscriptionId: null,
+          });
+        }
+        break;
+      }
+
+      case 'invoice.paid': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const user = await this.userRepository.findByStripeCustomerId(
+          invoice.customer as string,
+        );
+        if (user) {
+          // Invoice is paid, update status to ACTIVE
+          await this.userRepository.updateSubscription(user.id, {
+            subscriptionStatus: UserSubscriptionStatus.ACTIVE,
+          });
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const user = await this.userRepository.findByStripeCustomerId(
+          invoice.customer as string,
+        );
+        if (user) {
+          await this.userRepository.updateSubscription(user.id, {
+            subscriptionStatus: UserSubscriptionStatus.PAST_DUE,
           });
         }
         break;
@@ -219,4 +315,59 @@ export class StripeService {
       },
     ];
   }
+
+  // Sync user's subscription from Stripe (for use without webhooks)
+  async syncUserSubscriptionFromStripe(userId: string) {
+    const user = await this.userRepository.findByIdFull(userId);
+    if (!user || !user.stripeCustomerId) {
+      return null;
+    }
+
+    try {
+      // Verify customer still exists in Stripe
+      await getStripe().customers.retrieve(user.stripeCustomerId);
+
+      const subscriptions = await getStripe().subscriptions.list({
+        customer: user.stripeCustomerId,
+        limit: 1,
+        status: 'all',
+      });
+
+      const subscription = subscriptions.data[0];
+      if (subscription) {
+        const resolvedPlan = this.resolvePlanFromSubscription(subscription);
+        const resolvedStatus = this.resolveStatusFromSubscription(subscription);
+        
+        await this.userRepository.updateSubscription(userId, {
+          ...(resolvedPlan ? { subscriptionPlan: resolvedPlan } : {}),
+          subscriptionStatus: resolvedStatus,
+          stripeSubscriptionId: subscription.id,
+        });
+
+        return {
+          plan: resolvedPlan,
+          status: resolvedStatus,
+          subscriptionId: subscription.id,
+          synced: true,
+        };
+      } else {
+        // No active subscription, downgrade to FREE
+        await this.userRepository.updateSubscription(userId, {
+          subscriptionPlan: UserSubscriptionPlan.FREE,
+          subscriptionStatus: UserSubscriptionStatus.CANCELED,
+          stripeSubscriptionId: null,
+        });
+
+        return {
+          plan: UserSubscriptionPlan.FREE,
+          status: UserSubscriptionStatus.CANCELED,
+          synced: true,
+        };
+      }
+    } catch (err) {
+      console.error('[StripeService] Failed to sync subscription from Stripe:', err);
+      return null;
+    }
+  }
+
 }

@@ -1,4 +1,18 @@
+# Docker Compose for Full Stack Testing
+# 
+# For DEVELOPMENT with hot reload:
+#   docker-compose -f docker-compose.dev-services.yml up
+#   Then: cd apps/api && npm run dev
+#         cd apps/web && npm run dev
+#
+# For PRODUCTION-LIKE testing (rebuilds everything):
+#   docker-compose up --build
+#
+# For running only services, running apps locally:
+#   docker-compose -f docker-compose.dev-services.yml up
+
 services:
+  # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
     environment:
@@ -15,6 +29,7 @@ services:
       timeout: 5s
       retries: 5
 
+  # Redis Cache
   redis:
     image: redis:7-alpine
     ports:
@@ -27,6 +42,7 @@ services:
       timeout: 5s
       retries: 5
 
+  # Job Aggregator API
   api:
     build:
       context: .
@@ -47,6 +63,7 @@ services:
       redis:
         condition: service_healthy
 
+  # Next.js Web Application
   web:
     build:
       context: .

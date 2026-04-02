@@ -77,4 +77,42 @@ export class RemoteOKScraper extends BaseScraper {
     if (lower.includes('vp') || lower.includes('chief') || lower.includes('executive')) return 'executive';
     return 'mid';
   }
+
+  /**
+   * Scrape full job description from RemoteOK job page
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl);
+      if (!html) return '';
+
+      const cheerio = await import('cheerio');
+      const $ = cheerio.load(html);
+
+      // RemoteOK job pages use these selectors
+      const descriptionSelectors = [
+        '[data-job-description]',
+        '.job-description',
+        '[class*="description"]',
+        '.markdown',
+        'article',
+      ];
+
+      for (const selector of descriptionSelectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          element.find('script,style,nav,button').remove();
+          const descHtml = element.html()?.trim();
+          if (descHtml && descHtml.length > 100) {
+            return descHtml;
+          }
+        }
+      }
+
+      return '';
+    } catch (error) {
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      return '';
+    }
+  }
 }

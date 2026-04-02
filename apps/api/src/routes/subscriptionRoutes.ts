@@ -36,4 +36,12 @@ router.get(
   asyncErrorWrapper(subscriptionController.getCurrentSubscription),
 );
 
+
+// Authenticated — sync subscription from Stripe (on-demand)
+router.post(
+  '/sync',
+  asyncErrorWrapper(authMiddleware as never),
+  asyncErrorWrapper(subscriptionController.syncSubscription),
+);
+
 export { router as subscriptionRoutes };

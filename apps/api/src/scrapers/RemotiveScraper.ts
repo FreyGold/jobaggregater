@@ -49,10 +49,6 @@ export class RemotiveScraper extends BaseScraper {
         return false;
       });
 
-      // Validate and enrich descriptions if needed
-      console.log(`[Scraper: ${this.name}] Validating descriptions for ${uniqueJobs.length} jobs...`);
-      await this.validateDescriptions(uniqueJobs);
-
       return uniqueJobs;
     } catch (error) {
       console.error(`[Scraper: ${this.name}] Error in scrape:`, error);

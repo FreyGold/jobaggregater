@@ -155,4 +155,42 @@ export class GreenhouseScraper extends BaseScraper {
     }
     return 'mid';
   }
+
+  /**
+   * Scrape full job description from Greenhouse job page
+   * Note: Greenhouse API already provides excellent descriptions, but this exists for completeness
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl);
+      if (!html) return '';
+
+      const cheerio = await import('cheerio');
+      const $ = cheerio.load(html);
+
+      // Greenhouse job pages use these selectors
+      const descriptionSelectors = [
+        '#content',
+        '.job-post',
+        '[class*="description"]',
+        'article',
+      ];
+
+      for (const selector of descriptionSelectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          element.find('script,style,nav,button,header,footer').remove();
+          const descHtml = element.html()?.trim();
+          if (descHtml && descHtml.length > 100) {
+            return descHtml;
+          }
+        }
+      }
+
+      return '';
+    } catch (error) {
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      return '';
+    }
+  }
 }

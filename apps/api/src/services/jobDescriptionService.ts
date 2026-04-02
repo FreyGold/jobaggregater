@@ -68,14 +68,14 @@ export class JobDescriptionService {
     }
 
     // Validate enriched description
-    if (!enrichedDescription || enrichedDescription.length < 100) {
+    if (!enrichedDescription || enrichedDescription.length < 50) {
       logWarn('Scraped description too short or empty', { 
         jobId, 
         scrapedLength: enrichedDescription?.length || 0 
       });
       throw new AppError(
         500, 
-        'Could not extract valid description from job page', 
+        'Could not extract valid description from job page (less than 50 characters)', 
         'INVALID_DESCRIPTION'
       );
     }
@@ -109,14 +109,28 @@ export class JobDescriptionService {
       'linkedin': 'linkedin',
       'remotive': 'remotive',
       'weworkremotely': 'weworkremotely',
+      'wework remotely': 'weworkremotely',
+      'we work remotely': 'weworkremotely',
       'builtin': 'builtin',
       'builtin(remote)': 'builtin',
+      'built in': 'builtin',
+      'built in (remote)': 'builtin',
       'remoteok': 'remoteok',
+      'remote ok': 'remoteok',
       'hackernews': 'hackernews',
+      'hacker news': 'hackernews',
+      'hacker news jobs': 'hackernews',
       'greenhouse': 'greenhouse',
+      'greenhouse ats': 'greenhouse',
       'lever': 'lever',
+      'lever ats': 'lever',
       'ashby': 'ashby',
+      'ashby ats': 'ashby',
       'workable': 'workable',
+      'workable ats': 'workable',
+      'tanqeeb': 'tanqeeb',
+      'gulftalent': 'gulftalent',
+      'gulf talent': 'gulftalent',
     };
 
     const key = sourceKeyMap[normalizedKey] || normalizedKey;
@@ -156,16 +170,32 @@ export class JobDescriptionService {
       '[id*="description"]',
       'article',
       'main',
+      '.content',
+      '[class*="job-details"]',
+      '[class*="job-info"]',
     ];
 
     for (const selector of selectors) {
       const element = $(selector).first();
       if (element.length > 0) {
-        const html = element.html()?.trim();
-        if (html && html.length > 100) {
-          return html;
+        const text = element.text().trim();
+        if (text && text.length > 50) {
+          return text;
         }
       }
+    }
+
+    // Aggressive fallback: get largest text block
+    let largestText = '';
+    $('div, section, article').each((_, el) => {
+      const text = $(el).text().trim();
+      if (text.length > largestText.length && text.length > 50) {
+        largestText = text;
+      }
+    });
+
+    if (largestText.length > 50) {
+      return largestText.substring(0, 5000); // Cap at 5000 chars
     }
 
     throw new Error('Could not extract description from HTML');

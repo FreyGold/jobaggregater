@@ -10,18 +10,39 @@ import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { useCurrentSubscription } from '@/hooks/use-subscription';
+import { apiClient } from '@/lib/api';
 
 export default function SubscriptionSuccessPage() {
-  const { data: subscription, isLoading } = useCurrentSubscription();
+  const { data: subscription, isLoading, refetch } = useCurrentSubscription();
   const [mounted, setMounted] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Sync subscription from Stripe on page load (in case webhook hasn't processed yet)
+  useEffect(() => {
+    if (mounted && !isLoading && subscription?.plan === 'FREE') {
+      setIsSyncing(true);
+      apiClient
+        .post('/api/subscriptions/sync')
+        .then(() => {
+          refetch();
+        })
+        .catch((error) => {
+          console.error('Failed to sync subscription:', error);
+        })
+        .finally(() => {
+          setIsSyncing(false);
+        });
+    }
+  }, [mounted, isLoading, subscription?.plan, refetch]);
+
   const planName = subscription?.plan || 'Pro';
   const getPlanDescription = (plan: string) => {
-    switch (plan) {
+    const normalizedPlan = plan?.toUpperCase() || '';
+    switch (normalizedPlan) {
       case 'ENTERPRISE':
         return 'Enjoy unlimited job results, advanced analytics, priority support, and dedicated assistance.';
       case 'PRO':
@@ -31,7 +52,7 @@ export default function SubscriptionSuccessPage() {
     }
   };
 
-  if (!mounted || isLoading) {
+  if (!mounted || isLoading || isSyncing) {
     return (
       <main className="flex min-h-screen flex-col">
         <Header />

@@ -184,6 +184,55 @@ export class GulfTalentScraper extends BaseScraper {
     return jobs;
   }
 
+  /**
+   * Scrape full job description from individual job page
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl, { sourceName: this.name });
+      if (!html) throw new Error('Failed to fetch job page');
+
+      const $ = cheerio.load(html);
+      
+      // Remove noise
+      $('script,style,nav,header,footer,aside,button,form').remove();
+      
+      // Try common description selectors on GulfTalent
+      const selectors = [
+        'div[class*="description"]',
+        'div[class*="job-description"]',
+        'div[class*="job-details"]',
+        'div[class*="job-content"]',
+        'article',
+        'main',
+      ];
+
+      for (const selector of selectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          const text = element.text().trim();
+          if (text && text.length > 100) {
+            return text;
+          }
+        }
+      }
+
+      // Fallback: get all paragraph text
+      const allText = $('body').text().trim();
+      if (allText.length > 150) {
+        return allText.substring(0, 5000); // Cap at 5000 chars
+      }
+
+      throw new Error('Could not extract description from job page');
+    } catch (error) {
+      console.error(
+        `[GulfTalentScraper] Failed to scrape description from ${jobUrl}:`,
+        error,
+      );
+      throw error;
+    }
+  }
+
   private guessExperience(title: string): ExperienceLevel {
     const t = title.toLowerCase();
     if (t.includes('senior') || t.includes('sr.') || t.includes('staff') || t.includes('principal'))

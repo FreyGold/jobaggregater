@@ -105,8 +105,6 @@ export class LinkedInScraper extends BaseScraper {
 
   // @ts-ignore
   private queue = new PQueue({ concurrency: 5 });
-  // @ts-ignore
-  private descQueue = new PQueue({ concurrency: 3 }); // Slower for individual job pages
 
   async scrape(): Promise<JobCreateInput[]> {
     console.log(
@@ -152,11 +150,9 @@ export class LinkedInScraper extends BaseScraper {
       `[Scraper: ${this.name}] Finished multi-country scrape. Total unique jobs: ${allJobs.length}`,
     );
 
-    // Enrich descriptions in batches
-    console.log(`[Scraper: ${this.name}] Enriching descriptions for ${allJobs.length} jobs...`);
-    await this.enrichDescriptions(allJobs);
-    console.log(`[Scraper: ${this.name}] Description enrichment complete.`);
-
+    // Note: Description enrichment is available on-demand via enrichJobDescription API
+    // Enriching during scrape would be too slow and cause timeouts
+    
     return allJobs;
   }
 
@@ -331,21 +327,4 @@ export class LinkedInScraper extends BaseScraper {
     }
   }
 
-  /**
-   * Enrich job descriptions in parallel batches
-   */
-  private async enrichDescriptions(jobs: JobCreateInput[]): Promise<void> {
-    const enrichTasks = jobs.map((job) => async () => {
-      if (!job.url) return;
-      
-      const description = await this.scrapeJobDescription(job.url);
-      if (description && description.length > 100) {
-        job.description = description;
-      }
-      
-      await this.delay(500); // Polite delay between individual job page fetches
-    });
-
-    await this.descQueue.addAll(enrichTasks);
-  }
 }

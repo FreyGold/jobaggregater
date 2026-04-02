@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/auth-provider';
 import { Header } from '@/components/layout/Header';
@@ -10,15 +10,18 @@ import { JobCard } from '@/components/jobs/JobCard';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useSavedJobs } from '@/hooks/use-jobs';
+import { useSavedJobs, useSaveJob } from '@/hooks/use-jobs';
 import { useCurrentSubscription } from '@/hooks/use-subscription';
 import { Crown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function BookmarksPage() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { data: jobs = [], isLoading } = useSavedJobs();
   const { data: subscription } = useCurrentSubscription();
+  const { unsave } = useSaveJob();
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -26,7 +29,22 @@ export default function BookmarksPage() {
     }
   }, [isAuthenticated, router]);
 
+  const handleRemove = (jobId: string) => {
+    setRemovingIds((prev) => new Set([...prev, jobId]));
+    unsave.mutate(jobId);
+    
+    setTimeout(() => {
+      setRemovingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(jobId);
+        return next;
+      });
+    }, 400);
+  };
+
   if (!isAuthenticated) return null;
+
+  const visibleJobs = jobs.filter((job) => !removingIds.has(job.id));
 
   return (
     <main className="min-h-screen flex flex-col justify-between">
@@ -62,18 +80,38 @@ export default function BookmarksPage() {
               <Skeleton className="h-24 w-full  " />
             </div>
           </Card>
-        ) : jobs.length === 0 ? (
+        ) : visibleJobs.length === 0 && removingIds.size === 0 ? (
           <Card className="p-10 text-center">
             <h2 className="text-base font-semibold text-foreground">No bookmarks yet</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Save jobs you’re interested in to easily find them later.
+              Save jobs you're interested in to easily find them later.
             </p>
           </Card>
         ) : (
           <div className="space-y-4">
-            {jobs.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
+            {jobs.map((job, index) => {
+              const isRemoving = removingIds.has(job.id);
+              const hasRemovedAbove = jobs.slice(0, index).some((j) => removingIds.has(j.id));
+              const animationClass = isRemoving
+                ? 'animate-blur-out'
+                : hasRemovedAbove && removingIds.size > 0
+                  ? 'animate-slide-up'
+                  : 'animate-blur-in';
+
+              return (
+                <div
+                  key={job.id}
+                  className={animationClass}
+                >
+                  <JobCard 
+                    job={job} 
+                    isSaved={true}
+                    onUnsave={handleRemove}
+                    isBookmarksPage={true}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
       </PageShell>

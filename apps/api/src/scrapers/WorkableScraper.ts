@@ -85,6 +85,11 @@ export class WorkableScraper extends BaseScraper {
       const location = [job.location?.city, job.location?.country].filter(Boolean).join(', ') || 'Remote';
       const isRemote = job.remote === true || location.toLowerCase().includes('remote');
 
+      // Workable list API doesn't include full descriptions
+      // Use basic info as description; can be enriched later via fetchJobDescription
+      const description = job.description || 
+        `${job.title} at ${displayName}. Department: ${job.department || 'Unknown'}. ${isRemote ? 'Remote position' : location}.`;
+
       return {
         title: job.title,
         company: displayName,
@@ -92,7 +97,7 @@ export class WorkableScraper extends BaseScraper {
         url: `https://apply.workable.com/${slug}/j/${job.shortcode}/`,
         sourceId: `workable-${job.shortcode}`,
         sourceName: this.name,
-        description: `${job.title} at ${displayName}. Department: ${job.department || 'Unknown'}.`,
+        description,
         postedAt: job.published_on || new Date().toISOString(),
         tags: ['tech', slug],
         employmentType: this.mapEmploymentType(job.employment_type),
@@ -123,5 +128,43 @@ export class WorkableScraper extends BaseScraper {
     if (lower.includes('entry') || lower.includes('junior')) return 'entry';
     if (lower.includes('lead') || lower.includes('director')) return 'lead';
     return 'mid';
+  }
+
+  /**
+   * Scrape full job description from Workable job page
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl);
+      if (!html) return '';
+
+      const cheerio = await import('cheerio');
+      const $ = cheerio.load(html);
+
+      // Workable job pages use these selectors
+      const descriptionSelectors = [
+        '[data-ui="job-description"]',
+        '.job-description',
+        '[class*="description"]',
+        'article',
+        '.content',
+      ];
+
+      for (const selector of descriptionSelectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          element.find('script,style,nav,button,form').remove();
+          const descHtml = element.html()?.trim();
+          if (descHtml && descHtml.length > 100) {
+            return descHtml;
+          }
+        }
+      }
+
+      return '';
+    } catch (error) {
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      return '';
+    }
   }
 }

@@ -2,7 +2,8 @@
 
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useJob } from '@/hooks/use-jobs';
 import { formatSalary, formatTimeAgo } from '@jobagg/shared';
 import { Header } from '@/components/layout/Header';
@@ -22,13 +23,52 @@ import {
   ArrowLeft,
   Briefcase,
   BarChart3,
+  Download,
+  Loader2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { absoluteUrl } from '@/lib/seo';
 
 export default function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { data: job, isLoading, isError } = useJob(id);
+  const searchParams = useSearchParams();
+  const { data: job, isLoading, isError, refetch } = useJob(id);
+  const [enrichedDescription, setEnrichedDescription] = useState<string | null>(null);
+  const [isEnrichingDescription, setIsEnrichingDescription] = useState(false);
+  const [enrichmentError, setEnrichmentError] = useState<string | null>(null);
+
+  // Preserve all search params when going back
+  const backUrl = `/jobs?${searchParams.toString()}`;
+
+  const handleFetchDescription = async () => {
+    setIsEnrichingDescription(true);
+    setEnrichmentError(null);
+    
+    try {
+      const response = await fetch(`/api/jobs/${id}/enrich-description`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to fetch description');
+      }
+
+      const enrichedJob = await response.json();
+      const desc = enrichedJob.data?.description || enrichedJob.description;
+      setEnrichedDescription(desc);
+      refetch();
+    } catch (error) {
+      setEnrichmentError(error instanceof Error ? error.message : 'Failed to fetch description');
+    } finally {
+      setIsEnrichingDescription(false);
+    }
+  };
+
+  const descriptionToShow = enrichedDescription || job?.description;
+  const hasDescription = !!descriptionToShow && descriptionToShow.trim().length > 0;
+  // Show button if: no description at all, OR description is very short, OR not yet enriched
+  const shouldShowButton = !enrichedDescription && (!job?.description || job.description.trim().length < 100);
 
   return (
     <main className="min-h-screen justify-between flex flex-col">
@@ -37,7 +77,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       <PageShell className="max-w-3xl">
         {/* Back link */}
         <Link
-          href="/jobs"
+          href={backUrl}
           className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -179,11 +219,49 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
               {/* Description */}
               <section className="rounded-xl border border-border bg-card p-6">
-                <h2 className="text-lg font-semibold text-foreground">Job Description</h2>
-                <div
-                  className="mt-4 prose prose-sm prose-zinc max-w-none text-muted-foreground [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1"
-                  dangerouslySetInnerHTML={{ __html: job.description }}
-                />
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-foreground">Job Description</h2>
+                  {shouldShowButton && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleFetchDescription}
+                      disabled={isEnrichingDescription}
+                      title="Fetch full job description from source"
+                    >
+                      {isEnrichingDescription ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Loading...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="h-4 w-4 mr-2" />
+                          Fetch Description
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+                
+                {enrichmentError && (
+                  <div className="mb-4 rounded border border-destructive/20 bg-destructive/5 p-3 text-sm text-destructive">
+                    {enrichmentError}
+                  </div>
+                )}
+
+                {hasDescription ? (
+                  <div
+                    className="mt-4 prose prose-sm prose-zinc max-w-none text-muted-foreground [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1"
+                    dangerouslySetInnerHTML={{ __html: descriptionToShow }}
+                  />
+                ) : (
+                  <div className="rounded border border-border bg-muted/30 p-8 text-center">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Job description is not available. Click the button above to fetch it from the source.
+                    </p>
+                  </div>
+                )}
               </section>
 
               {/* Source info */}

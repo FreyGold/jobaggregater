@@ -16,6 +16,7 @@ import {
   BookmarkCheck,
   ExternalLink,
   Wifi,
+  Trash2,
 } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -25,9 +26,10 @@ interface JobCardProps {
   isSaved?: boolean;
   onSave?: (jobId: string) => void;
   onUnsave?: (jobId: string) => void;
+  isBookmarksPage?: boolean;
 }
 
-function JobCardComponent({ job, isSaved = false, onSave, onUnsave }: JobCardProps) {
+function JobCardComponent({ job, isSaved = false, onSave, onUnsave, isBookmarksPage = false }: JobCardProps) {
   const salaryText = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);
   
   // Optimistic state for bookmark
@@ -55,6 +57,14 @@ function JobCardComponent({ job, isSaved = false, onSave, onUnsave }: JobCardPro
       onUnsave?.(job.id);
     }
 
+    return () => clearTimeout(timer);
+  };
+
+  const handleRemove = () => {
+    setOptimisticSaved(false);
+    setIsAnimating(true);
+    const timer = setTimeout(() => setIsAnimating(false), 600);
+    onUnsave?.(job.id);
     return () => clearTimeout(timer);
   };
 
@@ -122,33 +132,46 @@ function JobCardComponent({ job, isSaved = false, onSave, onUnsave }: JobCardPro
 
           {/* Right: Actions */}
           <div className="flex flex-col gap-1.5 shrink-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "size-9 hover:bg-muted/70 transition-all",
-                isAnimating && "scale-125"
-              )}
-              onClick={handleBookmarkClick}
-              aria-label={optimisticSaved ? 'Unsave job' : 'Save job'}
-              title={optimisticSaved ? 'Unsave job' : 'Save job'}
-            >
-              {optimisticSaved ? (
-                <BookmarkCheck 
-                  className={cn(
-                    "h-4 w-4 text-primary transition-all duration-300",
-                    isAnimating && "scale-110 animate-pulse"
-                  )}
-                />
-              ) : (
-                <Bookmark 
-                  className={cn(
-                    "h-4 w-4 transition-all duration-300",
-                    isAnimating && "scale-110 animate-pulse"
-                  )}
-                />
-              )}
-            </Button>
+            {isBookmarksPage ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-9 hover:bg-muted/70 transition-all hover:text-destructive"
+                onClick={handleRemove}
+                aria-label="Remove from bookmarks"
+                title="Remove from bookmarks"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "size-9 hover:bg-muted/70 transition-all",
+                  isAnimating && "scale-125"
+                )}
+                onClick={handleBookmarkClick}
+                aria-label={optimisticSaved ? 'Unsave job' : 'Save job'}
+                title={optimisticSaved ? 'Unsave job' : 'Save job'}
+              >
+                {optimisticSaved ? (
+                  <BookmarkCheck 
+                    className={cn(
+                      "h-4 w-4 text-primary transition-all duration-300",
+                      isAnimating && "scale-110 animate-pulse"
+                    )}
+                  />
+                ) : (
+                  <Bookmark 
+                    className={cn(
+                      "h-4 w-4 transition-all duration-300",
+                      isAnimating && "scale-110 animate-pulse"
+                    )}
+                  />
+                )}
+              </Button>
+            )}
 
             <a
               className={cn(
@@ -177,7 +200,8 @@ export const JobCard = memo(
     // Only re-render if job ID or saved status changed
     return (
       prevProps.job.id === nextProps.job.id &&
-      prevProps.isSaved === nextProps.isSaved
+      prevProps.isSaved === nextProps.isSaved &&
+      prevProps.isBookmarksPage === nextProps.isBookmarksPage
     );
   }
 );

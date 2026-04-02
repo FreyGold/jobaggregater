@@ -44,10 +44,6 @@ export class WeWorkRemotelyScraper extends BaseScraper {
     });
 
     console.log(`[Scraper: ${this.name}] Successfully scraped ${allJobs.length} jobs.`);
-    
-    // Enrich descriptions if RSS data is insufficient
-    await this.enrichDescriptionsIfNeeded(allJobs);
-    
     return allJobs;
   }
 

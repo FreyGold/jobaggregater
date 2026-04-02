@@ -60,11 +60,6 @@ export default function PricingPage() {
       <section className="py-24 sm:py-32 bg-muted/10">
         <Container>
           <div className="mx-auto max-w-5xl text-center">
-            {/* Header */}
-            <div className="mb-6 inline-flex animate-fade-in items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium text-primary shadow-sm backdrop-blur-sm transition-colors hover:bg-primary/10 hover:text-primary">
-              <Sparkles className="h-3.5 w-3.5" />
-              Simple, transparent pricing
-            </div>
             <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Choose your plan
             </h1>

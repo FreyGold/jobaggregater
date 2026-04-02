@@ -84,6 +84,29 @@ export class SubscriptionController extends BaseController {
     }
   };
 
+
+  syncSubscription = async (req: Request, res: Response) => {
+    try {
+      const result = await this.stripeService.syncUserSubscriptionFromStripe(req.user!.userId);
+      if (!result) {
+        res.status(400).json({
+          data: null,
+          error: { message: 'Failed to sync subscription', code: 'SYNC_FAILED' },
+        });
+        return;
+      }
+
+      this.handleSuccess(res, {
+        plan: result.plan,
+        status: result.status,
+        subscriptionId: result.subscriptionId,
+        synced: result.synced,
+      });
+    } catch (error) {
+      this.handleError(error, res, 'SubscriptionController.syncSubscription');
+    }
+  };
+
   handleWebhook = async (req: Request, res: Response) => {
     try {
       const signature = req.headers['stripe-signature'] as string;
