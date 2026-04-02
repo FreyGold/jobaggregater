@@ -9,26 +9,59 @@ export class BuiltInScraper extends BaseScraper {
 
   private async fetchJobDescription(jobUrl: string): Promise<string> {
     try {
-      const res = await this.client.get(jobUrl, { responseType: 'text' });
-      const html = res.body as string;
+      const html = await this.fetchHtml(jobUrl);
+      if (!html) return '';
+      
       const $ = cheerio.load(html);
 
-      // BuiltIn job pages typically include the content in one of these containers.
-      // We keep a couple of fallbacks to survive minor DOM changes.
-      const container =
-        $('[data-id="job-description"]').first() ||
-        $('[data-testid="job-description"]').first() ||
-        $('.job-description').first() ||
-        $('main').first();
+      // BuiltIn job pages - updated selectors for current structure
+      const descriptionSelectors = [
+        '[data-id="job-description"]',
+        '[data-testid="job-description"]',
+        '.job-description',
+        '.job-description-content',
+        '[class*="JobDescription"]',
+        'article [class*="description"]',
+        'main section [class*="description"]',
+      ];
 
-      if (!container || container.length === 0) return '';
+      for (const selector of descriptionSelectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          // Remove noisy elements
+          element.find('script,noscript,style,svg,button,nav').remove();
+          
+          const descHtml = element.html()?.trim();
+          if (descHtml && descHtml.length > 100) {
+            console.log(`[Scraper: ${this.name}] Found description using selector: ${selector}`);
+            return descHtml;
+          }
+        }
+      }
 
-      // Remove noisy widgets/sidebars if present.
-      container.find('script,noscript,style,svg').remove();
+      // Fallback: look for largest text content block
+      const contentBlocks = $('div[class*="content"], section, article')
+        .map((_, el) => {
+          const $el = $(el);
+          $el.find('script,style,nav,button').remove();
+          const html = $el.html()?.trim();
+          return html && html.length > 200 ? html : null;
+        })
+        .get()
+        .filter(Boolean);
 
-      const descHtml = container.html()?.trim() ?? '';
-      return descHtml;
-    } catch {
+      if (contentBlocks.length > 0) {
+        const longest = contentBlocks.sort((a, b) => (b?.length || 0) - (a?.length || 0))[0];
+        if (longest && longest.length > 100) {
+          console.log(`[Scraper: ${this.name}] Found description via fallback (length: ${longest.length})`);
+          return longest;
+        }
+      }
+
+      console.warn(`[Scraper: ${this.name}] No description found for ${jobUrl}`);
+      return '';
+    } catch (error) {
+      console.error(`[Scraper: ${this.name}] Error fetching description:`, error);
       return '';
     }
   }
@@ -102,12 +135,23 @@ export class BuiltInScraper extends BaseScraper {
         }
       }
 
-      // Enrich descriptions (best-effort; avoids placeholder text)
+      // Enrich descriptions with better error handling and logging
+      console.log(`[Scraper: ${this.name}] Fetching descriptions for ${jobs.length} jobs...`);
+      let enrichedCount = 0;
+      
       for (const job of jobs) {
         if (!job.url) continue;
         const desc = await this.fetchJobDescription(job.url);
-        if (desc) job.description = desc;
+        if (desc && desc.length > 100) {
+          job.description = desc;
+          enrichedCount++;
+        }
+        
+        // Add delay to be polite
+        await new Promise(resolve => setTimeout(resolve, 800));
       }
+      
+      console.log(`[Scraper: ${this.name}] Successfully enriched ${enrichedCount}/${jobs.length} descriptions.`);
 
       console.log(`[Scraper: ${this.name}] Successfully scraped ${jobs.length} jobs.`);
       return jobs;

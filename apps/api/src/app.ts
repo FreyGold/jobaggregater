@@ -29,11 +29,26 @@ function ensureDatabaseReady(): Promise<void> {
 app.use('/api/webhooks', webhookRoutes);
 
 // ─── Global Middleware ───────────────────────────────────────────
-const allowedOrigins = config.cors.origin.split(',').map(o => o.trim());
+const normalizeOrigin = (value: string): string => value.trim().replace(/\/$/, '');
+const allowedOrigins = new Set(
+  config.cors.origin
+    .split(',')
+    .map(normalizeOrigin)
+    .filter(Boolean),
+);
+const addOrigin = (value: string): void => {
+  const normalized = normalizeOrigin(value);
+  if (normalized) allowedOrigins.add(normalized);
+};
+addOrigin(config.app.frontendUrl);
+addOrigin(config.api.url);
+addOrigin(`http://localhost:${config.port}`);
+addOrigin(`http://127.0.0.1:${config.port}`);
 
 app.use(cors({ 
   origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = origin ? normalizeOrigin(origin) : '';
+    if (!origin || allowedOrigins.has(normalizedOrigin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

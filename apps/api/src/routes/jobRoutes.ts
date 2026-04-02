@@ -3,6 +3,7 @@
 import { Router } from 'express';
 import { JobController } from '../controllers/JobController.js';
 import { JobService } from '../services/jobService.js';
+import { JobDescriptionService } from '../services/jobDescriptionService.js';
 import { jobRepository } from '../repositories/JobRepository.js';
 import { userRepository } from '../repositories/UserRepository.js';
 import { validateRequest } from '../middleware/validateRequest.js';
@@ -12,7 +13,8 @@ import { jobFiltersSchema } from '../validators/job.schema.js';
 import { asyncErrorWrapper } from '../utils/index.js';
 
 const jobService = new JobService(jobRepository, userRepository);
-const jobController = new JobController(jobService);
+const jobDescriptionService = new JobDescriptionService(jobRepository);
+const jobController = new JobController(jobService, jobDescriptionService);
 
 const router: Router = Router();
 
@@ -245,6 +247,41 @@ router.delete(
   '/saved/:jobId',
   asyncErrorWrapper(authMiddleware as never),
   asyncErrorWrapper((req, res) => jobController.unsaveJob(req, res)),
+);
+
+/**
+ * @swagger
+ * /api/jobs/{id}/enrich-description:
+ *   post:
+ *     summary: Enrich job description by fetching from original source
+ *     tags: [Jobs]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Job with enriched description
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   $ref: '#/components/schemas/Job'
+ *       400:
+ *         description: No scraper available for this source
+ *       404:
+ *         description: Job not found
+ *       500:
+ *         description: Failed to scrape description
+ */
+router.post(
+  '/:id/enrich-description',
+  tieredRateLimit,
+  asyncErrorWrapper((req, res) => jobController.enrichJobDescription(req, res)),
 );
 
 export { router as jobRoutes };

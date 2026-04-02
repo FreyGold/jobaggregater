@@ -63,11 +63,15 @@ export class JobRepository {
     }
 
     if (filters.dateFrom) {
-      qb.andWhere('job.postedAt >= :dateFrom', { dateFrom: new Date(filters.dateFrom) });
+      qb.andWhere('COALESCE(job.postedAt, job.createdAt) >= :dateFrom', {
+        dateFrom: new Date(filters.dateFrom),
+      });
     }
 
     if (filters.dateTo) {
-      qb.andWhere('job.postedAt <= :dateTo', { dateTo: new Date(filters.dateTo) });
+      qb.andWhere('COALESCE(job.postedAt, job.createdAt) <= :dateTo', {
+        dateTo: new Date(filters.dateTo),
+      });
     }
 
     if (filters.tags && filters.tags.length > 0) {
@@ -89,10 +93,7 @@ export class JobRepository {
   }
 
   async findById(id: string) {
-    return this.repo.createQueryBuilder('job')
-      .leftJoinAndSelect('job.source', 'source')
-      .where('job.id = :id', { id })
-      .getOne();
+    return this.repo.findOne({ where: { id } });
   }
 
   async search(keyword: string, limit: number = 20) {

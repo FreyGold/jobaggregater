@@ -20,6 +20,34 @@ function getStripe(): Stripe {
 export class StripeService {
   constructor(private readonly userRepository: UserRepository) {}
 
+  isConfigured(): boolean {
+    return Boolean(stripe);
+  }
+
+  private resolvePlanFromPriceId(priceId?: string | null): UserSubscriptionPlan | null {
+    if (!priceId) return null;
+    if (priceId === config.stripe.proPriceId) return UserSubscriptionPlan.PRO;
+    if (priceId === config.stripe.enterprisePriceId) return UserSubscriptionPlan.ENTERPRISE;
+    return null;
+  }
+
+  private resolvePlanFromSubscription(subscription?: Stripe.Subscription | null): UserSubscriptionPlan | null {
+    if (!subscription) return null;
+    const priceId = subscription.items?.data?.[0]?.price?.id;
+    return this.resolvePlanFromPriceId(priceId);
+  }
+
+  private resolveStatusFromSubscription(subscription?: Stripe.Subscription | null): UserSubscriptionStatus {
+    if (!subscription) return UserSubscriptionStatus.ACTIVE;
+    return subscription.status === 'active'
+      ? UserSubscriptionStatus.ACTIVE
+      : subscription.status === 'past_due'
+        ? UserSubscriptionStatus.PAST_DUE
+        : subscription.status === 'trialing'
+          ? UserSubscriptionStatus.TRIALING
+          : UserSubscriptionStatus.CANCELED;
+  }
+
   async createOrGetCustomer(userId: string, email: string): Promise<string> {
     const user = await this.userRepository.findByIdFull(userId);
     if (!user) throw new AppError(404, 'User not found', 'USER_NOT_FOUND');
@@ -54,6 +82,9 @@ export class StripeService {
       mode: 'subscription',
       payment_method_types: ['card'],
       line_items: [{ price: priceId, quantity: 1 }],
+      subscription_data: {
+        metadata: { userId, plan },
+      },
       success_url: `${config.app.frontendUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${config.app.frontendUrl}/subscription/cancel`,
       metadata: { userId, plan },
@@ -87,33 +118,35 @@ export class StripeService {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.userId;
-        const plan = session.metadata?.plan as 'PRO' | 'ENTERPRISE';
-        if (userId && plan) {
+        const plan = session.metadata?.plan as 'PRO' | 'ENTERPRISE' | undefined;
+        const subscriptionId = session.subscription as string | undefined;
+        const subscription = subscriptionId
+          ? await getStripe().subscriptions.retrieve(subscriptionId)
+          : null;
+        const resolvedPlan = this.resolvePlanFromSubscription(subscription)
+          ?? (plan ? UserSubscriptionPlan[plan] : null);
+        if (userId && resolvedPlan) {
           await this.userRepository.updateSubscription(userId, {
-            subscriptionPlan: UserSubscriptionPlan[plan],
-            subscriptionStatus: UserSubscriptionStatus.ACTIVE,
-            stripeSubscriptionId: session.subscription as string,
+            subscriptionPlan: resolvedPlan,
+            subscriptionStatus: this.resolveStatusFromSubscription(subscription),
+            stripeSubscriptionId: subscriptionId ?? null,
           });
         }
         break;
       }
 
+      case 'customer.subscription.created':
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription;
         const user = await this.userRepository.findByStripeCustomerId(
           subscription.customer as string,
         );
         if (user) {
-          const status = subscription.status === 'active'
-            ? UserSubscriptionStatus.ACTIVE
-            : subscription.status === 'past_due'
-              ? UserSubscriptionStatus.PAST_DUE
-              : subscription.status === 'trialing'
-                ? UserSubscriptionStatus.TRIALING
-                : UserSubscriptionStatus.CANCELED;
-
+          const resolvedPlan = this.resolvePlanFromSubscription(subscription);
           await this.userRepository.updateSubscription(user.id, {
-            subscriptionStatus: status,
+            subscriptionStatus: this.resolveStatusFromSubscription(subscription),
+            ...(resolvedPlan ? { subscriptionPlan: resolvedPlan } : {}),
+            stripeSubscriptionId: subscription.id ?? user.stripeSubscriptionId,
           });
         }
         break;
@@ -139,6 +172,7 @@ export class StripeService {
   }
 
   getPlans() {
+    const stripeConfigured = this.isConfigured();
     return [
       {
         id: 'FREE' as const,
@@ -166,7 +200,7 @@ export class StripeService {
           'Priority support',
         ],
         limits: { jobResultsPerPage: null, savedJobs: null, rateLimit: 300 },
-        stripePriceId: config.stripe.proPriceId || undefined,
+        stripePriceId: stripeConfigured ? config.stripe.proPriceId || undefined : undefined,
       },
       {
         id: 'ENTERPRISE' as const,
@@ -181,7 +215,7 @@ export class StripeService {
           'Dedicated support',
         ],
         limits: { jobResultsPerPage: null, savedJobs: null, rateLimit: 1000 },
-        stripePriceId: config.stripe.enterprisePriceId || undefined,
+        stripePriceId: stripeConfigured ? config.stripe.enterprisePriceId || undefined : undefined,
       },
     ];
   }

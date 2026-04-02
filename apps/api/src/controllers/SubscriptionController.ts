@@ -20,6 +20,13 @@ export class SubscriptionController extends BaseController {
 
   createCheckout = async (req: Request, res: Response) => {
     try {
+      if (!this.stripeService.isConfigured()) {
+        res.status(503).json({
+          data: null,
+          error: { message: 'Stripe is not configured', code: 'STRIPE_NOT_CONFIGURED' },
+        });
+        return;
+      }
       const { plan } = req.body as { plan: 'PRO' | 'ENTERPRISE' };
       if (!plan || !['PRO', 'ENTERPRISE'].includes(plan)) {
         res.status(400).json({
@@ -42,6 +49,13 @@ export class SubscriptionController extends BaseController {
 
   createPortal = async (req: Request, res: Response) => {
     try {
+      if (!this.stripeService.isConfigured()) {
+        res.status(503).json({
+          data: null,
+          error: { message: 'Stripe is not configured', code: 'STRIPE_NOT_CONFIGURED' },
+        });
+        return;
+      }
       const result = await this.stripeService.createPortalSession(req.user!.userId);
       this.handleSuccess(res, result);
     } catch (error) {

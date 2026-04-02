@@ -61,8 +61,12 @@ export const config = {
   cors: {
     origin: optional(
       'CORS_ORIGIN',
-      'http://localhost:3000,http://localhost:8081,https://nimble-buttercream-897ec0.netlify.app/',
+      'http://localhost:3000,http://localhost:3001,http://localhost:8081,https://nimble-buttercream-897ec0.netlify.app/',
     ),
+  },
+
+  api: {
+    url: optional('API_URL', ''),
   },
 
   stripe: {

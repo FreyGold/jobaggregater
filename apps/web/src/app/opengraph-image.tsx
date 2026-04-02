@@ -22,7 +22,7 @@ export default function Image() {
         }}
       >
         <div style={{ fontSize: 28, fontWeight: 700, color: '#7c3aed' }}>JobAgg</div>
-        <div style={{ marginTop: 20, fontSize: 68, fontWeight: 800, lineHeight: 1.1 }}>
+        <div style={{ marginTop: 20, fontSize: 68, fontWeight: 800, lineHeight: 1.1, display: 'flex', flexDirection: 'column' }}>
           Every job.
           <br />
           One search.

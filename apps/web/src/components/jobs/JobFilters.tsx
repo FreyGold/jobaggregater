@@ -93,40 +93,52 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
   }
 
   // Memoize filter update handlers to prevent inline functions in render
-  const handleRemoteFilterChange = useCallback((value: boolean | undefined) => {
-    updateFilter({ isRemote: value });
-  }, [filters, onFiltersChange]);
+  const handleRemoteFilterChange = useCallback(
+    (value: boolean | undefined) => {
+      updateFilter({ isRemote: value });
+    },
+    [filters, onFiltersChange]
+  );
 
-  const handleEmploymentTypeChange = useCallback((type: string) => {
-    updateFilter({ 
-      employmentType: filters.employmentType === type ? undefined : type 
-    });
-  }, [filters, onFiltersChange]);
+  const handleEmploymentTypeChange = useCallback(
+    (type: string) => {
+      updateFilter({
+        employmentType: filters.employmentType === type ? undefined : type,
+      });
+    },
+    [filters, onFiltersChange]
+  );
 
-  const handleExperienceChange = useCallback((level: string) => {
-    updateFilter({ 
-      experienceLevel: filters.experienceLevel === level ? undefined : level 
-    });
-  }, [filters, onFiltersChange]);
+  const handleExperienceChange = useCallback(
+    (level: string) => {
+      updateFilter({
+        experienceLevel: filters.experienceLevel === level ? undefined : level,
+      });
+    },
+    [filters, onFiltersChange]
+  );
 
-  const handleSourceChange = useCallback((source: string) => {
-    updateFilter({ 
-      source: filters.source === source ? undefined : source 
-    });
-  }, [filters, onFiltersChange]);
+  const handleSourceChange = useCallback(
+    (source: string) => {
+      updateFilter({
+        source: filters.source === source ? undefined : source,
+      });
+    },
+    [filters, onFiltersChange]
+  );
 
   function clearAll() {
     setKeyword('');
     setLocation('');
-    onFiltersChange({ 
-      page: 1, 
-      limit: 20, 
+    onFiltersChange({
+      page: 1,
+      limit: 20,
       dateFrom: undefined,
       employmentType: undefined,
       experienceLevel: undefined,
       source: undefined,
       isRemote: undefined,
-      arabOnly: undefined
+      arabOnly: undefined,
     });
   }
 
@@ -150,11 +162,11 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
   ].filter(Boolean).length;
 
   return (
-    <aside className="space-y-6 rounded-2xl border border-border bg-card/50 p-6 shadow-sm backdrop-blur-sm">
+    <aside className="space-y-6 rounded-2xl border border-border bg-card/50 p-6 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-md">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground/90">
-          <SlidersHorizontal className="h-4 w-4" />
+        <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
+          <SlidersHorizontal className="h-4 w-4 text-primary" />
           Filters
         </h2>
         {activeCount > 0 && (
@@ -162,7 +174,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
             variant="ghost"
             size="sm"
             onClick={clearAll}
-            className="h-7 px-2 text-[11px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="h-7 px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             Clear all
           </Button>
@@ -172,7 +184,10 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
       <div className="space-y-5">
         {/* Keyword */}
         <div className="space-y-2">
-          <Label htmlFor={keywordId} className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+          <Label
+            htmlFor={keywordId}
+            className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+          >
             Keyword
           </Label>
           <Input
@@ -180,13 +195,16 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
             placeholder="React, Python..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            className="h-10 border-muted-foreground/20 bg-background/50 focus-visible:border-primary/50"
+            className="h-10 border-border bg-background/50 transition-colors focus-visible:border-primary"
           />
         </div>
 
         {/* Location */}
         <div className="space-y-2">
-          <Label htmlFor={locationId} className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+          <Label
+            htmlFor={locationId}
+            className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+          >
             Location
           </Label>
           <Input
@@ -194,13 +212,13 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
             placeholder="City, state, or country"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="h-10 border-muted-foreground/20 bg-background/50 focus-visible:border-primary/50"
+            className="h-10 border-border bg-background/50 transition-colors focus-visible:border-primary"
           />
         </div>
 
         {/* Date Filter */}
         <div className="space-y-2">
-          <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+          <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Posted After
           </Label>
           <div className="relative">
@@ -210,12 +228,12 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
                   <Button
                     variant="outline"
                     className={cn(
-                      "h-10 w-full justify-start text-left font-normal border-muted-foreground/20 bg-background/50 hover:bg-muted/50",
-                      !dateFrom && "text-muted-foreground"
+                      'h-10 w-full justify-start text-left font-normal border-border bg-background/50 transition-colors hover:bg-muted/50',
+                      !dateFrom && 'text-muted-foreground'
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateFrom ? formatDate(dateFrom) : "Any time"}
+                    {dateFrom ? formatDate(dateFrom) : 'Any time'}
                   </Button>
                 }
               />
@@ -233,7 +251,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
                     }
                     setDateCalendarOpen(false);
                   }}
-                  disabled={(d) => d > new Date() || d < new Date("2024-01-01")}
+                  disabled={(d) => d > new Date() || d < new Date('2024-01-01')}
                   initialFocus
                 />
               </PopoverContent>
@@ -242,7 +260,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
               <Button
                 variant="ghost"
                 size="icon-xs"
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full z-10 !active:translate-y-0"
+                className="absolute right-1 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full transition-colors hover:bg-muted active:scale-95"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -251,7 +269,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
                 }}
                 aria-label="Clear date filter"
               >
-                <X className="h-4 w-4" />
+                <X className="h-3.5 w-3.5" />
               </Button>
             )}
           </div>
@@ -261,7 +279,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
 
         {/* Remote toggle */}
         <div className="space-y-2">
-          <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+          <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Work Mode
           </Label>
           <div className="flex flex-wrap gap-2">
@@ -274,13 +292,22 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
                 key={String(opt.value)}
                 variant={filters.isRemote === opt.value ? 'default' : 'outline'}
                 className={cn(
-                  "cursor-pointer px-2.5 py-1.5 text-xs font-medium",
-                  filters.isRemote === opt.value 
-                    ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20" 
-                    : "bg-transparent border-border hover:bg-muted/50"
+                  'cursor-pointer px-2.5 py-1 text-xs font-medium transition-all focus-visible:outline-none',
+                  filters.isRemote === opt.value
+                    ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20'
+                    : 'border-border bg-transparent hover:border-primary/30 hover:bg-muted/50 active:scale-95'
                 )}
                 onClick={() => handleRemoteFilterChange(opt.value)}
                 role="button"
+                tabIndex={0}
+                aria-pressed={filters.isRemote === opt.value}
+                aria-label={`Filter by ${opt.label} work mode`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleRemoteFilterChange(opt.value);
+                  }
+                }}
               >
                 {opt.label}
               </Badge>
@@ -290,7 +317,7 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
 
         {/* Employment Type */}
         <div className="space-y-2">
-          <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+          <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Employment Type
           </Label>
           <div className="flex flex-wrap gap-2">
@@ -299,20 +326,20 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
                 key={type}
                 variant={filters.employmentType === type ? 'default' : 'outline'}
                 className={cn(
-                  "cursor-pointer px-2.5 py-1.5 text-xs font-medium capitalize",
-                  filters.employmentType === type 
-                    ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20" 
-                    : "bg-transparent border-border hover:bg-muted/50"
+                  'cursor-pointer px-2.5 py-1 text-xs font-medium capitalize transition-all focus-visible:outline-none',
+                  filters.employmentType === type
+                    ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20'
+                    : 'border-border bg-transparent hover:border-primary/30 hover:bg-muted/50 active:scale-95'
                 )}
                 onClick={() => handleEmploymentTypeChange(type)}
                 role="button"
                 tabIndex={0}
+                aria-pressed={filters.employmentType === type}
+                aria-label={`Filter by ${type.replace('-', ' ')} employment type`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    updateFilter({ 
-                      employmentType: filters.employmentType === type ? undefined : type 
-                    });
+                    handleEmploymentTypeChange(type);
                   }
                 }}
               >
@@ -324,29 +351,29 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
 
         {/* Experience Level */}
         <div className="space-y-2">
-          <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+          <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Experience
           </Label>
           <div className="flex flex-wrap gap-2">
             {EXPERIENCE_LEVELS.map((level) => (
-               <Badge
+              <Badge
                 key={level}
                 variant={filters.experienceLevel === level ? 'default' : 'outline'}
                 className={cn(
-                  "cursor-pointer px-2.5 py-1.5 text-xs font-medium capitalize",
-                  filters.experienceLevel === level 
-                    ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20" 
-                    : "bg-transparent border-border hover:bg-muted/50"
+                  'cursor-pointer px-2.5 py-1 text-xs font-medium capitalize transition-all focus-visible:outline-none',
+                  filters.experienceLevel === level
+                    ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20'
+                    : 'border-border bg-transparent hover:border-primary/30 hover:bg-muted/50 active:scale-95'
                 )}
                 onClick={() => handleExperienceChange(level)}
                 role="button"
                 tabIndex={0}
+                aria-pressed={filters.experienceLevel === level}
+                aria-label={`Filter by ${level} experience level`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    updateFilter({ 
-                      experienceLevel: filters.experienceLevel === level ? undefined : level 
-                    });
+                    handleExperienceChange(level);
                   }
                 }}
               >
@@ -358,32 +385,34 @@ export function JobFiltersSidebar({ filters, onFiltersChange }: JobFiltersProps)
 
         {/* Source */}
         <div className="space-y-2">
-          <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+          <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Source
           </Label>
           <div className="flex flex-wrap gap-2">
             {sourcesLoading ? (
-              <span className="text-xs text-muted-foreground">Loading sources...</span>
+              <span className="text-xs text-muted-foreground animate-pulse">
+                Loading sources...
+              </span>
             ) : (
               sourcesSorted.map((s) => (
                 <Badge
                   key={s.key}
                   variant={filters.source === s.name ? 'default' : 'outline'}
                   className={cn(
-                    "cursor-pointer px-2.5 py-1.5 text-xs font-medium",
-                    filters.source === s.name 
-                      ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20" 
-                      : "bg-transparent border-border hover:bg-muted/50"
+                    'cursor-pointer px-2.5 py-1 text-xs font-medium transition-all focus-visible:outline-none',
+                    filters.source === s.name
+                      ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20'
+                      : 'border-border bg-transparent hover:border-primary/30 hover:bg-muted/50 active:scale-95'
                   )}
                   onClick={() => handleSourceChange(s.name)}
                   role="button"
                   tabIndex={0}
+                  aria-pressed={filters.source === s.name}
+                  aria-label={`Filter by ${s.name} source`}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      updateFilter({ 
-                        source: filters.source === s.name ? undefined : s.name 
-                      });
+                      handleSourceChange(s.name);
                     }
                   }}
                   title={s.name}

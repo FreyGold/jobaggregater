@@ -4,6 +4,7 @@
 import { Router } from 'express';
 import express from 'express';
 import { SubscriptionController } from '../controllers/SubscriptionController.js';
+import { asyncErrorWrapper } from '../utils/index.js';
 import { StripeService } from '../services/stripeService.js';
 import { userRepository } from '../repositories/UserRepository.js';
 
@@ -16,7 +17,7 @@ const router: Router = Router();
 router.post(
   '/stripe',
   express.raw({ type: 'application/json' }),
-  subscriptionController.handleWebhook,
+  asyncErrorWrapper(subscriptionController.handleWebhook),
 );
 
 export { router as webhookRoutes };

@@ -49,6 +49,10 @@ export class RemotiveScraper extends BaseScraper {
         return false;
       });
 
+      // Validate and enrich descriptions if needed
+      console.log(`[Scraper: ${this.name}] Validating descriptions for ${uniqueJobs.length} jobs...`);
+      await this.validateDescriptions(uniqueJobs);
+
       return uniqueJobs;
     } catch (error) {
       console.error(`[Scraper: ${this.name}] Error in scrape:`, error);
@@ -101,5 +105,65 @@ export class RemotiveScraper extends BaseScraper {
     if (lower.includes('junior') || lower.includes('jr') || lower.includes('entry') || lower.includes('grad')) return 'entry';
     if (lower.includes('vp') || lower.includes('chief') || lower.includes('executive')) return 'executive';
     return 'mid';
+  }
+
+  /**
+   * Scrape full job description from Remotive job page
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl);
+      if (!html) return '';
+
+      const cheerio = await import('cheerio');
+      const $ = cheerio.load(html);
+
+      // Remotive job pages typically use these selectors
+      const descriptionSelectors = [
+        '[data-description]',
+        '.job-description',
+        '.job-details-description',
+        '[class*="description"]',
+        'article.job',
+      ];
+
+      for (const selector of descriptionSelectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          element.find('script,style,svg,noscript').remove();
+          const descHtml = element.html()?.trim();
+          if (descHtml && descHtml.length > 100) {
+            return descHtml;
+          }
+        }
+      }
+
+      return '';
+    } catch (error) {
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      return '';
+    }
+  }
+
+  /**
+   * Validate descriptions from API and enrich if needed
+   */
+  private async validateDescriptions(jobs: JobCreateInput[]): Promise<void> {
+    let enrichedCount = 0;
+
+    for (const job of jobs) {
+      // Check if description is missing or too short (likely truncated)
+      if (!job.description || job.description.length < 200) {
+        const fullDescription = await this.scrapeJobDescription(job.url);
+        if (fullDescription && fullDescription.length > job.description.length) {
+          job.description = fullDescription;
+          enrichedCount++;
+        }
+      }
+    }
+
+    if (enrichedCount > 0) {
+      console.log(`[Scraper: ${this.name}] Enriched ${enrichedCount} descriptions from job pages.`);
+    }
   }
 }

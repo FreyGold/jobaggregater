@@ -47,4 +47,5 @@ export interface JobFilters extends PaginationParams {
   dateFrom?: string;
   dateTo?: string;
   tags?: string[];
+  tab?: 'all' | 'today';
 }

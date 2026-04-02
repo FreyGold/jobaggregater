@@ -44,6 +44,10 @@ export class WeWorkRemotelyScraper extends BaseScraper {
     });
 
     console.log(`[Scraper: ${this.name}] Successfully scraped ${allJobs.length} jobs.`);
+    
+    // Enrich descriptions if RSS data is insufficient
+    await this.enrichDescriptionsIfNeeded(allJobs);
+    
     return allJobs;
   }
 
@@ -121,5 +125,63 @@ export class WeWorkRemotelyScraper extends BaseScraper {
     if (lower.includes('junior') || lower.includes('jr') || lower.includes('entry') || lower.includes('grad')) return 'entry';
     if (lower.includes('vp') || lower.includes('chief') || lower.includes('executive')) return 'executive';
     return 'mid';
+  }
+
+  /**
+   * Scrape full job description from WeWorkRemotely job page
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl);
+      if (!html) return '';
+
+      const $ = cheerio.load(html);
+
+      // WeWorkRemotely job pages use these selectors
+      const descriptionSelectors = [
+        '.listing-container .listing-content',
+        '[data-description]',
+        '.job-description',
+        '[class*="description"]',
+      ];
+
+      for (const selector of descriptionSelectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          element.find('script,style,svg,noscript').remove();
+          const descHtml = element.html()?.trim();
+          if (descHtml && descHtml.length > 100) {
+            return descHtml;
+          }
+        }
+      }
+
+      return '';
+    } catch (error) {
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      return '';
+    }
+  }
+
+  /**
+   * Validate and enrich descriptions if RSS data is insufficient
+   */
+  private async enrichDescriptionsIfNeeded(jobs: JobCreateInput[]): Promise<void> {
+    let enrichedCount = 0;
+
+    for (const job of jobs) {
+      // If description is too short (likely truncated in RSS), fetch full version
+      if (job.description.length < 300 && job.url) {
+        const fullDescription = await this.scrapeJobDescription(job.url);
+        if (fullDescription && fullDescription.length > job.description.length) {
+          job.description = fullDescription;
+          enrichedCount++;
+        }
+      }
+    }
+
+    if (enrichedCount > 0) {
+      console.log(`[Scraper: ${this.name}] Enriched ${enrichedCount} descriptions from job pages.`);
+    }
   }
 }

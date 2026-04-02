@@ -14,15 +14,16 @@ const JOB_CACHE_TTL_SECONDS = 900;
 const SEARCH_CACHE_TTL_SECONDS = 300;
 
 /**
- * If tab is 'today', calculate and set dateFrom to 24 hours ago
+ * If tab is 'today', calculate and set dateFrom to the start of today.
+ * This aligns the filter with the calendar day instead of a rolling 24h window.
  */
 function enrichFiltersWithTab(filters: JobFiltersInput): JobFiltersInput {
   if (filters.tab === 'today' && !filters.dateFrom) {
-    const now = new Date();
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
     return {
       ...filters,
-      dateFrom: twentyFourHoursAgo.toISOString(),
+      dateFrom: startOfDay.toISOString(),
     };
   }
   return filters;

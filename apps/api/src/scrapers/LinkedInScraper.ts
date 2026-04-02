@@ -105,6 +105,8 @@ export class LinkedInScraper extends BaseScraper {
 
   // @ts-ignore
   private queue = new PQueue({ concurrency: 5 });
+  // @ts-ignore
+  private descQueue = new PQueue({ concurrency: 3 }); // Slower for individual job pages
 
   async scrape(): Promise<JobCreateInput[]> {
     console.log(
@@ -149,6 +151,12 @@ export class LinkedInScraper extends BaseScraper {
     console.log(
       `[Scraper: ${this.name}] Finished multi-country scrape. Total unique jobs: ${allJobs.length}`,
     );
+
+    // Enrich descriptions in batches
+    console.log(`[Scraper: ${this.name}] Enriching descriptions for ${allJobs.length} jobs...`);
+    await this.enrichDescriptions(allJobs);
+    console.log(`[Scraper: ${this.name}] Description enrichment complete.`);
+
     return allJobs;
   }
 
@@ -268,5 +276,76 @@ export class LinkedInScraper extends BaseScraper {
 
   private delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Scrape full job description from individual LinkedIn job page
+   */
+  async scrapeJobDescription(jobUrl: string): Promise<string> {
+    try {
+      const html = await this.fetchHtml(jobUrl);
+      if (!html) return '';
+
+      const $ = cheerio.load(html);
+
+      // LinkedIn job pages use these selectors for description content
+      const descriptionSelectors = [
+        '.show-more-less-html__markup',
+        '.description__text',
+        '[class*="description"]',
+        '.job-view-layout .description',
+        'section.description',
+      ];
+
+      for (const selector of descriptionSelectors) {
+        const element = $(selector).first();
+        if (element.length > 0) {
+          // Remove script/style/svg tags
+          element.find('script,style,svg,noscript').remove();
+          
+          const descHtml = element.html()?.trim();
+          if (descHtml && descHtml.length > 100) {
+            return descHtml;
+          }
+        }
+      }
+
+      // Fallback: try to find the largest text block
+      const textBlocks = $('div, section, article')
+        .map((_, el) => {
+          const text = $(el).text().trim();
+          return text.length > 200 ? text : null;
+        })
+        .get()
+        .filter(Boolean);
+
+      if (textBlocks.length > 0) {
+        const longest = textBlocks.sort((a, b) => (b?.length || 0) - (a?.length || 0))[0];
+        return longest || '';
+      }
+
+      return '';
+    } catch (error) {
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      return '';
+    }
+  }
+
+  /**
+   * Enrich job descriptions in parallel batches
+   */
+  private async enrichDescriptions(jobs: JobCreateInput[]): Promise<void> {
+    const enrichTasks = jobs.map((job) => async () => {
+      if (!job.url) return;
+      
+      const description = await this.scrapeJobDescription(job.url);
+      if (description && description.length > 100) {
+        job.description = description;
+      }
+      
+      await this.delay(500); // Polite delay between individual job page fetches
+    });
+
+    await this.descQueue.addAll(enrichTasks);
   }
 }

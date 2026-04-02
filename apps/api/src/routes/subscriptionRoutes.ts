@@ -13,27 +13,27 @@ const subscriptionController = new SubscriptionController(stripeService);
 const router: Router = Router();
 
 // Public — list available plans
-router.get('/plans', subscriptionController.getPlans);
+router.get('/plans', asyncErrorWrapper(subscriptionController.getPlans));
 
 // Authenticated — create checkout session
 router.post(
   '/checkout',
   asyncErrorWrapper(authMiddleware as never),
-  subscriptionController.createCheckout,
+  asyncErrorWrapper(subscriptionController.createCheckout),
 );
 
 // Authenticated — create customer portal session
 router.post(
   '/portal',
   asyncErrorWrapper(authMiddleware as never),
-  subscriptionController.createPortal,
+  asyncErrorWrapper(subscriptionController.createPortal),
 );
 
 // Authenticated — get current subscription status
 router.get(
   '/current',
   asyncErrorWrapper(authMiddleware as never),
-  subscriptionController.getCurrentSubscription,
+  asyncErrorWrapper(subscriptionController.getCurrentSubscription),
 );
 
 export { router as subscriptionRoutes };

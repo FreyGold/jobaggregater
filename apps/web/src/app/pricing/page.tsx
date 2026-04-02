@@ -20,6 +20,7 @@ import {
   useSubscriptionPlans,
   useCreateCheckout,
   useCurrentSubscription,
+  type SubscriptionPlan,
 } from '@/hooks/use-subscription';
 import { useAuth } from '@/providers/auth-provider';
 
@@ -41,12 +42,15 @@ export default function PricingPage() {
   const { data: currentSub } = useCurrentSubscription();
   const checkout = useCreateCheckout();
 
-  const handleUpgrade = (planId: 'PRO' | 'ENTERPRISE') => {
+  const handleUpgrade = (plan: SubscriptionPlan) => {
+    if (!plan.stripePriceId) {
+      return;
+    }
     if (!isAuthenticated) {
       window.location.href = '/login?redirect=/pricing';
       return;
     }
-    checkout.mutate(planId);
+    checkout.mutate(plan.id as 'PRO' | 'ENTERPRISE');
   };
 
   return (
@@ -79,6 +83,7 @@ export default function PricingPage() {
                     const Icon = PLAN_ICONS[plan.id] || Zap;
                     const isCurrentPlan = currentSub?.plan === plan.id;
                     const isPopular = plan.id === 'PRO';
+                    const stripeUnavailable = plan.id !== 'FREE' && !plan.stripePriceId;
 
                     return (
                       <Card
@@ -160,10 +165,14 @@ export default function PricingPage() {
                             <Button
                               className="w-full h-12   font-semibold"
                               variant={isPopular ? 'default' : 'outline'}
-                              onClick={() => handleUpgrade(plan.id as 'PRO' | 'ENTERPRISE')}
-                              disabled={checkout.isPending}
+                              onClick={() => handleUpgrade(plan)}
+                              disabled={checkout.isPending || stripeUnavailable}
                             >
-                              {checkout.isPending ? 'Redirecting...' : `Upgrade to ${plan.name}`}
+                              {stripeUnavailable
+                                ? 'Payments unavailable'
+                                : checkout.isPending
+                                  ? 'Redirecting...'
+                                  : `Upgrade to ${plan.name}`}
                             </Button>
                           )}
                         </CardFooter>

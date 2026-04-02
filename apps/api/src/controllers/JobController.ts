@@ -4,10 +4,12 @@ import type { Request, Response } from 'express';
 import type { SubscriptionPlan } from '@jobagg/shared';
 import { BaseController } from './BaseController.js';
 import type { JobService } from '../services/jobService.js';
+import type { JobDescriptionService } from '../services/jobDescriptionService.js';
 
 export class JobController extends BaseController {
   constructor(
     private readonly jobService: JobService,
+    private readonly jobDescriptionService: JobDescriptionService,
   ) {
     super();
   }
@@ -72,4 +74,15 @@ export class JobController extends BaseController {
       this.handleError(error, res, 'JobController.getSavedJobs');
     }
   }
+
+  // ─── Enrich job description on-demand
+  enrichJobDescription = async (req: Request, res: Response) => {
+    try {
+      const jobId = req.params['id'] as string;
+      const enrichedJob = await this.jobDescriptionService.enrichJobDescription(jobId);
+      this.handleSuccess(res, enrichedJob);
+    } catch (error) {
+      this.handleError(error, res, 'JobController.enrichJobDescription');
+    }
+  };
 }

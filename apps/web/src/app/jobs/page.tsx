@@ -85,6 +85,7 @@ function JobsPageContent() {
 
   const filters = useMemo<JobFilters>(() => {
     const base: JobFilters = {
+      tab: activeTab === 'today' ? 'today' : undefined,
       keyword: searchParams.get('keyword') ?? undefined,
       location: searchParams.get('location') ?? undefined,
       source: searchParams.get('source') ?? undefined,

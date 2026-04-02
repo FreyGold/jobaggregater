@@ -7,11 +7,12 @@
 export function formatSalary(
   min?: number,
   max?: number,
-  currency: string = 'USD',
+  currency: string | null = 'USD',
 ): string {
+  const validCurrency = currency || 'USD';
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: validCurrency,
     maximumFractionDigits: 0,
   });
 
