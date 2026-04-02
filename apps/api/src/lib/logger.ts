@@ -34,21 +34,32 @@ const format = winston.format.combine(
   }),
 );
 
-const transports = [
-  // Console transport
+const transports: winston.transport[] = [
+  // Console transport (always available)
   new winston.transports.Console(),
-  // Error log file
-  new winston.transports.File({
-    filename: 'logs/error.log',
-    level: 'error',
-    format: winston.format.uncolorize(),
-  }),
-  // Combined log file
-  new winston.transports.File({
-    filename: 'logs/combined.log',
-    format: winston.format.uncolorize(),
-  }),
 ];
+
+// Only add file transports in non-serverless environments
+if (config.nodeEnv !== 'production') {
+  try {
+    transports.push(
+      // Error log file
+      new winston.transports.File({
+        filename: 'logs/error.log',
+        level: 'error',
+        format: winston.format.uncolorize(),
+      }),
+      // Combined log file
+      new winston.transports.File({
+        filename: 'logs/combined.log',
+        format: winston.format.uncolorize(),
+      }),
+    );
+  } catch (err) {
+    // Silently fail if logs directory can't be created
+    console.warn('Could not create log files, using console only');
+  }
+}
 
 export const logger = winston.createLogger({
   level: logLevel,
