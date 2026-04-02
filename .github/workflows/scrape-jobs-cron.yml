@@ -1,0 +1,45 @@
+name: Scrape Jobs Cron
+
+on:
+  schedule:
+    # LinkedIn: Every hour at minute 0
+    - cron: '0 * * * *'
+    # API Jobs: Every 3 hours at minute 0
+    - cron: '0 */3 * * *'
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  scrape-jobs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Scrape LinkedIn Jobs
+        run: |
+          curl -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://jobaggregater-api.vercel.app/api/cron/scrape-linkedin" \
+            --fail-with-body \
+            --max-time 300 \
+            -v
+
+      - name: Scrape API Jobs (Remotive, RemoteOK, HackerNews, WeWorkRemotely)
+        run: |
+          curl -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://jobaggregater-api.vercel.app/api/cron/scrape-api-jobs" \
+            --fail-with-body \
+            --max-time 300 \
+            -v
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: 1,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Cron job failed at ' + new Date().toISOString()
+            })

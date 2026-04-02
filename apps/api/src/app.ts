@@ -13,6 +13,7 @@ import { jobRoutes } from './routes/jobRoutes.js';
 import { sourceRoutes } from './routes/sourceRoutes.js';
 import { subscriptionRoutes } from './routes/subscriptionRoutes.js';
 import { webhookRoutes } from './routes/webhookRoutes.js';
+import cronRoutes from './routes/cronRoutes.js';
 
 const app: Application = express();
 let dbInitPromise: Promise<void> | null = null;
@@ -87,6 +88,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/sources', sourceRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/cron', cronRoutes);
 
 // ─── 404 Handler ─────────────────────────────────────────────────
 app.use((_req, res) => {
