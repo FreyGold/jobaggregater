@@ -242,24 +242,29 @@ export class TanqeebScraper extends BaseScraper {
   }
 
   /**
-   * Scrape full job description from individual job page
+   * Scrape full job description from individual Tanqeeb job page.
+   * This method will return empty string if blocked rather than throwing.
    */
   async scrapeJobDescription(jobUrl: string): Promise<string> {
     try {
       const html = await this.fetchHtml(jobUrl, { sourceName: this.name });
-      if (!html) throw new Error('Failed to fetch job page');
+      if (!html) {
+        console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+        return '';
+      }
 
       const $ = cheerio.load(html);
       
       // Remove noise
-      $('script,style,nav,header,footer,aside,button,form').remove();
+      $('script,style,nav,header,footer,aside,button,form,svg,noscript').remove();
       
-      // Try common description selectors on Tanqeeb
+      // Tanqeeb job pages selectors
       const selectors = [
+        '.job-description',
         'div[class*="description"]',
-        'div[class*="job-description"]',
         'div[class*="job-details"]',
         'div[class*="job-content"]',
+        '.job-detail-content',
         'article',
         'main',
       ];
@@ -267,26 +272,33 @@ export class TanqeebScraper extends BaseScraper {
       for (const selector of selectors) {
         const element = $(selector).first();
         if (element.length > 0) {
-          const text = element.text().trim();
-          if (text && text.length > 100) {
-            return text;
+          element.find('script,style,svg,noscript,button').remove();
+          const html = element.html()?.trim();
+          if (html && html.length > 200) {
+            return html;
           }
         }
       }
 
-      // Fallback: get all paragraph text
-      const allText = $('body').text().trim();
-      if (allText.length > 150) {
-        return allText.substring(0, 5000); // Cap at 5000 chars
+      // Last resort: find largest content block
+      let largestBlock = '';
+      $('div, section, article').each((_, el) => {
+        const $el = $(el);
+        $el.find('script,style,nav,button').remove();
+        const text = $el.text().trim();
+        if (text.length > largestBlock.length && text.length > 300) {
+          largestBlock = text;
+        }
+      });
+
+      if (largestBlock.length > 300) {
+        return largestBlock.substring(0, 5000);
       }
 
-      throw new Error('Could not extract description from job page');
+      return '';
     } catch (error) {
-      console.error(
-        `[TanqeebScraper] Failed to scrape description from ${jobUrl}:`,
-        error,
-      );
-      throw error;
+      console.warn(`[Scraper: ${this.name}] Failed to scrape description from ${jobUrl}:`, error);
+      return '';
     }
   }
 

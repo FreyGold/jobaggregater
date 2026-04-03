@@ -275,54 +275,61 @@ export class LinkedInScraper extends BaseScraper {
   }
 
   /**
-   * Scrape full job description from individual LinkedIn job page
+   * Scrape full job description from individual LinkedIn job page.
+   * Note: LinkedIn often blocks direct access and requires authentication.
+   * This method will return empty string if blocked rather than throwing.
    */
   async scrapeJobDescription(jobUrl: string): Promise<string> {
     try {
       const html = await this.fetchHtml(jobUrl);
-      if (!html) return '';
+      if (!html) {
+        console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+        return '';
+      }
 
       const $ = cheerio.load(html);
+
+      // Remove noise elements
+      $('script,style,svg,noscript,nav,header,footer,aside').remove();
 
       // LinkedIn job pages use these selectors for description content
       const descriptionSelectors = [
         '.show-more-less-html__markup',
         '.description__text',
-        '[class*="description"]',
         '.job-view-layout .description',
         'section.description',
+        '[class*="description"]',
+        '[class*="job-details"]',
       ];
 
       for (const selector of descriptionSelectors) {
         const element = $(selector).first();
         if (element.length > 0) {
-          // Remove script/style/svg tags
-          element.find('script,style,svg,noscript').remove();
+          element.find('script,style,svg,noscript,button').remove();
           
           const descHtml = element.html()?.trim();
-          if (descHtml && descHtml.length > 100) {
+          if (descHtml && descHtml.length > 200) {
             return descHtml;
           }
         }
       }
 
       // Fallback: try to find the largest text block
-      const textBlocks = $('div, section, article')
-        .map((_, el) => {
-          const text = $(el).text().trim();
-          return text.length > 200 ? text : null;
-        })
-        .get()
-        .filter(Boolean);
+      let largestBlock = '';
+      $('div, section, article').each((_, el) => {
+        const text = $(el).text().trim();
+        if (text.length > largestBlock.length && text.length > 300) {
+          largestBlock = text;
+        }
+      });
 
-      if (textBlocks.length > 0) {
-        const longest = textBlocks.sort((a, b) => (b?.length || 0) - (a?.length || 0))[0];
-        return longest || '';
+      if (largestBlock.length > 300) {
+        return largestBlock.substring(0, 5000);
       }
 
       return '';
     } catch (error) {
-      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}:`, error);
       return '';
     }
   }

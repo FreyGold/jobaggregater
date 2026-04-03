@@ -18,8 +18,10 @@ const PLACEHOLDER_PATTERNS = [
 
 /**
  * Minimum length for a valid job description (in characters)
+ * Job descriptions should be substantial - 500 chars is roughly 80-100 words
+ * which is the minimum for a meaningful job posting.
  */
-const MIN_DESCRIPTION_LENGTH = 100;
+const MIN_DESCRIPTION_LENGTH = 500;
 
 /**
  * Check if a description is empty or null

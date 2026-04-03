@@ -79,23 +79,55 @@ export class RemoteOKScraper extends BaseScraper {
   }
 
   /**
-   * Scrape full job description from RemoteOK job page
+   * Scrape full job description from RemoteOK job page.
+   * Note: The RemoteOK API already provides full HTML descriptions,
+   * so this method is primarily for fallback.
    */
   async scrapeJobDescription(jobUrl: string): Promise<string> {
+    // Try API first (more reliable than scraping)
+    try {
+      const data = await this.client
+        .get(this.endpoint, {
+          headers: {
+            'User-Agent': 'JobAggregator/1.0',
+            'Accept': 'application/json',
+          },
+          responseType: 'json',
+          throwHttpErrors: false,
+        })
+        .json<any[]>();
+      
+      const jobs = data.filter(item => item.legal === undefined) as RemoteOKJob[];
+      const matchingJob = jobs.find(j => j.url === jobUrl || jobUrl.includes(j.id));
+      if (matchingJob?.description) {
+        return matchingJob.description;
+      }
+    } catch {
+      // Fall through to HTML scraping
+    }
+
+    // Fallback: scrape HTML page
     try {
       const html = await this.fetchHtml(jobUrl);
-      if (!html) return '';
+      if (!html) {
+        console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+        return '';
+      }
 
       const cheerio = await import('cheerio');
       const $ = cheerio.load(html);
 
+      // Remove noise elements
+      $('script,style,svg,noscript,nav,header,footer').remove();
+
       // RemoteOK job pages use these selectors
       const descriptionSelectors = [
-        '[data-job-description]',
-        '.job-description',
+        '.company_profile',
+        '[class*="job-description"]',
         '[class*="description"]',
         '.markdown',
         'article',
+        'main',
       ];
 
       for (const selector of descriptionSelectors) {
@@ -103,15 +135,28 @@ export class RemoteOKScraper extends BaseScraper {
         if (element.length > 0) {
           element.find('script,style,nav,button').remove();
           const descHtml = element.html()?.trim();
-          if (descHtml && descHtml.length > 100) {
+          if (descHtml && descHtml.length > 200) {
             return descHtml;
           }
         }
       }
 
+      // Last resort: find largest text block
+      let largestBlock = '';
+      $('div, section').each((_, el) => {
+        const text = $(el).text().trim();
+        if (text.length > largestBlock.length && text.length > 300) {
+          largestBlock = text;
+        }
+      });
+
+      if (largestBlock.length > 300) {
+        return largestBlock.substring(0, 5000);
+      }
+
       return '';
     } catch (error) {
-      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}:`, error);
       return '';
     }
   }

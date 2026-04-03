@@ -5,6 +5,7 @@
 import { use, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useJob } from '@/hooks/use-jobs';
+import { apiClient, ApiError } from '@/lib/api';
 import { formatSalary, formatTimeAgo } from '@jobagg/shared';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -45,21 +46,16 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
     setEnrichmentError(null);
     
     try {
-      const response = await fetch(`/api/jobs/${id}/enrich-description`, {
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to fetch description');
-      }
-
-      const enrichedJob = await response.json();
-      const desc = enrichedJob.data?.description || enrichedJob.description;
-      setEnrichedDescription(desc);
+      const enrichedJob = await apiClient.post<{ description: string }>(`/api/jobs/${id}/enrich-description`);
+      const desc = enrichedJob.data?.description;
+      setEnrichedDescription(desc ?? null);
       refetch();
     } catch (error) {
-      setEnrichmentError(error instanceof Error ? error.message : 'Failed to fetch description');
+      if (error instanceof ApiError) {
+        setEnrichmentError(error.message);
+      } else {
+        setEnrichmentError(error instanceof Error ? error.message : 'Failed to fetch description');
+      }
     } finally {
       setIsEnrichingDescription(false);
     }
@@ -67,8 +63,6 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
   const descriptionToShow = enrichedDescription || job?.description;
   const hasDescription = !!descriptionToShow && descriptionToShow.trim().length > 0;
-  // Show button if: no description at all, OR description is very short, OR not yet enriched
-  const shouldShowButton = !enrichedDescription && (!job?.description || job.description.trim().length < 100);
 
   return (
     <main className="min-h-screen justify-between flex flex-col">
@@ -221,7 +215,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               <section className="rounded-xl border border-border bg-card p-6">
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-foreground">Job Description</h2>
-                  {shouldShowButton && (
+                  
                     <Button
                       size="sm"
                       variant="outline"
@@ -241,7 +235,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                         </>
                       )}
                     </Button>
-                  )}
+                 
                 </div>
                 
                 {enrichmentError && (

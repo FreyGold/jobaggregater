@@ -177,22 +177,31 @@ export class BuiltInScraper extends BaseScraper {
   }
 
   /**
-   * Scrape full job description from individual job page
+   * Scrape full job description from individual job page.
+   * Note: BuiltIn often blocks direct access with Cloudflare.
+   * This method will return empty string if blocked rather than throwing.
    */
   async scrapeJobDescription(jobUrl: string): Promise<string> {
     try {
-      const html = await this.fetchHtml(jobUrl, { sourceName: this.name });
-      if (!html) throw new Error('Failed to fetch job page');
+      // Use render option for Cloudflare-protected pages when available
+      const html = await this.fetchHtml(jobUrl, { sourceName: this.name, render: true });
+      if (!html) {
+        console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+        return '';
+      }
 
       const $ = cheerio.load(html);
       
       // Remove noise
-      $('script,style,nav,header,footer,aside,button,form').remove();
+      $('script,style,nav,header,footer,aside,button,form,svg,noscript').remove();
       
-      // Try common description selectors on BuiltIn
+      // BuiltIn uses React with data attributes, try these selectors
       const selectors = [
+        '[data-id="job-description"]',
+        '[data-testid="job-description"]',
+        '[class*="JobDescription"]',
+        '[class*="job-description"]',
         'div[class*="description"]',
-        'div[class*="job-description"]',
         'div[class*="job-details"]',
         'div[class*="job-content"]',
         'article',
@@ -202,26 +211,34 @@ export class BuiltInScraper extends BaseScraper {
       for (const selector of selectors) {
         const element = $(selector).first();
         if (element.length > 0) {
-          const text = element.text().trim();
-          if (text && text.length > 100) {
-            return text;
+          element.find('script,style,svg,noscript,button').remove();
+          const html = element.html()?.trim();
+          if (html && html.length > 200) {
+            return html;
           }
         }
       }
 
-      // Fallback: get all paragraph text
-      const allText = $('body').text().trim();
-      if (allText.length > 150) {
-        return allText.substring(0, 5000); // Cap at 5000 chars
+      // Last resort: find largest content block
+      let largestBlock = '';
+      $('div, section, article').each((_, el) => {
+        const $el = $(el);
+        $el.find('script,style,nav,button').remove();
+        const text = $el.text().trim();
+        if (text.length > largestBlock.length && text.length > 300) {
+          largestBlock = text;
+        }
+      });
+
+      if (largestBlock.length > 300) {
+        return largestBlock.substring(0, 5000);
       }
 
-      throw new Error('Could not extract description from job page');
+      console.warn(`[Scraper: ${this.name}] No description content found for ${jobUrl}`);
+      return '';
     } catch (error) {
-      console.error(
-        `[BuiltInScraper] Failed to scrape description from ${jobUrl}:`,
-        error,
-      );
-      throw error;
+      console.warn(`[Scraper: ${this.name}] Failed to scrape description from ${jobUrl}:`, error);
+      return '';
     }
   }
 }

@@ -95,7 +95,8 @@ export class HackerNewsScraper extends BaseScraper {
   }
 
   /**
-   * Scrape full job description from HackerNews job posting
+   * Scrape full job description from HackerNews job posting.
+   * HN job titles are short, so this is useful for external job URLs.
    */
   async scrapeJobDescription(jobUrl: string): Promise<string> {
     try {
@@ -103,10 +104,16 @@ export class HackerNewsScraper extends BaseScraper {
       if (!jobUrl.includes('news.ycombinator.com/item')) {
         // External URL - try generic scraping
         const html = await this.fetchHtml(jobUrl);
-        if (!html) return '';
+        if (!html) {
+          console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+          return '';
+        }
 
         const $ = cheerio.load(html);
         
+        // Remove noise
+        $('script,style,svg,noscript,nav,header,footer').remove();
+
         // Generic content selectors
         const selectors = [
           'article',
@@ -114,6 +121,7 @@ export class HackerNewsScraper extends BaseScraper {
           'main',
           '.content',
           '.job-description',
+          '[class*="description"]',
         ];
 
         for (const selector of selectors) {
@@ -126,10 +134,26 @@ export class HackerNewsScraper extends BaseScraper {
             }
           }
         }
+
+        // Last resort: find largest text block
+        let largestBlock = '';
+        $('div, section').each((_, el) => {
+          const text = $(el).text().trim();
+          if (text.length > largestBlock.length && text.length > 300) {
+            largestBlock = text;
+          }
+        });
+
+        if (largestBlock.length > 300) {
+          return largestBlock.substring(0, 5000);
+        }
       } else {
         // HN item page - extract comment text
         const html = await this.fetchHtml(jobUrl);
-        if (!html) return '';
+        if (!html) {
+          console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+          return '';
+        }
 
         const $ = cheerio.load(html);
         const commentText = $('.comment .commtext').first().html()?.trim();
@@ -140,7 +164,7 @@ export class HackerNewsScraper extends BaseScraper {
 
       return '';
     } catch (error) {
-      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}:`, error);
       return '';
     }
   }

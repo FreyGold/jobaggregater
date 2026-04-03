@@ -6,7 +6,6 @@ on:
     - cron: '0 * * * *'
     # API Jobs: Every 3 hours at minute 0
     - cron: '0 */3 * * *'
-  # Allow manual trigger for testing
   workflow_dispatch:
 
 jobs:
@@ -14,32 +13,47 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Scrape LinkedIn Jobs
-        run: |
-          curl -X GET \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "https://jobaggregater-api.vercel.app/api/cron/scrape-linkedin" \
-            --fail-with-body \
-            --max-time 300 \
-            -v
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Scrape API Jobs (Remotive, RemoteOK, HackerNews, WeWorkRemotely)
-        run: |
-          curl -X GET \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "https://jobaggregater-api.vercel.app/api/cron/scrape-api-jobs" \
-            --fail-with-body \
-            --max-time 300 \
-            -v
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build shared workspace
+        run: pnpm --filter @jobagg/shared build
+
+      - name: Scrape LinkedIn Jobs
+        working-directory: ./apps/api
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+        run: npx tsx src/jobs/runScraperCli.ts linkedin
+
+      - name: Scrape API Jobs
+        working-directory: ./apps/api
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+        run: npx tsx src/jobs/runScraperCli.ts api
 
       - name: Notify on failure
         if: failure()
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: 1,
+            github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '❌ Cron job failed at ' + new Date().toISOString()
+              title: '❌ Cron job failed',
+              body: 'The scrape-jobs-cron workflow failed at ' + new Date().toISOString()
             })

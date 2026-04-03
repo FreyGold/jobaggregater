@@ -146,22 +146,32 @@ export class LeverScraper extends BaseScraper {
   }
 
   /**
-   * Scrape full job description from Lever job page
+   * Scrape full job description from Lever job page.
+   * Note: Lever API already provides full descriptions (descriptionHtml),
+   * so this method is primarily for fallback.
    */
   async scrapeJobDescription(jobUrl: string): Promise<string> {
     try {
       const html = await this.fetchHtml(jobUrl);
-      if (!html) return '';
+      if (!html) {
+        console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+        return '';
+      }
 
       const cheerio = await import('cheerio');
       const $ = cheerio.load(html);
+
+      // Remove noise elements
+      $('script,style,svg,noscript,nav,header,footer').remove();
 
       // Lever job pages use these selectors
       const descriptionSelectors = [
         '.posting-description',
         '.description',
+        '[class*="posting-content"]',
         '[class*="description"]',
         '.content',
+        'main',
       ];
 
       for (const selector of descriptionSelectors) {
@@ -169,15 +179,28 @@ export class LeverScraper extends BaseScraper {
         if (element.length > 0) {
           element.find('script,style,nav,button').remove();
           const descHtml = element.html()?.trim();
-          if (descHtml && descHtml.length > 100) {
+          if (descHtml && descHtml.length > 200) {
             return descHtml;
           }
         }
       }
 
+      // Last resort: find largest text block
+      let largestBlock = '';
+      $('div, section').each((_, el) => {
+        const text = $(el).text().trim();
+        if (text.length > largestBlock.length && text.length > 300) {
+          largestBlock = text;
+        }
+      });
+
+      if (largestBlock.length > 300) {
+        return largestBlock.substring(0, 5000);
+      }
+
       return '';
     } catch (error) {
-      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}:`, error);
       return '';
     }
   }

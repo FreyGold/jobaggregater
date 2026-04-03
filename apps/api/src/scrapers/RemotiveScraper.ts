@@ -104,39 +104,84 @@ export class RemotiveScraper extends BaseScraper {
   }
 
   /**
-   * Scrape full job description from Remotive job page
+   * Scrape full job description from Remotive job page.
+   * Note: The Remotive API already provides full HTML descriptions,
+   * so this method is only needed as a fallback for very old jobs.
    */
   async scrapeJobDescription(jobUrl: string): Promise<string> {
+    // Try to extract job ID and fetch from API first (more reliable)
+    const jobIdMatch = jobUrl.match(/remote-jobs\/[^/]+\/([^/]+?)(?:-(\d+))?$/);
+    if (jobIdMatch) {
+      try {
+        // The API provides full descriptions, try to get job by searching
+        const data = await this.client
+          .get('https://remotive.com/api/remote-jobs?limit=200', {
+            responseType: 'json',
+            throwHttpErrors: false,
+          })
+          .json<{ jobs: RemotivePublicJob[] }>();
+        
+        const jobs = data.jobs || [];
+        const matchingJob = jobs.find(j => j.url === jobUrl);
+        if (matchingJob?.description) {
+          return matchingJob.description;
+        }
+      } catch {
+        // Fall through to HTML scraping
+      }
+    }
+
+    // Fallback: scrape HTML page
     try {
       const html = await this.fetchHtml(jobUrl);
-      if (!html) return '';
+      if (!html) {
+        console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+        return '';
+      }
 
       const cheerio = await import('cheerio');
       const $ = cheerio.load(html);
 
-      // Remotive job pages typically use these selectors
+      // Remove noise elements
+      $('script,style,svg,noscript,nav,header,footer').remove();
+
+      // Remotive uses Tailwind classes, look for prose/content blocks
       const descriptionSelectors = [
-        '[data-description]',
-        '.job-description',
-        '.job-details-description',
-        '[class*="description"]',
-        'article.job',
+        '[class*="prose"]',
+        '[class*="job-description"]',
+        '[class*="Description"]',
+        '[class*="content"]',
+        'main article',
+        'article',
+        'main',
       ];
 
       for (const selector of descriptionSelectors) {
         const element = $(selector).first();
         if (element.length > 0) {
-          element.find('script,style,svg,noscript').remove();
-          const descHtml = element.html()?.trim();
-          if (descHtml && descHtml.length > 100) {
-            return descHtml;
+          const html = element.html()?.trim();
+          if (html && html.length > 200) {
+            return html;
           }
         }
       }
 
+      // Last resort: find largest text block
+      let largestBlock = '';
+      $('div, section').each((_, el) => {
+        const text = $(el).text().trim();
+        if (text.length > largestBlock.length && text.length > 300) {
+          largestBlock = text;
+        }
+      });
+
+      if (largestBlock.length > 300) {
+        return largestBlock.substring(0, 5000);
+      }
+
       return '';
     } catch (error) {
-      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}:`, error);
       return '';
     }
   }

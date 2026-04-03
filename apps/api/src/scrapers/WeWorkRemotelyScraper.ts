@@ -4,17 +4,18 @@ import { type JobCreateInput, EmploymentType, ExperienceLevel } from '@jobagg/sh
 
 // WeWorkRemotely has multiple category RSS feeds. Scraping all of them
 // at once multiplies our take vs. a single feed.
+// Feed URLs updated as of 2024 - some categories merged or renamed.
 const WWR_FEEDS = [
-  { url: 'https://weworkremotely.com/categories/remote-programming-jobs.rss', tags: ['programming', 'development'] },
+  { url: 'https://weworkremotely.com/categories/remote-full-stack-programming-jobs.rss', tags: ['programming', 'fullstack'] },
+  { url: 'https://weworkremotely.com/categories/remote-back-end-programming-jobs.rss', tags: ['programming', 'backend'] },
+  { url: 'https://weworkremotely.com/categories/remote-front-end-programming-jobs.rss', tags: ['programming', 'frontend'] },
   { url: 'https://weworkremotely.com/categories/remote-devops-sysadmin-jobs.rss', tags: ['devops', 'sysadmin'] },
   { url: 'https://weworkremotely.com/categories/remote-design-jobs.rss', tags: ['design', 'ux'] },
   { url: 'https://weworkremotely.com/categories/remote-product-jobs.rss', tags: ['product', 'pm'] },
-  { url: 'https://weworkremotely.com/categories/remote-marketing-jobs.rss', tags: ['marketing', 'growth'] },
-  { url: 'https://weworkremotely.com/categories/remote-sales-jobs.rss', tags: ['sales', 'business-development'] },
+  { url: 'https://weworkremotely.com/categories/remote-sales-and-marketing-jobs.rss', tags: ['sales', 'marketing'] },
   { url: 'https://weworkremotely.com/categories/remote-customer-support-jobs.rss', tags: ['customer-support'] },
-  { url: 'https://weworkremotely.com/categories/remote-copywriting-jobs.rss', tags: ['copywriting', 'content'] },
-  { url: 'https://weworkremotely.com/categories/remote-finance-legal-jobs.rss', tags: ['finance', 'legal'] },
-  { url: 'https://weworkremotely.com/categories/remote-data-science-jobs.rss', tags: ['data-science', 'analytics'] },
+  { url: 'https://weworkremotely.com/categories/remote-management-and-finance-jobs.rss', tags: ['management', 'finance'] },
+  { url: 'https://weworkremotely.com/categories/all-other-remote-jobs.rss', tags: ['other'] },
 ];
 
 export class WeWorkRemotelyScraper extends BaseScraper {
@@ -52,6 +53,7 @@ export class WeWorkRemotelyScraper extends BaseScraper {
       headers: { 'User-Agent': 'JobAggregator/1.0' },
       responseType: 'text',
       throwHttpErrors: false,
+      followRedirect: true,  // Follow 301/302 redirects
     });
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -124,37 +126,61 @@ export class WeWorkRemotelyScraper extends BaseScraper {
   }
 
   /**
-   * Scrape full job description from WeWorkRemotely job page
+   * Scrape full job description from WeWorkRemotely job page.
+   * Note: The RSS feed already provides full HTML descriptions,
+   * so this method is primarily for fallback/enrichment.
    */
   async scrapeJobDescription(jobUrl: string): Promise<string> {
     try {
       const html = await this.fetchHtml(jobUrl);
-      if (!html) return '';
+      if (!html) {
+        console.warn(`[Scraper: ${this.name}] Could not fetch HTML for ${jobUrl}`);
+        return '';
+      }
 
       const $ = cheerio.load(html);
+
+      // Remove noise elements
+      $('script,style,svg,noscript,nav,header,footer,aside').remove();
 
       // WeWorkRemotely job pages use these selectors
       const descriptionSelectors = [
         '.listing-container .listing-content',
-        '[data-description]',
-        '.job-description',
+        '.listing-content',
+        '.listing-container',
+        '[class*="job-description"]',
         '[class*="description"]',
+        'article',
+        'main',
       ];
 
       for (const selector of descriptionSelectors) {
         const element = $(selector).first();
         if (element.length > 0) {
-          element.find('script,style,svg,noscript').remove();
+          element.find('script,style,svg,noscript,button,form').remove();
           const descHtml = element.html()?.trim();
-          if (descHtml && descHtml.length > 100) {
+          if (descHtml && descHtml.length > 200) {
             return descHtml;
           }
         }
       }
 
+      // Last resort: find largest text block
+      let largestBlock = '';
+      $('div, section').each((_, el) => {
+        const text = $(el).text().trim();
+        if (text.length > largestBlock.length && text.length > 300) {
+          largestBlock = text;
+        }
+      });
+
+      if (largestBlock.length > 300) {
+        return largestBlock.substring(0, 5000);
+      }
+
       return '';
     } catch (error) {
-      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}`);
+      console.warn(`[Scraper: ${this.name}] Failed to fetch description from ${jobUrl}:`, error);
       return '';
     }
   }

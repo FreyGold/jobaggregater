@@ -62,7 +62,7 @@ export class JobDescriptionService {
       });
       throw new AppError(
         500, 
-        'Failed to fetch job description from source', 
+        `Failed to fetch job description from ${job.source}. The site may be blocking requests or the page structure has changed.`, 
         'SCRAPE_FAILED'
       );
     }
@@ -71,11 +71,13 @@ export class JobDescriptionService {
     if (!enrichedDescription || enrichedDescription.length < 50) {
       logWarn('Scraped description too short or empty', { 
         jobId, 
+        source: job.source,
+        url: job.url,
         scrapedLength: enrichedDescription?.length || 0 
       });
       throw new AppError(
         500, 
-        'Could not extract valid description from job page (less than 50 characters)', 
+        `Could not extract valid description from ${job.source} job page. The site may be blocking requests or using a different page structure.`, 
         'INVALID_DESCRIPTION'
       );
     }
