@@ -54,7 +54,10 @@ export const config = {
   },
 
   auth: {
-    jwtSecret: required('JWT_SECRET'),
+    /** Lazy – only throws when actually accessed (not needed by scraper CLI) */
+    get jwtSecret(): string {
+      return required('JWT_SECRET');
+    },
     jwtExpiresIn: optional('JWT_EXPIRES_IN', '7d'),
   },
 
