@@ -1,11 +1,11 @@
-import express from 'express';
+import express, { type Router } from 'express';
 import { logInfo, logError } from '../lib/logger.js';
 import { scraperRegistry } from '../scrapers/ScraperRegistry.js';
 import { jobRepository } from '../repositories/JobRepository.js';
 import { CacheService } from '../lib/redis.js';
 import type { JobCreateInput } from '@jobagg/shared';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Middleware: Verify CRON_SECRET
 const verifyCronSecret = (req: express.Request, res: express.Response, next: express.NextFunction) => {
