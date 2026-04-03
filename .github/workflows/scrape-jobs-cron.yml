@@ -15,6 +15,7 @@ permissions:
 jobs:
   scrape-jobs:
     runs-on: ubuntu-latest
+    environment: Production
     timeout-minutes: 15
     steps:
       - name: Checkout code
