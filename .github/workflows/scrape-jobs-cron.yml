@@ -8,6 +8,9 @@ on:
     - cron: '0 */3 * * *'
   workflow_dispatch:
 
+permissions:
+  issues: write
+
 jobs:
   scrape-jobs:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
 
       - name: Install dependencies
         run: pnpm install
