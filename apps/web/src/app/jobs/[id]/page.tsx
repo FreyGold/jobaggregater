@@ -4,7 +4,8 @@
 
 import { use, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useJob } from '@/hooks/use-jobs';
+import { useJob, useSavedJobs, useSaveJob } from '@/hooks/use-jobs';
+import { useAuth } from '@/providers/auth-provider';
 import { apiClient, ApiError } from '@/lib/api';
 import { formatSalary, formatTimeAgo } from '@jobagg/shared';
 import { Header } from '@/components/layout/Header';
@@ -19,6 +20,7 @@ import {
   Clock,
   ExternalLink,
   Bookmark,
+  BookmarkCheck,
   DollarSign,
   Wifi,
   ArrowLeft,
@@ -33,13 +35,28 @@ import { absoluteUrl } from '@/lib/seo';
 export default function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const searchParams = useSearchParams();
+  const { isAuthenticated } = useAuth();
   const { data: job, isLoading, isError, refetch } = useJob(id);
+  const { data: savedJobs = [] } = useSavedJobs();
+  const { save, unsave } = useSaveJob();
   const [enrichedDescription, setEnrichedDescription] = useState<string | null>(null);
   const [isEnrichingDescription, setIsEnrichingDescription] = useState(false);
   const [enrichmentError, setEnrichmentError] = useState<string | null>(null);
 
+  // Check if current job is saved
+  const isSaved = savedJobs.some((j) => j.id === id);
+
   // Preserve all search params when going back
   const backUrl = `/jobs?${searchParams.toString()}`;
+
+  const handleToggleSave = () => {
+    if (!isAuthenticated) return;
+    if (isSaved) {
+      unsave.mutate(id);
+    } else {
+      save.mutate(id);
+    }
+  };
 
   const handleFetchDescription = async () => {
     setIsEnrichingDescription(true);
@@ -204,9 +221,19 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     <ExternalLink className="h-4 w-4" />
                     <span>Apply on Source</span>
                   </a>
-                  <Button variant="outline" size="lg">
-                    <Bookmark className="h-4 w-4" />
-                    Save Job
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    onClick={handleToggleSave}
+                    disabled={!isAuthenticated}
+                    title={!isAuthenticated ? 'Login to save jobs' : isSaved ? 'Remove from saved' : 'Save job'}
+                  >
+                    {isSaved ? (
+                      <BookmarkCheck className="h-4 w-4 text-primary" />
+                    ) : (
+                      <Bookmark className="h-4 w-4" />
+                    )}
+                    {isSaved ? 'Saved' : 'Save Job'}
                   </Button>
                 </div>
               </header>

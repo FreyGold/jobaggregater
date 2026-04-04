@@ -31,13 +31,18 @@ export default function BookmarksPage() {
 
   const handleRemove = (jobId: string) => {
     setRemovingIds((prev) => new Set([...prev, jobId]));
-    unsave.mutate(jobId);
     
+    // Wait for animation to complete before triggering mutation
+    // This prevents the flash of the item reappearing during refetch
     setTimeout(() => {
-      setRemovingIds((prev) => {
-        const next = new Set(prev);
-        next.delete(jobId);
-        return next;
+      unsave.mutate(jobId, {
+        onSettled: () => {
+          setRemovingIds((prev) => {
+            const next = new Set(prev);
+            next.delete(jobId);
+            return next;
+          });
+        },
       });
     }, 400);
   };

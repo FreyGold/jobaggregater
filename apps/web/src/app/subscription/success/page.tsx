@@ -23,7 +23,8 @@ export default function SubscriptionSuccessPage() {
 
   // Sync subscription from Stripe on page load (in case webhook hasn't processed yet)
   useEffect(() => {
-    if (mounted && !isLoading && subscription?.plan === 'FREE') {
+    if (mounted && !isLoading && !isSyncing) {
+      // Always sync after checkout to ensure plan is correct
       setIsSyncing(true);
       apiClient
         .post('/api/subscriptions/sync')
@@ -37,7 +38,7 @@ export default function SubscriptionSuccessPage() {
           setIsSyncing(false);
         });
     }
-  }, [mounted, isLoading, subscription?.plan, refetch]);
+  }, [mounted, isLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const planName = subscription?.plan || 'Pro';
   const getPlanDescription = (plan: string) => {

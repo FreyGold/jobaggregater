@@ -9,7 +9,7 @@ export class UserRepository {
   private savedJobRepo = AppDataSource.getRepository(SavedJob);
 
   async findByEmail(email: string) {
-    return this.repo.findOne({ where: { email } });
+    return this.repo.findOne({ where: { email: email.toLowerCase() } });
   }
 
   async findById(id: string) {
@@ -37,7 +37,10 @@ export class UserRepository {
   }
 
   async create(data: { email: string; passwordHash: string; name: string }) {
-    const user = this.repo.create(data);
+    const user = this.repo.create({
+      ...data,
+      email: data.email.toLowerCase(),
+    });
     const savedUser = await this.repo.save(user);
     return {
       id: savedUser.id,

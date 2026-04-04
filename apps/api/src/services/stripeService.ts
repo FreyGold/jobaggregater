@@ -63,7 +63,16 @@ export class StripeService {
   private resolvePlanFromSubscription(subscription?: Stripe.Subscription | null): UserSubscriptionPlan | null {
     if (!subscription) return null;
     const priceId = subscription.items?.data?.[0]?.price?.id;
-    return this.resolvePlanFromPriceId(priceId);
+    const planFromPriceId = this.resolvePlanFromPriceId(priceId);
+    
+    // If price ID didn't match, fall back to subscription metadata
+    if (!planFromPriceId && subscription.metadata?.plan) {
+      const metadataPlan = subscription.metadata.plan.toUpperCase();
+      if (metadataPlan === 'PRO') return UserSubscriptionPlan.PRO;
+      if (metadataPlan === 'ENTERPRISE') return UserSubscriptionPlan.ENTERPRISE;
+    }
+    
+    return planFromPriceId;
   }
 
   private resolveStatusFromSubscription(subscription?: Stripe.Subscription | null): UserSubscriptionStatus {
@@ -146,6 +155,9 @@ export class StripeService {
       );
     }
 
+    // Remove trailing slash from frontendUrl to prevent double slashes
+    const baseUrl = config.app.frontendUrl.replace(/\/$/, '');
+    
     const session = await getStripe().checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
@@ -154,8 +166,8 @@ export class StripeService {
       subscription_data: {
         metadata: { userId, plan },
       },
-      success_url: `${config.app.frontendUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${config.app.frontendUrl}/subscription/cancel`,
+      success_url: `${baseUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/subscription/cancel`,
       metadata: { userId, plan },
     });
 
@@ -168,9 +180,12 @@ export class StripeService {
       throw new AppError(400, 'No Stripe customer found. Subscribe first.', 'NO_STRIPE_CUSTOMER');
     }
 
+    // Remove trailing slash from frontendUrl to prevent double slashes
+    const baseUrl = config.app.frontendUrl.replace(/\/$/, '');
+    
     const session = await getStripe().billingPortal.sessions.create({
       customer: user.stripeCustomerId,
-      return_url: `${config.app.frontendUrl}/profile`,
+      return_url: `${baseUrl}/profile`,
     });
 
     return { url: session.url };
