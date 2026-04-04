@@ -49,6 +49,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('auth_token', newToken);
     localStorage.setItem('user', JSON.stringify(newUser));
     apiClient.setToken(newToken);
+    // Reload to ensure all components get fresh state
+    window.location.reload();
   };
 
   const logout = () => {
@@ -57,6 +59,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
     apiClient.setToken(null);
+    // Reload to clear all cached data and queries
+    window.location.reload();
   };
 
   return (
