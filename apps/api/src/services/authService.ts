@@ -75,7 +75,7 @@ export class AuthService {
     return user;
   }
 
-  private generateToken(
+  generateToken(
     userId: string,
     email: string,
     subscriptionPlan: 'FREE' | 'PRO' | 'ENTERPRISE' = 'FREE',

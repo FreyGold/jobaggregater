@@ -3,12 +3,14 @@
 import { Router } from 'express';
 import { SubscriptionController } from '../controllers/SubscriptionController.js';
 import { StripeService } from '../services/stripeService.js';
+import { AuthService } from '../services/authService.js';
 import { userRepository } from '../repositories/UserRepository.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { asyncErrorWrapper } from '../utils/index.js';
 
 const stripeService = new StripeService(userRepository);
-const subscriptionController = new SubscriptionController(stripeService);
+const authService = new AuthService(userRepository);
+const subscriptionController = new SubscriptionController(stripeService, authService);
 
 const router: Router = Router();
 

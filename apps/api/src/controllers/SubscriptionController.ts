@@ -3,9 +3,13 @@
 import type { Request, Response } from 'express';
 import { BaseController } from './BaseController.js';
 import type { StripeService } from '../services/stripeService.js';
+import type { AuthService } from '../services/authService.js';
 
 export class SubscriptionController extends BaseController {
-  constructor(private readonly stripeService: StripeService) {
+  constructor(
+    private readonly stripeService: StripeService,
+    private readonly authService?: AuthService,
+  ) {
     super();
   }
 
@@ -96,11 +100,22 @@ export class SubscriptionController extends BaseController {
         return;
       }
 
+      // Generate a fresh token with the updated subscription plan
+      let token: string | undefined;
+      if (this.authService && result.plan) {
+        token = this.authService.generateToken(
+          req.user!.userId,
+          req.user!.email,
+          result.plan as 'FREE' | 'PRO' | 'ENTERPRISE',
+        );
+      }
+
       this.handleSuccess(res, {
         plan: result.plan,
         status: result.status,
         subscriptionId: result.subscriptionId,
         synced: result.synced,
+        token, // Frontend should update stored token
       });
     } catch (error) {
       this.handleError(error, res, 'SubscriptionController.syncSubscription');

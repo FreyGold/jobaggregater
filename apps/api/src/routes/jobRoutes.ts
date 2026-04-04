@@ -14,7 +14,7 @@ import { asyncErrorWrapper } from '../utils/index.js';
 
 const jobService = new JobService(jobRepository, userRepository);
 const jobDescriptionService = new JobDescriptionService(jobRepository);
-const jobController = new JobController(jobService, jobDescriptionService);
+const jobController = new JobController(jobService, jobDescriptionService, userRepository);
 
 const router: Router = Router();
 

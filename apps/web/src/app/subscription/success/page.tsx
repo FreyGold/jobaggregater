@@ -27,8 +27,12 @@ export default function SubscriptionSuccessPage() {
       // Always sync after checkout to ensure plan is correct
       setIsSyncing(true);
       apiClient
-        .post('/api/subscriptions/sync')
-        .then(() => {
+        .post<{ plan: string; token?: string }>('/api/subscriptions/sync')
+        .then((res) => {
+          // Update token if provided (contains fresh subscription plan)
+          if (res.data?.token) {
+            apiClient.setToken(res.data.token);
+          }
           refetch();
         })
         .catch((error) => {

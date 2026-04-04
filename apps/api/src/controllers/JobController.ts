@@ -5,19 +5,28 @@ import type { SubscriptionPlan } from '@jobagg/shared';
 import { BaseController } from './BaseController.js';
 import type { JobService } from '../services/jobService.js';
 import type { JobDescriptionService } from '../services/jobDescriptionService.js';
+import type { UserRepository } from '../repositories/UserRepository.js';
 
 export class JobController extends BaseController {
   constructor(
     private readonly jobService: JobService,
     private readonly jobDescriptionService: JobDescriptionService,
+    private readonly userRepository?: UserRepository,
   ) {
     super();
   }
 
   async listJobs(req: Request, res: Response): Promise<void> {
     try {
-      // Prefer token claim so listing is not blocked on an extra DB read.
-      const userPlan: SubscriptionPlan = req.user?.subscriptionPlan ?? 'FREE';
+      // Fetch fresh plan from DB if user is authenticated (JWT may be stale after subscription change)
+      let userPlan: SubscriptionPlan = 'FREE';
+      if (req.user?.userId && this.userRepository) {
+        const user = await this.userRepository.findById(req.user.userId);
+        userPlan = (user?.subscriptionPlan as SubscriptionPlan) ?? 'FREE';
+      } else if (req.user?.subscriptionPlan) {
+        userPlan = req.user.subscriptionPlan;
+      }
+      
       const result = await this.jobService.listJobs(req.query as never, userPlan);
       this.handlePaginatedSuccess(res, result.data, result.meta);
     } catch (error) {
