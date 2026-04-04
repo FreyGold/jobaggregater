@@ -2,10 +2,8 @@ name: Scrape Jobs Cron
 
 on:
   schedule:
-    # LinkedIn: Every hour at minute 0
-    - cron: '0 * * * *'
-    # API Jobs: Every 3 hours at minute 0
     - cron: '0 */3 * * *'
+    - cron: '0 */8 * * *'
   workflow_dispatch:
 
 permissions:
