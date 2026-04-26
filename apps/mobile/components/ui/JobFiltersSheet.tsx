@@ -14,6 +14,9 @@ interface JobFiltersSheetProps {
   setSelectedExperience: (val: string | null) => void;
   selectedType: string | null;
   setSelectedType: (val: string | null) => void;
+  selectedSource: string | null;
+  setSelectedSource: (val: string | null) => void;
+  sources: {key: string, name: string}[];
   onApply: () => void;
 }
 
@@ -28,6 +31,9 @@ export function JobFiltersSheet({
   setSelectedExperience,
   selectedType,
   setSelectedType,
+  selectedSource,
+  setSelectedSource,
+  sources,
   onApply
 }: JobFiltersSheetProps) {
   const [slideAnim] = useState(new Animated.Value(SCREEN_HEIGHT));
@@ -52,7 +58,10 @@ export function JobFiltersSheet({
     setSelectedRemote(null);
     setSelectedExperience(null);
     setSelectedType(null);
+    setSelectedSource(null);
   };
+
+  const sourcesSorted = sources.filter(s => !['remotive', 'indeed', 'tanqeeb', 'bayt', 'gulftalent'].includes(s.key));
 
   return (
     <Modal
@@ -147,6 +156,29 @@ export function JobFiltersSheet({
                 ))}
               </View>
             </View>
+
+            {sourcesSorted.length > 0 && (
+              <>
+                <View style={styles.divider} />
+                {/* Source */}
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Source</Text>
+                  <View style={styles.chipRow}>
+                    {sourcesSorted.map((s) => (
+                      <TouchableOpacity 
+                        key={s.key}
+                        style={[styles.chip, selectedSource === s.name && styles.chipActive]}
+                        onPress={() => setSelectedSource(selectedSource === s.name ? null : s.name)}
+                      >
+                        <Text style={[styles.chipText, selectedSource === s.name && styles.chipTextActive]}>
+                          {s.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              </>
+            )}
             
             <View style={{ height: 100 }} />
           </ScrollView>

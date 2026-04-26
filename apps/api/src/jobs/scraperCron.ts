@@ -48,7 +48,7 @@ export const startScraperCron = () => {
   const runAPIScraper = async () => {
     logInfo('Starting API scraper cron');
     try {
-      const apiScrapers = ['remotive', 'remoteok', 'hackernews', 'weWorkRemotely'];
+      const apiScrapers = ['remotive', 'remoteok', 'hackernews', 'weWorkRemotely', 'greenhouse', 'lever', 'ashby'];
       const sources = apiScrapers
         .map((key) => scraperRegistry.get(key))
         .filter((s) => s !== undefined) as any[];

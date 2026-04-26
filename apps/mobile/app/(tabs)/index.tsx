@@ -11,6 +11,7 @@ import { THEME } from '../../lib/theme';
 export default function JobsFeedScreen() {
   const [keyword, setKeyword] = useState('');
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [sources, setSources] = useState<{key: string, name: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -20,6 +21,16 @@ export default function JobsFeedScreen() {
   const [isRemote, setIsRemote] = useState<boolean | null>(null);
   const [experience, setExperience] = useState<string | null>(null);
   const [employmentType, setEmploymentType] = useState<string | null>(null);
+  const [source, setSource] = useState<string | null>(null);
+
+  const fetchSources = async () => {
+    try {
+      const res = await api.get<{key: string, name: string}[]>('/api/sources');
+      setSources(res.data || []);
+    } catch (err) {
+      console.error('Failed to fetch sources:', err);
+    }
+  };
 
   const fetchJobs = async () => {
     try {
@@ -29,10 +40,11 @@ export default function JobsFeedScreen() {
       if (isRemote !== null) params.append('isRemote', String(isRemote));
       if (experience) params.append('experienceLevel', experience);
       if (employmentType) params.append('employmentType', employmentType);
+      if (source) params.append('source', source);
 
       const res = await api.get<Job[]>(`/api/jobs?${params.toString()}`);
       setJobs(res.data || []);
-      if (keyword.trim() || isRemote !== null || experience || employmentType) {
+      if (keyword.trim() || isRemote !== null || experience || employmentType || source) {
         setSearched(true);
       } else {
         setSearched(false);
@@ -45,8 +57,12 @@ export default function JobsFeedScreen() {
   };
 
   useEffect(() => {
+    fetchSources();
+  }, []);
+
+  useEffect(() => {
     fetchJobs();
-  }, [isRemote, experience, employmentType]);
+  }, [isRemote, experience, employmentType, source]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -61,7 +77,7 @@ export default function JobsFeedScreen() {
     setRefreshing(false);
   };
 
-  const activeFiltersCount = [isRemote !== null, experience !== null, employmentType !== null].filter(Boolean).length;
+  const activeFiltersCount = [isRemote !== null, experience !== null, employmentType !== null, source !== null].filter(Boolean).length;
 
   return (
     <View style={styles.container}>
@@ -129,6 +145,9 @@ export default function JobsFeedScreen() {
         setSelectedExperience={setExperience}
         selectedType={employmentType}
         setSelectedType={setEmploymentType}
+        selectedSource={source}
+        setSelectedSource={setSource}
+        sources={sources}
         onApply={() => setIsFilterVisible(false)}
       />
     </View>

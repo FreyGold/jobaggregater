@@ -59,7 +59,7 @@ export class WorkableScraper extends BaseScraper {
         'Origin': 'https://apply.workable.com',
         'Referer': `https://apply.workable.com/${slug}/`,
       },
-      json: { query: '', location: [], department: [], worktype: [], remote: true },
+      json: { query: '', location: [], department: [], worktype: [], remote: [] },
       responseType: 'json',
       throwHttpErrors: false,
     });

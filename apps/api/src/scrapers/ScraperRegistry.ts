@@ -25,7 +25,9 @@ class ScraperRegistry {
     this.register(new LinkedInScraper());
     this.register(new BuiltInScraper());
     this.register(new WeWorkRemotelyScraper());
-    // ATS platforms removed from auto-rotation (can be re-added later)
+    this.register(new GreenhouseScraper());
+    this.register(new LeverScraper());
+    this.register(new AshbyScraper());
   }
 
   register(scraper: BaseScraper): void {

@@ -79,7 +79,7 @@ router.get('/scrape-linkedin', verifyCronSecret, async (req, res) => {
 router.get('/scrape-api-jobs', verifyCronSecret, async (req, res) => {
   try {
     logInfo('Cron: Starting API scrapers');
-    const apiScrapers = ['remotive', 'remoteok', 'hackernews', 'weWorkRemotely'];
+    const apiScrapers = ['remotive', 'remoteok', 'hackernews', 'weWorkRemotely', 'greenhouse', 'lever', 'ashby'];
     const sources = apiScrapers
       .map((key) => scraperRegistry.get(key))
       .filter((s) => s !== undefined) as any[];
