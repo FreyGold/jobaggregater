@@ -1,0 +1,1 @@
+I built this project for scraping and aggregating job offers from different job boards and presenting them in a unified interface, it was a fun project that helped me learn a lot about web scraping and data aggregation
