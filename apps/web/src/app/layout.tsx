@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import { QueryProvider } from '@/providers/query-provider';
 import { ThemeProvider } from '@/providers/theme-provider';
@@ -157,6 +158,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </ConfigProvider>
         </ThemeProvider>
       </body>
+      <GoogleAnalytics gaId="G-9D56YF8W51" />
     </html>
   );
 }

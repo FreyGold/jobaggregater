@@ -4,6 +4,7 @@
 
 import { use, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { sendGAEvent } from '@next/third-parties/google';
 import { useJob, useSavedJobs, useSaveJob } from '@/hooks/use-jobs';
 import { useAuth } from '@/providers/auth-provider';
 import { apiClient, ApiError } from '@/lib/api';
@@ -217,6 +218,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     target="_blank"
                     rel="noopener noreferrer"
                     className={buttonVariants({ size: 'lg', className: 'flex items-center gap-2' })}
+                    onClick={() => sendGAEvent({ event: 'apply_click', value: job.id, company: job.company, title: job.title })}
                   >
                     <ExternalLink className="h-4 w-4" />
                     <span>Apply on Source</span>

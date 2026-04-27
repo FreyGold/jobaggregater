@@ -4,6 +4,7 @@
 
 import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { sendGAEvent } from '@next/third-parties/google';
 import type { Job } from '@jobagg/shared';
 import { formatSalary, formatTimeAgo } from '@jobagg/shared';
 import { Badge } from '@/components/ui/badge';
@@ -183,6 +184,7 @@ function JobCardComponent({ job, isSaved = false, onSave, onUnsave, isBookmarksP
               rel="noopener noreferrer"
               aria-label="View original posting"
               title="View original"
+              onClick={() => sendGAEvent({ event: 'apply_click', value: job.id, company: job.company, title: job.title })}
             >
               <ExternalLink className="h-4 w-4" />
             </a>
