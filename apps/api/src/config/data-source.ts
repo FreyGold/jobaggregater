@@ -5,13 +5,15 @@ import { Job } from '../entities/Job.js';
 import { User } from '../entities/User.js';
 import { Source } from '../entities/Source.js';
 import { SavedJob } from '../entities/SavedJob.js';
+import { Resume } from '../entities/Resume.js';
+import { TailoredResume } from '../entities/TailoredResume.js';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: config.db.url,
   synchronize: true, // Force sync for local docker schema deployment
   logging: config.isDev ? ['query', 'error'] : ['error'],
-  entities: [Job, User, Source, SavedJob],
+  entities: [Job, User, Source, SavedJob, Resume, TailoredResume],
   migrations: [],
   subscribers: [],
 });

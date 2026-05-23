@@ -69,6 +69,12 @@ export function Header() {
               >
                 Bookmarks
               </Link>
+              <Link
+                className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                href="/tailored"
+              >
+                Tailored CVs
+              </Link>
               <Button variant="ghost" size="sm" onClick={logout}>
                 Log out
               </Button>

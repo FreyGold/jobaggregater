@@ -48,3 +48,33 @@ export interface AuthResponse {
   user: User;
   token: string;
 }
+
+export interface Resume {
+  id: string;
+  userId: string;
+  fileName: string;
+  fileType: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TailoredResume {
+  id: string;
+  resumeId: string;
+  userId: string;
+  jobTitle: string;
+  companyName: string;
+  jobDescription: string;
+  jobUrl?: string;
+  score: number;
+  tailoredContent: string;
+  createdAt: string;
+}
+
+export interface TailorResumeInput {
+  jobTitle: string;
+  companyName: string;
+  jobDescription: string;
+  jobUrl?: string;
+}

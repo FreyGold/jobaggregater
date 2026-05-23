@@ -56,4 +56,9 @@ export const API_ROUTES = {
   SUBSCRIPTIONS_CHECKOUT: '/api/subscriptions/checkout',
   SUBSCRIPTIONS_PORTAL: '/api/subscriptions/portal',
   SUBSCRIPTIONS_CURRENT: '/api/subscriptions/current',
+  RESUMES: '/api/resumes',
+  RESUMES_UPLOAD: '/api/resumes/upload',
+  RESUME_TAILOR: (id: string) => `/api/resumes/${id}/tailor`,
+  TAILORED: '/api/resumes/tailored',
+  TAILORED_BY_ID: (id: string) => `/api/resumes/tailored/${id}`,
 } as const;
