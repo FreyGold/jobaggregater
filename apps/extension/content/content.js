@@ -140,7 +140,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'GET_SELECTION_METADATA') {
     const selection = window.getSelection().toString().trim();
     
-    // Find page metadata
     let jobTitle = document.title;
     const h1 = document.querySelector('h1');
     if (h1) jobTitle = h1.textContent.trim();
@@ -152,5 +151,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       jobUrl: window.location.href
     });
   }
+
+  if (request.type === 'GET_PAGE_TEXT') {
+    const title = document.title;
+    const metaDesc = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+    const main = document.querySelector('article') || document.querySelector('main') || document.querySelector('[role="main"]') || document.body;
+    const bodyText = main.textContent
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 30000);
+
+    sendResponse({ title, metaDescription: metaDesc, bodyText, url: window.location.href });
+  }
+
   return true;
 });
