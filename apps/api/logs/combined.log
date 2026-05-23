@@ -78,3 +78,6 @@
   "resumeId": "25a3a888-a9fa-44ba-b54b-422345179780",
   "fileName": "Ahmed-Tawfik-Cv (1).pdf"
 }
+2026-05-23 19:00:00 [info]: Starting LinkedIn scraper cron {
+  "service": "job-aggregator-api"
+}

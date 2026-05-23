@@ -8,7 +8,8 @@
     "http://localhost:3001/*",
     "https://jobaggregater-api.vercel.app/*",
     "https://api.groq.com/*",
-    "https://generativelanguage.googleapis.com/*"
+    "https://generativelanguage.googleapis.com/*",
+    "<all_urls>"
   ],
   "action": {
     "default_popup": "popup/popup.html",

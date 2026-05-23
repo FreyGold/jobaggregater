@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      const pageData = await chrome.tabs.sendMessage(tab.id, { type: 'GET_PAGE_TEXT' });
+      const pageData = await getPageText(tab.id);
       if (!pageData || !pageData.bodyText) {
         showMessage('Could not extract text from this page.', 'error');
         setLoading(aiExtractBtn, false);
@@ -243,7 +243,8 @@ ${pageData.bodyText.slice(0, 15000)}`;
         result = await callGemini(settings.apiKey, settings.model || 'gemini-2.0-flash', prompt);
       }
 
-      const parsed = JSON.parse(result);
+      const cleaned = result.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(cleaned);
       if (parsed.jobTitle) jobTitleInput.value = parsed.jobTitle;
       if (parsed.companyName) jobCompanyInput.value = parsed.companyName;
       if (parsed.jobDescription) jobDescInput.value = parsed.jobDescription;
@@ -464,6 +465,25 @@ ${pageData.bodyText.slice(0, 15000)}`;
   });
 
   // ─── Helpers ──────────────────────────────────────────────────────
+  async function getPageText(tabId) {
+    try {
+      const data = await chrome.tabs.sendMessage(tabId, { type: 'GET_PAGE_TEXT' });
+      return data;
+    } catch {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId },
+        func: () => {
+          const title = document.title;
+          const metaDesc = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+          const main = document.querySelector('article') || document.querySelector('main') || document.querySelector('[role="main"]') || document.body;
+          const bodyText = main.textContent.replace(/\s+/g, ' ').trim().slice(0, 30000);
+          return { title, metaDescription: metaDesc, bodyText, url: window.location.href };
+        },
+      });
+      return results[0]?.result;
+    }
+  }
+
   function setLoading(btn, isLoading, loadingText = 'Loading...') {
     if (isLoading) {
       btn.disabled = true;
