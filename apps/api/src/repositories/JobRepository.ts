@@ -136,7 +136,7 @@ export class JobRepository {
       await this.repo.createQueryBuilder()
         .insert()
         .into(Job)
-        .values(batch)
+        .values(batch as any)
         .orUpdate(
           [
             'title',

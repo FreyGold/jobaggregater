@@ -61,3 +61,14 @@
   "email": "ahmedtawfik833@gmail.com",
   "plan": "PRO"
 }
+2026-05-23 18:51:01 [info]: User logged in successfully {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "email": "ahmedtawfik833@gmail.com",
+  "plan": "PRO"
+}
+2026-05-23 18:53:48 [error]: Unhandled error {
+  "service": "job-aggregator-api",
+  "error": "invalid byte sequence for encoding \"UTF8\": 0x00",
+  "stack": "QueryFailedError: invalid byte sequence for encoding \"UTF8\": 0x00\n    at PostgresQueryRunner.query (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/driver/src/driver/postgres/PostgresQueryRunner.ts:325:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async InsertQueryBuilder.execute (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/InsertQueryBuilder.ts:164:33)\n    at async SubjectExecutor.executeInsertOperations (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/persistence/src/persistence/SubjectExecutor.ts:435:42)\n    at async SubjectExecutor.execute (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/persistence/src/persistence/SubjectExecutor.ts:137:9)\n    at async EntityPersistExecutor.execute (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/persistence/src/persistence/EntityPersistExecutor.ts:182:21)\n    at async ResumeService.uploadResume (/home/frey/Important/jobaggregator/apps/api/src/services/resumeService.ts:28:20)\n    at async ResumeController.upload (/home/frey/Important/jobaggregator/apps/api/src/controllers/ResumeController.ts:24:22)"
+}

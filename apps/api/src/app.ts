@@ -15,6 +15,7 @@ import { subscriptionRoutes } from './routes/subscriptionRoutes.js';
 import { webhookRoutes } from './routes/webhookRoutes.js';
 import cronRoutes from './routes/cronRoutes.js';
 import { resumeRoutes } from './routes/resumeRoutes.js';
+import { settingsRoutes } from './routes/settingsRoutes.js';
 
 const app: Application = express();
 let dbInitPromise: Promise<void> | null = null;
@@ -91,6 +92,7 @@ app.use('/api/sources', sourceRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/cron', cronRoutes);
 app.use('/api/resumes', resumeRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // ─── 404 Handler ─────────────────────────────────────────────────
 app.use((_req, res) => {

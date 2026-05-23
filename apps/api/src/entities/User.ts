@@ -62,6 +62,9 @@ export class User {
   @UpdateDateColumn()
   updatedAt!: Date;
 
+  @Column({ type: 'jsonb', nullable: true })
+  settings!: Record<string, unknown> | null;
+
   @OneToMany(() => SavedJob, (savedJob) => savedJob.user)
   savedJobs!: Relation<SavedJob[]>;
 }

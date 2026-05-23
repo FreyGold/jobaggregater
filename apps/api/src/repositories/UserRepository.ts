@@ -53,7 +53,7 @@ export class UserRepository {
   }
 
   async updateSubscription(userId: string, data: Partial<User>) {
-    await this.repo.update(userId, data);
+    await this.repo.update(userId, data as any);
   }
 
   async getSavedJobs(userId: string) {

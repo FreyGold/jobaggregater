@@ -11,10 +11,11 @@ const genAI = config.isDev
 async function extractTextFromBuffer(buffer: Buffer, mimetype: string): Promise<string> {
   if (mimetype === 'application/pdf') {
     try {
-      const pdfParse = require('pdf-parse');
+      const { default: pdfParse } = await import('pdf-parse');
       const data = await pdfParse(buffer);
       return data.text as string;
-    } catch {
+    } catch (err) {
+      console.error('PDF parse error, falling back to raw text:', err);
       return buffer.toString('utf-8');
     }
   }
