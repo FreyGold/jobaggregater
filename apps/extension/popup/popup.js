@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // DOM Elements - Main Form
   const resumeSelect = document.getElementById('resume-select');
   const uploadZone = document.getElementById('upload-zone');
-  const resumeFileInput = document.getElementById('resume-file');
   const uploadStatus = document.getElementById('upload-status');
   const jobTitleInput = document.getElementById('job-title');
   const jobCompanyInput = document.getElementById('job-company');
@@ -297,8 +296,22 @@ ${pageData.bodyText.slice(0, 15000)}`;
   });
 
   // ─── File Uploads ─────────────────────────────────────────────────
-  uploadZone.addEventListener('click', () => {
-    resumeFileInput.click();
+  uploadZone.addEventListener('click', async () => {
+    try {
+      const [fileHandle] = await window.showOpenFilePicker({
+        types: [{
+          description: 'CV Files',
+          accept: { 'application/pdf': ['.pdf'], 'text/markdown': ['.md'] },
+        }],
+        multiple: false,
+      });
+      const file = await fileHandle.getFile();
+      handleFileUpload(file);
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.error('File picker error:', err);
+      }
+    }
   });
 
   uploadZone.addEventListener('dragover', (e) => {
@@ -316,12 +329,6 @@ ${pageData.bodyText.slice(0, 15000)}`;
     
     if (e.dataTransfer.files.length > 0) {
       handleFileUpload(e.dataTransfer.files[0]);
-    }
-  });
-
-  resumeFileInput.addEventListener('change', () => {
-    if (resumeFileInput.files.length > 0) {
-      handleFileUpload(resumeFileInput.files[0]);
     }
   });
 
