@@ -81,3 +81,35 @@
 2026-05-23 19:00:00 [info]: Starting LinkedIn scraper cron {
   "service": "job-aggregator-api"
 }
+2026-05-23 19:04:55 [warn]: Application error Missing or invalid authorization header {
+  "service": "job-aggregator-api",
+  "code": "UNAUTHORIZED",
+  "statusCode": 401
+}
+2026-05-23 19:04:56 [warn]: Application error Missing or invalid authorization header {
+  "service": "job-aggregator-api",
+  "code": "UNAUTHORIZED",
+  "statusCode": 401
+}
+2026-05-23 19:05:06 [error]: Unhandled error {
+  "service": "job-aggregator-api",
+  "error": "column User.settings does not exist",
+  "stack": "QueryFailedError: column User.settings does not exist\n    at PostgresQueryRunner.query (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/driver/src/driver/postgres/PostgresQueryRunner.ts:325:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async SelectQueryBuilder.loadRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3868:25)\n    at async SelectQueryBuilder.executeEntitiesAndRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3614:26)\n    at async SelectQueryBuilder.getRawAndEntities (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1671:29)\n    at async SelectQueryBuilder.getOne (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1698:25)\n    at async AuthService.login (/home/frey/Important/jobaggregator/apps/api/src/services/authService.ts:37:18)\n    at async AuthController.login (/home/frey/Important/jobaggregator/apps/api/src/controllers/AuthController.ts:23:22)"
+}
+2026-05-23 19:05:11 [error]: Unhandled error {
+  "service": "job-aggregator-api",
+  "error": "column User.settings does not exist",
+  "stack": "QueryFailedError: column User.settings does not exist\n    at PostgresQueryRunner.query (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/driver/src/driver/postgres/PostgresQueryRunner.ts:325:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async SelectQueryBuilder.loadRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3868:25)\n    at async SelectQueryBuilder.executeEntitiesAndRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3614:26)\n    at async SelectQueryBuilder.getRawAndEntities (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1671:29)\n    at async SelectQueryBuilder.getOne (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1698:25)\n    at async AuthService.login (/home/frey/Important/jobaggregator/apps/api/src/services/authService.ts:37:18)\n    at async AuthController.login (/home/frey/Important/jobaggregator/apps/api/src/controllers/AuthController.ts:23:22)"
+}
+2026-05-23 19:08:57 [info]: User logged in successfully {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "email": "ahmedtawfik833@gmail.com",
+  "plan": "PRO"
+}
+2026-05-23 19:09:08 [info]: User logged in successfully {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "email": "ahmedtawfik833@gmail.com",
+  "plan": "PRO"
+}
