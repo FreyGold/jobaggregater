@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "JobAgg CV Tailor",
+  "version": "1.0.0",
+  "description": "Tailor your CV for any job listing with AI — powered by JobAgg",
+  "permissions": ["storage", "tabs", "contextMenus", "scripting"],
+  "host_permissions": [
+    "http://localhost:3001/*",
+    "https://jobaggregater-api.vercel.app/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "JobAgg CV Tailor"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -49,7 +49,7 @@ addOrigin(`http://127.0.0.1:${config.port}`);
 app.use(cors({ 
   origin: function(origin, callback) {
     const normalizedOrigin = origin ? normalizeOrigin(origin) : '';
-    if (!origin || allowedOrigins.has(normalizedOrigin)) {
+    if (!origin || allowedOrigins.has(normalizedOrigin) || origin?.startsWith('chrome-extension://')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
