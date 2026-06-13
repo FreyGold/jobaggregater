@@ -155,11 +155,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'GET_PAGE_TEXT') {
     const title = document.title;
     const metaDesc = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
-    const main = document.querySelector('article') || document.querySelector('main') || document.querySelector('[role="main"]') || document.body;
-    const bodyText = main.textContent
+    const bodyText = document.body.textContent
       .replace(/\s+/g, ' ')
       .trim()
-      .slice(0, 30000);
+      .slice(0, 50000);
 
     sendResponse({ title, metaDescription: metaDesc, bodyText, url: window.location.href });
   }

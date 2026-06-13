@@ -51,9 +51,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true;
 });
 
-// Helper to store job data in session storage
+// Helper to store job data in local storage (persists across popup closes)
 function storeJobData(data) {
-  chrome.storage.session.set({ job_data: data }, () => {
-    console.log('Saved job data to session storage:', data);
+  chrome.storage.local.set({ job_data: data }, () => {
+    console.log('Saved job data to local storage:', data);
   });
 }

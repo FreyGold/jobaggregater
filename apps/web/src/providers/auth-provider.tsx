@@ -15,32 +15,37 @@ interface AuthContextType {
   login: (token: string, user: User) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load from localStorage on mount
     const storedToken = localStorage.getItem('auth_token');
     const storedUser = localStorage.getItem('user');
 
     if (storedToken && storedUser) {
       try {
+        JSON.parse(storedUser);
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
         apiClient.setToken(storedToken);
-      } catch (e) {
-        console.error('Failed to parse stored user', e);
+      } catch {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
       }
+    } else if (storedToken && !storedUser) {
+      localStorage.removeItem('auth_token');
+    } else if (!storedToken && storedUser) {
+      localStorage.removeItem('user');
     }
-    setMounted(true);
+
+    setIsLoading(false);
   }, []);
 
   const login = (newToken: string, newUser: User) => {
@@ -57,18 +62,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
     apiClient.setToken(null);
-    // Reload to clear all cached data and queries
     window.location.reload();
   };
 
   return (
     <AuthContext.Provider
       value={{
-        user: mounted ? user : null,
-        token: mounted ? token : null,
+        user,
+        token,
         login,
         logout,
-        isAuthenticated: mounted ? !!token : false,
+        isAuthenticated: !!token,
+        isLoading,
       }}
     >
       {children}

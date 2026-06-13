@@ -57,6 +57,21 @@ export class ResumeRepository {
     return this.tailoredRepo.save(t);
   }
 
+  async countTailoredByUserId(userId: string): Promise<number> {
+    return this.tailoredRepo.count({ where: { userId } });
+  }
+
+  async updateTailored(
+    id: string,
+    userId: string,
+    data: { tailoredContent: string },
+  ): Promise<TailoredResume | null> {
+    const t = await this.tailoredRepo.findOne({ where: { id, userId } });
+    if (!t) return null;
+    t.tailoredContent = data.tailoredContent;
+    return this.tailoredRepo.save(t);
+  }
+
   async deleteTailored(id: string, userId: string): Promise<void> {
     await this.tailoredRepo.delete({ id, userId });
   }

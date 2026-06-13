@@ -113,3 +113,315 @@
   "email": "ahmedtawfik833@gmail.com",
   "plan": "PRO"
 }
+2026-05-23 19:15:55 [error]: Unhandled error {
+  "service": "job-aggregator-api",
+  "error": "column User.settings does not exist",
+  "stack": "QueryFailedError: column User.settings does not exist\n    at PostgresQueryRunner.query (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/driver/src/driver/postgres/PostgresQueryRunner.ts:325:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async SelectQueryBuilder.loadRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3868:25)\n    at async SelectQueryBuilder.executeEntitiesAndRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3614:26)\n    at async SelectQueryBuilder.getRawAndEntities (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1671:29)\n    at async SelectQueryBuilder.getOne (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1698:25)\n    at async AuthService.login (/home/frey/Important/jobaggregator/apps/api/src/services/authService.ts:37:18)\n    at async AuthController.login (/home/frey/Important/jobaggregator/apps/api/src/controllers/AuthController.ts:23:22)"
+}
+2026-05-23 19:15:59 [error]: Unhandled error {
+  "service": "job-aggregator-api",
+  "error": "column User.settings does not exist",
+  "stack": "QueryFailedError: column User.settings does not exist\n    at PostgresQueryRunner.query (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/driver/src/driver/postgres/PostgresQueryRunner.ts:325:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async SelectQueryBuilder.loadRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3868:25)\n    at async SelectQueryBuilder.executeEntitiesAndRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3614:26)\n    at async SelectQueryBuilder.getRawAndEntities (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1671:29)\n    at async SelectQueryBuilder.getOne (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1698:25)\n    at async AuthService.login (/home/frey/Important/jobaggregator/apps/api/src/services/authService.ts:37:18)\n    at async AuthController.login (/home/frey/Important/jobaggregator/apps/api/src/controllers/AuthController.ts:23:22)"
+}
+2026-05-23 19:16:11 [warn]: Login failed: invalid password {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "email": "ahmedtawfik833@gmail.com"
+}
+2026-05-23 19:16:12 [warn]: Application error Invalid email or password {
+  "service": "job-aggregator-api",
+  "code": "INVALID_CREDENTIALS",
+  "statusCode": 401
+}
+2026-05-23 19:16:15 [warn]: Login failed: invalid password {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "email": "ahmedtawfik833@gmail.com"
+}
+2026-05-23 19:16:15 [warn]: Application error Invalid email or password {
+  "service": "job-aggregator-api",
+  "code": "INVALID_CREDENTIALS",
+  "statusCode": 401
+}
+2026-05-23 19:16:23 [info]: User logged in successfully {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "email": "ahmedtawfik833@gmail.com",
+  "plan": "PRO"
+}
+2026-05-24 11:47:57 [info]: Fetched jobs from database {
+  "service": "job-aggregator-api",
+  "jobCount": 40,
+  "total": 195229,
+  "plan": "PRO"
+}
+2026-05-24 11:47:57 [info]: Job list operation completed {
+  "service": "job-aggregator-api",
+  "plan": "PRO",
+  "duration": "2296ms",
+  "resultCount": 40
+}
+2026-05-24 11:48:16 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "49b02bbb-2e2f-4ec8-b2f1-954ef16a5d9e"
+}
+2026-05-24 11:48:18 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "d3b480c0-060c-4a6d-9e08-d90b03e841ef"
+}
+2026-05-24 11:48:49 [info]: Tailored CV updated {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "79acd6cc-2b2c-423e-b393-43ec13badb74"
+}
+2026-05-24 11:49:13 [error]: LaTeX compilation failed {
+  "service": "job-aggregator-api",
+  "error": "pdflatex -interaction nonstopmode -recorder -output-directory latex.out /tmp/downloads/tmp_43/main.tex\n/tmp/downloads/tmp_43/main.tex:24: error: Missing \\begin{document}\n      at \\addtolength{\\textwidth}{1in}S\nThere were errors; /tmp/storage/compilation_38/output.pdf not updated\n",
+  "stack": "Error: pdflatex -interaction nonstopmode -recorder -output-directory latex.out /tmp/downloads/tmp_43/main.tex\n/tmp/downloads/tmp_43/main.tex:24: error: Missing \\begin{document}\n      at \\addtolength{\\textwidth}{1in}S\nThere were errors; /tmp/storage/compilation_38/output.pdf not updated\n\n    at ResumeService.generateCvPdf (/home/frey/Important/jobaggregator/apps/api/src/services/resumeService.ts:254:44)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async ResumeController.generateCvPdf (/home/frey/Important/jobaggregator/apps/api/src/controllers/ResumeController.ts:105:19)"
+}
+2026-05-24 11:49:13 [error]: Application error {
+  "service": "job-aggregator-api",
+  "error": "LaTeX compilation failed",
+  "stack": "AppError: LaTeX compilation failed\n    at ResumeService.generateCvPdf (/home/frey/Important/jobaggregator/apps/api/src/services/resumeService.ts:255:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async ResumeController.generateCvPdf (/home/frey/Important/jobaggregator/apps/api/src/controllers/ResumeController.ts:105:19)",
+  "code": "COMPILE_ERROR",
+  "statusCode": 502
+}
+2026-05-24 12:00:00 [info]: Starting LinkedIn scraper cron {
+  "service": "job-aggregator-api"
+}
+2026-05-24 12:00:00 [info]: Starting API scraper cron {
+  "service": "job-aggregator-api"
+}
+2026-05-24 13:27:28 [info]: Scrape batch processed {
+  "service": "job-aggregator-api",
+  "newOrUpdated": 8190,
+  "total": 8190
+}
+2026-05-24 13:27:29 [info]: API scraper cron completed {
+  "service": "job-aggregator-api",
+  "totalJobsCollected": 8190,
+  "sourceCount": 6
+}
+2026-05-24 13:28:57 [warn]: Application error Missing or invalid authorization header {
+  "service": "job-aggregator-api",
+  "code": "UNAUTHORIZED",
+  "statusCode": 401
+}
+2026-05-24 13:31:30 [info]: Resume uploaded {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "resumeId": "49f74ec9-1af2-41c5-9c92-310159ebb83d",
+  "fileName": "Ahmed-Tawfik-Cv (1).pdf"
+}
+2026-05-24 13:32:12 [warn]: Application error Missing or invalid authorization header {
+  "service": "job-aggregator-api",
+  "code": "UNAUTHORIZED",
+  "statusCode": 401
+}
+2026-05-24 13:32:29 [error]: Unhandled error {
+  "service": "job-aggregator-api",
+  "error": "column User.settings does not exist",
+  "stack": "QueryFailedError: column User.settings does not exist\n    at PostgresQueryRunner.query (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/driver/src/driver/postgres/PostgresQueryRunner.ts:325:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async SelectQueryBuilder.loadRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3868:25)\n    at async SelectQueryBuilder.executeEntitiesAndRawResults (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:3614:26)\n    at async SelectQueryBuilder.getRawAndEntities (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1671:29)\n    at async SelectQueryBuilder.getOne (/home/frey/Important/jobaggregator/node_modules/.pnpm/typeorm@0.3.28_ioredis@5.10.0_pg@8.20.0_ts-node@10.9.2_@types+node@22.19.15_typescript@5.9.3_/node_modules/typeorm/query-builder/src/query-builder/SelectQueryBuilder.ts:1698:25)\n    at async AuthService.login (/home/frey/Important/jobaggregator/apps/api/src/services/authService.ts:37:18)\n    at async AuthController.login (/home/frey/Important/jobaggregator/apps/api/src/controllers/AuthController.ts:23:22)"
+}
+2026-05-24 13:34:33 [info]: Scrape batch processed {
+  "service": "job-aggregator-api",
+  "newOrUpdated": 6927,
+  "total": 6927
+}
+2026-05-24 13:34:33 [info]: LinkedIn scraper cron completed {
+  "service": "job-aggregator-api",
+  "jobsCollected": 6927
+}
+2026-05-24 16:00:00 [info]: Starting LinkedIn scraper cron {
+  "service": "job-aggregator-api"
+}
+2026-05-24 16:10:02 [info]: Scrape batch processed {
+  "service": "job-aggregator-api",
+  "newOrUpdated": 6724,
+  "total": 6724
+}
+2026-05-24 16:10:02 [info]: LinkedIn scraper cron completed {
+  "service": "job-aggregator-api",
+  "jobsCollected": 6724
+}
+2026-05-24 16:10:57 [warn]: Application error Maximum 10 tailored CVs allowed. Delete an existing one first. {
+  "service": "job-aggregator-api",
+  "code": "LIMIT_REACHED",
+  "statusCode": 400
+}
+2026-05-24 16:11:11 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "44e7ae4d-6199-4241-8f7f-5c16ae1eeca0"
+}
+2026-05-24 16:11:12 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "526820d4-42b2-449c-ac8b-b2fd40d6169b"
+}
+2026-05-24 16:11:13 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "20c11f4b-90ec-4edb-bf81-89909e463bf1"
+}
+2026-05-24 16:11:13 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:14 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:14 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:14 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:14 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "f7250430-db8f-457d-ba7e-6bf9d35537cd"
+}
+2026-05-24 16:11:15 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:15 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:15 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:15 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:15 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:15 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:15 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:16 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:16 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:16 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:16 [warn]: Application error Tailored CV not found {
+  "service": "job-aggregator-api",
+  "code": "NOT_FOUND",
+  "statusCode": 404
+}
+2026-05-24 16:11:17 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "ed5b9417-598b-404e-abe9-d73e592fe724"
+}
+2026-05-24 16:11:19 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "aa4c2cff-263d-4c24-803e-c56d8d90d555"
+}
+2026-05-24 16:11:20 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "5d7c3fa7-a986-4697-9ed2-fc0dd8a0158c"
+}
+2026-05-24 16:11:21 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "4b0449b4-2518-4edc-934c-7b33d0b473b9"
+}
+2026-05-24 16:11:23 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "872ffa0a-83ad-437f-9505-b921a42d3722"
+}
+2026-05-24 16:11:24 [info]: Tailored CV deleted {
+  "service": "job-aggregator-api",
+  "userId": "be8a02ec-ce24-4df3-9312-c86a1ee1175b",
+  "tailoredId": "79acd6cc-2b2c-423e-b393-43ec13badb74"
+}
+2026-05-24 17:00:00 [info]: Starting LinkedIn scraper cron {
+  "service": "job-aggregator-api"
+}
+2026-05-24 17:09:47 [info]: Scrape batch processed {
+  "service": "job-aggregator-api",
+  "newOrUpdated": 6753,
+  "total": 6753
+}
+2026-05-24 17:09:47 [info]: LinkedIn scraper cron completed {
+  "service": "job-aggregator-api",
+  "jobsCollected": 6753
+}
+2026-05-24 18:00:00 [info]: Starting API scraper cron {
+  "service": "job-aggregator-api"
+}
+2026-05-24 18:00:00 [info]: Starting LinkedIn scraper cron {
+  "service": "job-aggregator-api"
+}
+2026-05-24 18:03:30 [info]: Scrape batch processed {
+  "service": "job-aggregator-api",
+  "newOrUpdated": 8195,
+  "total": 8195
+}
+2026-05-24 18:03:30 [info]: API scraper cron completed {
+  "service": "job-aggregator-api",
+  "totalJobsCollected": 8195,
+  "sourceCount": 6
+}
+2026-05-24 18:09:28 [info]: Scrape batch processed {
+  "service": "job-aggregator-api",
+  "newOrUpdated": 6830,
+  "total": 6830
+}
+2026-05-24 18:09:28 [info]: LinkedIn scraper cron completed {
+  "service": "job-aggregator-api",
+  "jobsCollected": 6830
+}
+2026-05-24 19:00:00 [info]: Starting LinkedIn scraper cron {
+  "service": "job-aggregator-api"
+}
+2026-05-24 19:09:05 [info]: Scrape batch processed {
+  "service": "job-aggregator-api",
+  "newOrUpdated": 6941,
+  "total": 6941
+}
+2026-05-24 19:09:05 [info]: LinkedIn scraper cron completed {
+  "service": "job-aggregator-api",
+  "jobsCollected": 6941
+}

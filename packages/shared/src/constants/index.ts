@@ -61,4 +61,7 @@ export const API_ROUTES = {
   RESUME_TAILOR: (id: string) => `/api/resumes/${id}/tailor`,
   TAILORED: '/api/resumes/tailored',
   TAILORED_BY_ID: (id: string) => `/api/resumes/tailored/${id}`,
+  GENERATE_CV: '/api/generate-cv',
 } as const;
+
+export const TAILORED_CV_LIMIT = 10;

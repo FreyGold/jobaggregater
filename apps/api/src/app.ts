@@ -8,6 +8,8 @@ import { specs } from './config/swagger.js';
 import { AppDataSource, initializeDatabase } from './config/data-source.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { globalRateLimit } from './middleware/rateLimitMiddleware.js';
+import { asyncErrorWrapper } from './utils/index.js';
+import { authMiddleware } from './middleware/authMiddleware.js';
 import { authRoutes } from './routes/authRoutes.js';
 import { jobRoutes } from './routes/jobRoutes.js';
 import { sourceRoutes } from './routes/sourceRoutes.js';
@@ -16,6 +18,11 @@ import { webhookRoutes } from './routes/webhookRoutes.js';
 import cronRoutes from './routes/cronRoutes.js';
 import { resumeRoutes } from './routes/resumeRoutes.js';
 import { settingsRoutes } from './routes/settingsRoutes.js';
+import { ResumeService } from './services/resumeService.js';
+import { ResumeController } from './controllers/ResumeController.js';
+
+const resumeService = new ResumeService();
+const resumeController = new ResumeController(resumeService);
 
 const app: Application = express();
 let dbInitPromise: Promise<void> | null = null;
@@ -93,6 +100,12 @@ app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/cron', cronRoutes);
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/settings', settingsRoutes);
+
+app.post(
+  '/api/generate-cv',
+  asyncErrorWrapper(authMiddleware as never),
+  asyncErrorWrapper((req, res) => resumeController.generateCvPdf(req, res)),
+);
 
 // ─── 404 Handler ─────────────────────────────────────────────────
 app.use((_req, res) => {

@@ -46,81 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let activeUser = null;
 
-  // Initialize
-  await checkAuth();
-  await loadSettings();
-
-  // ─── Provider/Model selectors ─────────────────────────────────────
-  function populateModels(provider) {
-    const models = provider === 'groq' ? GROQ_MODELS : GEMINI_MODELS;
-    aiModelSelect.innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
-  }
-
-  aiProviderSelect.addEventListener('change', () => {
-    populateModels(aiProviderSelect.value);
-  });
-
-  // ─── Settings Toggle ──────────────────────────────────────────────
-  settingsToggleBtn.addEventListener('click', () => {
-    settingsPanel.classList.toggle('hidden');
-  });
-
-  // ─── Load / Save Settings ─────────────────────────────────────────
-  async function loadSettings() {
-    return new Promise((resolve) => {
-      chrome.storage.local.get(['ai_settings'], (res) => {
-        const s = res.ai_settings || {};
-        if (s.provider) aiProviderSelect.value = s.provider;
-        populateModels(aiProviderSelect.value);
-        if (s.model) aiModelSelect.value = s.model;
-        if (s.apiKey) aiApiKeyInput.value = s.apiKey;
-        saveToBackendCheckbox.checked = s.saveToBackend || false;
-        resolve();
-      });
-    });
-  }
-
-  function saveSettingsLocally(settings) {
-    return new Promise((resolve) => {
-      chrome.storage.local.set({ ai_settings: settings }, resolve);
-    });
-  }
-
-  saveSettingsBtn.addEventListener('click', async () => {
-    const settings = {
-      provider: aiProviderSelect.value,
-      model: aiModelSelect.value,
-      apiKey: aiApiKeyInput.value.trim(),
-      saveToBackend: saveToBackendCheckbox.checked,
-    };
-
-    await saveSettingsLocally(settings);
-
-    if (settings.saveToBackend && settings.apiKey) {
-      const token = await getToken();
-      if (token) {
-        const res = await apiRequest('/api/settings/ai', {
-          method: 'PUT',
-          body: {
-            provider: settings.provider,
-            model: settings.model,
-            apiKey: settings.apiKey,
-          },
-        });
-        if (res.error) {
-          showMessage('Saved locally, but failed to save to backend: ' + res.error, 'error');
-          return;
-        }
-      } else {
-        showMessage('Not logged in — API key saved locally only.', 'error');
-        return;
-      }
-    }
-
-    showMessage('Settings saved!', 'success');
-  });
-
-  // ─── Auth ─────────────────────────────────────────────────────────
+  // ─── Auth ──────────────────────────────────────────────────────────
   async function checkAuth() {
     const token = await getToken();
     if (token) {
@@ -134,6 +60,92 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderLoggedOutState();
     }
   }
+
+  // ─── Form Persistence ──────────────────────────────────────────────
+  function saveFormFields() {
+    const data = {
+      title: jobTitleInput.value,
+      company: jobCompanyInput.value,
+      description: jobDescInput.value,
+    };
+    chrome.storage.local.set({ form_fields: data });
+  }
+
+  function loadFormFields() {
+    chrome.storage.local.get(['form_fields'], (res) => {
+      if (res.form_fields) {
+        if (res.form_fields.title) jobTitleInput.value = res.form_fields.title;
+        if (res.form_fields.company) jobCompanyInput.value = res.form_fields.company;
+        if (res.form_fields.description) jobDescInput.value = res.form_fields.description;
+      }
+    });
+  }
+
+  jobTitleInput.addEventListener('input', saveFormFields);
+  jobCompanyInput.addEventListener('input', saveFormFields);
+  jobDescInput.addEventListener('input', saveFormFields);
+
+  // ─── Settings ──────────────────────────────────────────────────────
+  function populateModelOptions(provider) {
+    const models = provider === 'groq' ? GROQ_MODELS : GEMINI_MODELS;
+    aiModelSelect.innerHTML = '';
+    models.forEach((m) => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = m;
+      aiModelSelect.appendChild(opt);
+    });
+  }
+
+  aiProviderSelect.addEventListener('change', () => {
+    populateModelOptions(aiProviderSelect.value);
+  });
+
+  settingsToggleBtn.addEventListener('click', () => {
+    settingsPanel.classList.toggle('hidden');
+  });
+
+  saveSettingsBtn.addEventListener('click', async () => {
+    const settings = {
+      provider: aiProviderSelect.value,
+      model: aiModelSelect.value,
+      apiKey: aiApiKeyInput.value.trim(),
+      saveToBackend: saveToBackendCheckbox.checked,
+    };
+    chrome.storage.local.set({ ai_settings: settings });
+
+    if (settings.saveToBackend) {
+      const res = await apiRequest('/api/settings/ai', {
+        method: 'PUT',
+        body: { provider: settings.provider, model: settings.model, apiKey: settings.apiKey },
+      });
+      if (res.error) {
+        showMessage('Saved locally, but failed to save to backend: ' + res.error, 'error');
+        return;
+      }
+    }
+    showMessage('Settings saved!', 'success');
+  });
+
+  async function loadSettings() {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(['ai_settings'], (res) => {
+        const settings = res.ai_settings || {};
+        if (settings.provider) aiProviderSelect.value = settings.provider;
+        populateModelOptions(aiProviderSelect.value);
+        if (settings.model) aiModelSelect.value = settings.model;
+        if (settings.apiKey) aiApiKeyInput.value = settings.apiKey;
+        if (settings.saveToBackend) saveToBackendCheckbox.checked = true;
+        resolve();
+      });
+    });
+  }
+
+  // Initialize
+  await checkAuth();
+  await loadSettings();
+  await loadDetectedJob();
+  loadFormFields();
 
   function renderAuthenticatedState() {
     loginSection.classList.add('hidden');
@@ -187,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ─── Job Detection ───────────────────────────────────────────────
   async function loadDetectedJob() {
-    chrome.storage.session.get(['job_data'], (res) => {
+    chrome.storage.local.get(['job_data'], (res) => {
       if (res.job_data) {
         const data = res.job_data;
         if (data.jobTitle) jobTitleInput.value = data.jobTitle;
@@ -248,6 +260,7 @@ ${pageData.bodyText.slice(0, 15000)}`;
       if (parsed.jobTitle) jobTitleInput.value = parsed.jobTitle;
       if (parsed.companyName) jobCompanyInput.value = parsed.companyName;
       if (parsed.jobDescription) jobDescInput.value = parsed.jobDescription;
+      saveFormFields();
 
       showMessage('Job details extracted!', 'success');
     } catch (err) {
@@ -297,22 +310,43 @@ ${pageData.bodyText.slice(0, 15000)}`;
   });
 
   // ─── File Uploads ─────────────────────────────────────────────────
+  let fileInputFallback = null;
+
   uploadZone.addEventListener('click', async () => {
     try {
-      const [fileHandle] = await window.showOpenFilePicker({
-        types: [{
-          description: 'CV Files',
-          accept: { 'application/pdf': ['.pdf'], 'text/markdown': ['.md'] },
-        }],
-        multiple: false,
-      });
-      const file = await fileHandle.getFile();
-      handleFileUpload(file);
+      if (typeof window.showOpenFilePicker === 'function') {
+        const [fileHandle] = await window.showOpenFilePicker({
+          types: [{
+            description: 'CV Files',
+            accept: { 'application/pdf': ['.pdf'], 'text/markdown': ['.md'] },
+          }],
+          multiple: false,
+        });
+        const file = await fileHandle.getFile();
+        handleFileUpload(file);
+        return;
+      }
     } catch (err) {
       if (err.name !== 'AbortError') {
         console.error('File picker error:', err);
+      } else {
+        return; // user cancelled
       }
     }
+    // Fallback to hidden <input type="file">
+    if (!fileInputFallback) {
+      fileInputFallback = document.createElement('input');
+      fileInputFallback.type = 'file';
+      fileInputFallback.accept = '.pdf,.md';
+      fileInputFallback.style.display = 'none';
+      document.body.appendChild(fileInputFallback);
+      fileInputFallback.addEventListener('change', () => {
+        const file = fileInputFallback.files?.[0];
+        if (file) handleFileUpload(file);
+        fileInputFallback.value = '';
+      });
+    }
+    fileInputFallback.click();
   });
 
   uploadZone.addEventListener('dragover', (e) => {
@@ -475,8 +509,7 @@ ${pageData.bodyText.slice(0, 15000)}`;
         func: () => {
           const title = document.title;
           const metaDesc = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
-          const main = document.querySelector('article') || document.querySelector('main') || document.querySelector('[role="main"]') || document.body;
-          const bodyText = main.textContent.replace(/\s+/g, ' ').trim().slice(0, 30000);
+          const bodyText = document.body.textContent.replace(/\s+/g, ' ').trim().slice(0, 50000);
           return { title, metaDescription: metaDesc, bodyText, url: window.location.href };
         },
       });

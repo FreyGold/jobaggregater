@@ -68,6 +68,49 @@ export class ResumeController extends BaseController {
     }
   }
 
+  async getTailoredById(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.resumeService.getTailoredById(req.params.id as string, req.user!.userId);
+      this.handleSuccess(res, result);
+    } catch (error) {
+      this.handleError(error, res, 'ResumeController.getTailoredById');
+    }
+  }
+
+  async updateTailoredContent(req: Request, res: Response): Promise<void> {
+    try {
+      const { tailoredContent } = req.body;
+      if (!tailoredContent || typeof tailoredContent !== 'string') {
+        res.status(400).json({ data: null, error: { message: 'tailoredContent is required', code: 'VALIDATION_ERROR' } });
+        return;
+      }
+      const result = await this.resumeService.updateTailoredContent(
+        req.params.id as string,
+        req.user!.userId,
+        tailoredContent,
+      );
+      this.handleSuccess(res, result);
+    } catch (error) {
+      this.handleError(error, res, 'ResumeController.updateTailoredContent');
+    }
+  }
+
+  async generateCvPdf(req: Request, res: Response): Promise<void> {
+    try {
+      const { latex } = req.body;
+      if (!latex || typeof latex !== 'string') {
+        res.status(400).json({ data: null, error: { message: 'latex content is required', code: 'VALIDATION_ERROR' } });
+        return;
+      }
+      const pdf = await this.resumeService.generateCvPdf(latex);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'inline; filename="cv.pdf"');
+      res.send(pdf);
+    } catch (error) {
+      this.handleError(error, res, 'ResumeController.generateCvPdf');
+    }
+  }
+
   async deleteTailored(req: Request, res: Response): Promise<void> {
     try {
       await this.resumeService.deleteTailored(req.params.id as string, req.user!.userId);

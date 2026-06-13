@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/providers/auth-provider';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -11,56 +12,33 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { useTailoredResumes, useDeleteTailored } from '@/hooks/use-resumes';
-import { Copy, Trash2, ChevronDown, ChevronUp, FileDown, Pencil, Save } from 'lucide-react';
+import { Copy, Trash2, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function TailoredPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const { data: tailoredList = [], isLoading } = useTailoredResumes();
   const deleteMutation = useDeleteTailored();
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editContent, setEditContent] = useState<string>('');
   const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [authLoading, isAuthenticated, router]);
 
+  if (authLoading) return null;
   if (!isAuthenticated) return null;
 
-  const toggleExpand = (id: string, content: string) => {
+  const toggleExpand = (id: string) => {
     setExpandedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
-      return next;
-    });
-    if (editingId === id) {
-      setEditingId(null);
-    }
-  };
-
-  const startEdit = (id: string, content: string) => {
-    setEditingId(id);
-    setEditContent(content);
-    setExpandedIds((prev) => {
-      const next = new Set(prev);
-      next.add(id);
-      return next;
-    });
-  };
-
-  const saveEdit = (id: string) => {
-    setEditingId(null);
-    setExpandedIds((prev) => {
-      const next = new Set(prev);
-      next.add(id);
       return next;
     });
   };
@@ -86,71 +64,6 @@ export default function TailoredPage() {
         },
       });
     }, 400);
-  };
-
-  const handleDownloadPdf = (item: { jobTitle: string; companyName: string; tailoredContent: string; score: number }) => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>${item.jobTitle} - Tailored CV</title>
-        <style>
-          @page { margin: 20mm 15mm; size: A4; }
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 11pt;
-            line-height: 1.6;
-            color: #1a1a1a;
-            max-width: 210mm;
-            margin: 0 auto;
-            padding: 30px;
-          }
-          .header {
-            text-align: center;
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-          }
-          .header h1 { font-size: 20pt; margin-bottom: 4px; }
-          .header .subtitle { font-size: 10pt; color: #555; }
-          .match-badge {
-            display: inline-block;
-            background: #059669;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 9pt;
-            margin-top: 8px;
-          }
-          .content {
-            white-space: pre-wrap;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 11pt;
-            line-height: 1.6;
-          }
-          @media print {
-            body { padding: 0; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>${item.jobTitle}</h1>
-          <div class="subtitle">Tailored for ${item.companyName}</div>
-          <div class="match-badge">${item.score}% Match</div>
-        </div>
-        <div class="content">${item.tailoredContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-        <script>
-          window.onload = function() { window.print(); };
-        <\/script>
-      </body>
-      </html>
-    `);
-    printWindow.document.close();
   };
 
   const scoreColor = (score: number) => {
@@ -193,7 +106,6 @@ export default function TailoredPage() {
             {tailoredList.map((item) => {
               const isExpanded = expandedIds.has(item.id);
               const isRemoving = removingIds.has(item.id);
-              const isEditing = editingId === item.id;
 
               return (
                 <div
@@ -229,43 +141,23 @@ export default function TailoredPage() {
                     <div className="mt-4 flex flex-wrap items-center gap-2">
                       <Button
                         variant="ghost" size="sm"
-                        onClick={() => toggleExpand(item.id, item.tailoredContent)}
+                        onClick={() => toggleExpand(item.id)}
                         className="gap-1 text-xs"
                       >
                         {isExpanded ? <><ChevronUp className="h-3.5 w-3.5" /> Hide CV</> : <><ChevronDown className="h-3.5 w-3.5" /> Show CV</>}
                       </Button>
-                      {isExpanded && !isEditing && (
-                        <Button
-                          variant="ghost" size="sm"
-                          onClick={() => startEdit(item.id, item.tailoredContent)}
-                          className="gap-1 text-xs"
-                        >
-                          <Pencil className="h-3.5 w-3.5" /> Edit
+                      <Link href={`/tailored/${item.id}`}>
+                        <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                          <ExternalLink className="h-3.5 w-3.5" /> Open Editor
                         </Button>
-                      )}
-                      {isExpanded && isEditing && (
-                        <Button
-                          variant="ghost" size="sm"
-                          onClick={() => saveEdit(item.id)}
-                          className="gap-1 text-xs text-green-500"
-                        >
-                          <Save className="h-3.5 w-3.5" /> Save
-                        </Button>
-                      )}
+                      </Link>
                       <Button
                         variant="ghost" size="sm"
-                        onClick={() => handleCopy(item.id, isEditing ? editContent : item.tailoredContent)}
+                        onClick={() => handleCopy(item.id, item.tailoredContent)}
                         className="gap-1 text-xs"
                       >
                         <Copy className="h-3.5 w-3.5" />
                         {copiedId === item.id ? 'Copied!' : 'Copy'}
-                      </Button>
-                      <Button
-                        variant="ghost" size="sm"
-                        onClick={() => handleDownloadPdf(item)}
-                        className="gap-1 text-xs"
-                      >
-                        <FileDown className="h-3.5 w-3.5" /> PDF
                       </Button>
                       <Button
                         variant="ghost" size="sm"
@@ -278,17 +170,9 @@ export default function TailoredPage() {
 
                     {isExpanded && (
                       <div className="mt-4">
-                        {isEditing ? (
-                          <textarea
-                            className="w-full rounded-lg bg-muted p-4 text-sm leading-relaxed font-mono resize-y min-h-[200px] outline-none ring-1 ring-primary/30 focus:ring-2"
-                            value={editContent}
-                            onChange={(e) => setEditContent(e.target.value)}
-                          />
-                        ) : (
-                          <pre className="rounded-lg bg-muted p-4 text-sm leading-relaxed overflow-x-auto whitespace-pre-wrap">
-                            {item.tailoredContent}
-                          </pre>
-                        )}
+                        <pre className="rounded-lg bg-muted p-4 text-sm leading-relaxed overflow-x-auto whitespace-pre-wrap">
+                          {item.tailoredContent}
+                        </pre>
                       </div>
                     )}
                   </Card>

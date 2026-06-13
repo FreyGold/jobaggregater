@@ -24,6 +24,39 @@ export function useTailoredResumes() {
   });
 }
 
+export function useTailoredResume(id: string | undefined) {
+  return useQuery({
+    queryKey: ['tailored-resume', id],
+    queryFn: async () => {
+      const res = await apiClient.get<TailoredResume>(`/api/resumes/tailored/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+}
+
+export function useUpdateTailored() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, tailoredContent }: { id: string; tailoredContent: string }) => {
+      const res = await apiClient.put<TailoredResume>(`/api/resumes/tailored/${id}`, { tailoredContent });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['tailored-resumes'] });
+      queryClient.invalidateQueries({ queryKey: ['tailored-resume', data.id] });
+    },
+  });
+}
+
+export function useGenerateCv() {
+  return useMutation({
+    mutationFn: async (latex: string): Promise<Blob> => {
+      return apiClient.postBlob('/api/generate-cv', { latex });
+    },
+  });
+}
+
 export function useDeleteTailored() {
   const queryClient = useQueryClient();
   return useMutation({

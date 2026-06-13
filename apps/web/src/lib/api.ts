@@ -72,6 +72,33 @@ class ApiClient {
     });
   }
 
+  async postBlob(endpoint: string, body: unknown): Promise<Blob> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    const token = this.getToken();
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const text = await response.text();
+      throw new ApiError(text || 'PDF compilation failed', 'COMPILE_ERROR', response.status);
+    }
+    return response.blob();
+  }
+
+  put<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
+    return this.request<ApiResponse<T>>(endpoint, {
+      method: 'PUT',
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  }
+
   delete<T>(endpoint: string): Promise<ApiResponse<T>> {
     return this.request<ApiResponse<T>>(endpoint, { method: 'DELETE' });
   }

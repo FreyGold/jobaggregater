@@ -19,6 +19,18 @@ router.get(
   asyncErrorWrapper((req, res) => resumeController.listTailored(req, res)),
 );
 
+router.get(
+  '/tailored/:id',
+  asyncErrorWrapper(authMiddleware as never),
+  asyncErrorWrapper((req, res) => resumeController.getTailoredById(req, res)),
+);
+
+router.put(
+  '/tailored/:id',
+  asyncErrorWrapper(authMiddleware as never),
+  asyncErrorWrapper((req, res) => resumeController.updateTailoredContent(req, res)),
+);
+
 router.delete(
   '/tailored/:id',
   asyncErrorWrapper(authMiddleware as never),

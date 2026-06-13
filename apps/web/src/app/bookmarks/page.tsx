@@ -16,7 +16,7 @@ import { Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function BookmarksPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const { data: jobs = [], isLoading } = useSavedJobs();
   const { data: subscription } = useCurrentSubscription();
@@ -24,10 +24,10 @@ export default function BookmarksPage() {
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [authLoading, isAuthenticated, router]);
 
   const handleRemove = (jobId: string) => {
     setRemovingIds((prev) => new Set([...prev, jobId]));
@@ -47,6 +47,7 @@ export default function BookmarksPage() {
     }, 400);
   };
 
+  if (authLoading) return null;
   if (!isAuthenticated) return null;
 
   const visibleJobs = jobs.filter((job) => !removingIds.has(job.id));
