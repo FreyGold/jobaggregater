@@ -48,7 +48,7 @@ export const startScraperCron = () => {
   const runAPIScraper = async () => {
     logInfo('Starting API scraper cron');
     try {
-      const apiScrapers = ['remotive', 'remoteok', 'hackernews', 'weWorkRemotely', 'greenhouse', 'lever', 'ashby'];
+      const apiScrapers = ['remotive', 'remoteok', 'hackernews', 'weWorkRemotely', 'greenhouse', 'lever', 'ashby', 'arbeitnow'];
       const sources = apiScrapers
         .map((key) => scraperRegistry.get(key))
         .filter((s) => s !== undefined) as any[];
@@ -70,9 +70,12 @@ export const startScraperCron = () => {
     }
   };
 
+
   // LinkedIn every 1 hour at minute 0.
   cron.schedule('0 * * * *', runLinkedInScraper);
   // API scrapers every 3 hours.
   cron.schedule('0 */3 * * *', runAPIScraper);
+  
+
   // setTimeout(runLinkedInScraper, 0);
 };

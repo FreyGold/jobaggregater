@@ -64,9 +64,14 @@ export class UserRepository {
       .getMany();
   }
 
-  async saveJob(userId: string, jobId: string) {
-    const savedJob = this.savedJobRepo.create({ userId, jobId });
+  async saveJob(userId: string, jobId: string, status: 'WISHLIST' | 'APPLIED' | 'INTERVIEWING' | 'OFFERED' | 'REJECTED' = 'WISHLIST') {
+    const savedJob = this.savedJobRepo.create({ userId, jobId, status });
     return this.savedJobRepo.save(savedJob);
+  }
+
+  async updateSavedJobStatus(userId: string, jobId: string, status: 'WISHLIST' | 'APPLIED' | 'INTERVIEWING' | 'OFFERED' | 'REJECTED') {
+    await this.savedJobRepo.update({ userId, jobId }, { status });
+    return this.savedJobRepo.findOne({ where: { userId, jobId }, relations: ['job'] });
   }
 
   async unsaveJob(userId: string, jobId: string) {

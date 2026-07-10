@@ -1,6 +1,7 @@
 // ─── Job Repository ──────────────────────────────────────────────
 // All Prisma queries for jobs live here. Never accessed directly from controllers.
 
+import { Brackets } from 'typeorm';
 import { AppDataSource } from '../config/data-source.js';
 import { Job } from '../entities/Job.js';
 import type { JobFiltersInput } from '../validators/job.schema.js';
@@ -105,6 +106,37 @@ export class JobRepository {
       .orWhere(':exactKeyword = ANY(job.tags)', { exactKeyword: keyword.toLowerCase() })
       .orderBy('job.postedAt', 'DESC')
       .take(limit);
+
+    return qb.getMany();
+  }
+
+  async findManyByKeywords(keywords: string[], limit: number = 200, dateFrom?: Date) {
+    if (!keywords || keywords.length === 0) return [];
+
+    const qb = this.repo.createQueryBuilder('job');
+    
+    qb.where(
+      new Brackets((subQb) => {
+        keywords.forEach((kw, index) => {
+          const pName = `kw_${index}`;
+          const searchStr = `%${kw}%`;
+          const condition = `(job.title ILIKE :${pName} OR job.company ILIKE :${pName})`;
+          
+          if (index === 0) {
+            subQb.where(condition, { [pName]: searchStr });
+          } else {
+            subQb.orWhere(condition, { [pName]: searchStr });
+          }
+        });
+      })
+    );
+
+    if (dateFrom) {
+      qb.andWhere('COALESCE(job.postedAt, job.createdAt) >= :dateFrom', { dateFrom });
+    }
+
+    qb.orderBy('COALESCE(job.postedAt, job.createdAt)', 'DESC');
+    qb.take(limit);
 
     return qb.getMany();
   }

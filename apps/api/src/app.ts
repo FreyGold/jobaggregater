@@ -18,6 +18,7 @@ import { webhookRoutes } from './routes/webhookRoutes.js';
 import cronRoutes from './routes/cronRoutes.js';
 import { resumeRoutes } from './routes/resumeRoutes.js';
 import { settingsRoutes } from './routes/settingsRoutes.js';
+import { alertRoutes } from './routes/alertRoutes.js';
 import { ResumeService } from './services/resumeService.js';
 import { ResumeController } from './controllers/ResumeController.js';
 
@@ -100,6 +101,7 @@ app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/cron', cronRoutes);
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/alerts', alertRoutes);
 
 app.post(
   '/api/generate-cv',

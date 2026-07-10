@@ -241,3 +241,27 @@
 .animate-slide-up {
   animation: slide-up 0.4s ease-out forwards;
 }
+
+/* Custom Minimal Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--foreground) 15%, transparent);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklch, var(--foreground) 25%, transparent);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

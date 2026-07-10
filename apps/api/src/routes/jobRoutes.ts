@@ -251,6 +251,40 @@ router.delete(
 
 /**
  * @swagger
+ * /api/jobs/saved/{jobId}/status:
+ *   patch:
+ *     summary: Update saved job status
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: jobId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [WISHLIST, APPLIED, INTERVIEWING, OFFERED, REJECTED]
+ *     responses:
+ *       200:
+ *         description: Status updated
+ */
+router.patch(
+  '/saved/:jobId/status',
+  asyncErrorWrapper(authMiddleware as never),
+  asyncErrorWrapper((req, res) => jobController.updateSavedJobStatus(req, res)),
+);
+
+/**
+ * @swagger
  * /api/jobs/{id}/enrich-description:
  *   post:
  *     summary: Enrich job description by fetching from original source
@@ -282,6 +316,39 @@ router.post(
   '/:id/enrich-description',
   tieredRateLimit,
   asyncErrorWrapper((req, res) => jobController.enrichJobDescription(req, res)),
+);
+
+/**
+ * @swagger
+ * /api/jobs/{id}/score:
+ *   post:
+ *     summary: Get an ATS score match for a specific resume against this job
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               resumeId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: ATS Score result
+ */
+router.post(
+  '/:id/score',
+  asyncErrorWrapper(authMiddleware as never),
+  asyncErrorWrapper((req, res) => jobController.scoreJob(req, res)),
 );
 
 export { router as jobRoutes };

@@ -43,9 +43,17 @@
           </button>
         </form>
 
+        <div class="api-env-container" style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+          <span>API Server:</span>
+          <select id="api-env-select" style="width: auto; padding: 2px 8px; font-size: 11px; height: auto; border-radius: 4px; background-color: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-primary);">
+            <option value="production">Production</option>
+            <option value="local">Local Dev</option>
+          </select>
+        </div>
+
         <div class="signup-footer">
           <span>Don't have an account?</span>
-          <a href="http://localhost:3000/register" target="_blank" class="link-signup">Sign up on JobAgg</a>
+          <a href="https://jobagg.vercel.app/register" target="_blank" class="link-signup">Sign up on JobAgg</a>
         </div>
       </section>
 
@@ -108,43 +116,6 @@
         <button id="tailor-btn" class="btn btn-primary mt-4 w-full">
           <span>Tailor My CV</span>
         </button>
-
-        <!-- Settings Toggle -->
-        <button id="settings-toggle-btn" class="btn btn-ghost btn-sm w-full mt-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-          <span>AI Settings</span>
-        </button>
-
-        <!-- Settings Panel -->
-        <div id="settings-panel" class="settings-panel hidden mt-4">
-          <div class="card">
-            <div class="card-header"><h3>AI Provider Configuration</h3></div>
-            <div class="form-group">
-              <label for="ai-provider">Provider</label>
-              <select id="ai-provider">
-                <option value="groq">Groq</option>
-                <option value="gemini">Gemini</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="ai-model">Model</label>
-              <select id="ai-model"></select>
-            </div>
-            <div class="form-group">
-              <label for="ai-api-key">API Key</label>
-              <input type="password" id="ai-api-key" placeholder="Enter your API key">
-            </div>
-            <div class="form-group checkbox-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="save-to-backend">
-                <span>Save API key to backend (encrypted)</span>
-              </label>
-            </div>
-            <button id="save-settings-btn" class="btn btn-primary w-full">Save Settings</button>
-          </div>
-        </div>
       </section>
 
       <!-- 3. RESULT SECTION -->
@@ -173,7 +144,7 @@
           </div>
 
           <div class="action-footer mt-4">
-            <a href="http://localhost:3000/tailored" target="_blank" class="btn btn-primary w-full text-center block-link">
+            <a href="https://jobagg.vercel.app/tailored" target="_blank" id="dashboard-link" class="btn btn-primary w-full text-center block-link">
               View on JobAgg Dashboard
             </a>
           </div>

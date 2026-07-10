@@ -1,0 +1,162 @@
+// ─── Auth Context & SecureStore Persistence ──────────────────────
+
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { Platform } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import { api, setAuthToken } from './api';
+import type { User, AuthResponse } from '@jobagg/shared';
+
+// Web-safe storage wrapper since SecureStore throws on web in latest Expo
+const Storage = {
+  async getItemAsync(key: string) {
+    if (Platform.OS === 'web') {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    return await SecureStore.getItemAsync(key);
+  },
+  async setItemAsync(key: string, value: string) {
+    if (Platform.OS === 'web') {
+      try { localStorage.setItem(key, value); } catch (e) {}
+      return;
+    }
+    await SecureStore.setItemAsync(key, value);
+  },
+  async deleteItemAsync(key: string) {
+    if (Platform.OS === 'web') {
+      try { localStorage.removeItem(key); } catch (e) {}
+      return;
+    }
+    await SecureStore.deleteItemAsync(key);
+  }
+};
+
+interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  token: null,
+  isLoading: true,
+  isAuthenticated: false,
+  login: async () => {},
+  register: async () => {},
+  logout: async () => {},
+  signOut: async () => {},
+  refreshProfile: async () => {},
+});
+
+const TOKEN_KEY = 'auth_token';
+const USER_KEY = 'jobagg_user';
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Restore session on mount
+  useEffect(() => {
+    async function restoreSession() {
+      try {
+        const storedToken = await Storage.getItemAsync(TOKEN_KEY);
+        const storedUser = await Storage.getItemAsync(USER_KEY);
+
+        if (storedToken && storedUser) {
+          setToken(storedToken);
+          setAuthToken(storedToken);
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (err) {
+        console.error('Failed to restore auth session:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    restoreSession();
+  }, []);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const res = await api.post<AuthResponse>('/api/auth/login', { email, password });
+    if (!res.data) {
+      throw new Error(res.error?.message || 'Login failed');
+    }
+    const { user: userData, token: authToken } = res.data;
+
+    setToken(authToken);
+    setUser(userData);
+    setAuthToken(authToken);
+
+    await Storage.setItemAsync(TOKEN_KEY, authToken);
+    await Storage.setItemAsync(USER_KEY, JSON.stringify(userData));
+  }, []);
+
+  const register = useCallback(async (name: string, email: string, password: string) => {
+    const res = await api.post<AuthResponse>('/api/auth/register', { email, password, name });
+    if (!res.data) {
+      throw new Error(res.error?.message || 'Registration failed');
+    }
+    const { user: userData, token: authToken } = res.data;
+
+    setToken(authToken);
+    setUser(userData);
+    setAuthToken(authToken);
+
+    await Storage.setItemAsync(TOKEN_KEY, authToken);
+    await Storage.setItemAsync(USER_KEY, JSON.stringify(userData));
+  }, []);
+
+  const logout = useCallback(async () => {
+    setToken(null);
+    setUser(null);
+    setAuthToken(null);
+
+    await Storage.deleteItemAsync(TOKEN_KEY);
+    await Storage.deleteItemAsync(USER_KEY);
+  }, []);
+
+  const signOut = logout;
+
+  const refreshProfile = useCallback(async () => {
+    if (!token) return;
+    try {
+      const res = await api.get<User>('/api/auth/me');
+      if (res.data) {
+        const userData = res.data;
+        setUser(userData);
+        await Storage.setItemAsync(USER_KEY, JSON.stringify(userData));
+      }
+    } catch (err) {
+      console.error('Failed to refresh profile:', err);
+    }
+  }, [token]);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        isLoading,
+        isAuthenticated: !!token && !!user,
+        login,
+        register,
+        logout,
+        signOut,
+        refreshProfile,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}

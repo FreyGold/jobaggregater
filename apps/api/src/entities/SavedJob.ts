@@ -24,6 +24,13 @@ export class SavedJob {
   @Column({ type: 'uuid' })
   jobId!: string;
 
+  @Column({ 
+    type: 'enum', 
+    enum: ['WISHLIST', 'APPLIED', 'INTERVIEWING', 'OFFERED', 'REJECTED'],
+    default: 'WISHLIST' 
+  })
+  status!: 'WISHLIST' | 'APPLIED' | 'INTERVIEWING' | 'OFFERED' | 'REJECTED';
+
   @CreateDateColumn()
   createdAt!: Date;
 

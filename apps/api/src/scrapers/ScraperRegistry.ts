@@ -11,6 +11,7 @@ import { WeWorkRemotelyScraper } from './WeWorkRemotelyScraper.js';
 import { GreenhouseScraper } from './GreenhouseScraper.js';
 import { LeverScraper } from './LeverScraper.js';
 import { AshbyScraper } from './AshbyScraper.js';
+import { ArbeitnowScraper } from './ArbeitnowScraper.js';
 
 
 
@@ -28,6 +29,7 @@ class ScraperRegistry {
     this.register(new GreenhouseScraper());
     this.register(new LeverScraper());
     this.register(new AshbyScraper());
+    this.register(new ArbeitnowScraper());
   }
 
   register(scraper: BaseScraper): void {

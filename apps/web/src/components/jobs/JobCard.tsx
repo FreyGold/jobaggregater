@@ -153,8 +153,8 @@ function JobCardComponent({ job, isSaved = false, onSave, onUnsave, isBookmarksP
                   isAnimating && "scale-125"
                 )}
                 onClick={handleBookmarkClick}
-                aria-label={optimisticSaved ? 'Unsave job' : 'Save job'}
-                title={optimisticSaved ? 'Unsave job' : 'Save job'}
+                aria-label={optimisticSaved ? 'Stop tracking job' : 'Track on Board'}
+                title={optimisticSaved ? 'Stop tracking job' : 'Track on Board'}
               >
                 {optimisticSaved ? (
                   <BookmarkCheck 

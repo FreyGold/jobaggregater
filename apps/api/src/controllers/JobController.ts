@@ -3,6 +3,7 @@
 import type { Request, Response } from 'express';
 import type { SubscriptionPlan } from '@jobagg/shared';
 import { BaseController } from './BaseController.js';
+import { AppError } from '../middleware/errorHandler.js';
 import type { JobService } from '../services/jobService.js';
 import type { JobDescriptionService } from '../services/jobDescriptionService.js';
 import type { UserRepository } from '../repositories/UserRepository.js';
@@ -58,10 +59,23 @@ export class JobController extends BaseController {
   // ─── Save job (Authenticated)
   saveJob = async (req: Request, res: Response) => {
     try {
-      await this.jobService.saveJob(req.user!.userId, req.params['jobId'] as string);
+      const status = req.body.status as 'WISHLIST' | 'APPLIED' | 'INTERVIEWING' | 'OFFERED' | 'REJECTED' | undefined;
+      await this.jobService.saveJob(req.user!.userId, req.params['jobId'] as string, status);
       this.handleSuccess(res, { message: 'Job saved successfully' }, 201);
     } catch (error) {
       this.handleError(error, res, 'JobController.saveJob');
+    }
+  };
+
+  updateSavedJobStatus = async (req: Request, res: Response) => {
+    try {
+      const status = req.body.status as 'WISHLIST' | 'APPLIED' | 'INTERVIEWING' | 'OFFERED' | 'REJECTED';
+      if (!status) throw new AppError(400, 'Status is required', 'BAD_REQUEST');
+      
+      const updated = await this.jobService.updateSavedJobStatus(req.user!.userId, req.params['jobId'] as string, status);
+      this.handleSuccess(res, { message: 'Status updated', data: updated });
+    } catch (error) {
+      this.handleError(error, res, 'JobController.updateSavedJobStatus');
     }
   };
 
@@ -92,6 +106,32 @@ export class JobController extends BaseController {
       this.handleSuccess(res, enrichedJob);
     } catch (error) {
       this.handleError(error, res, 'JobController.enrichJobDescription');
+    }
+  };
+
+  // ─── Score ATS Match (Authenticated)
+  scoreJob = async (req: Request, res: Response) => {
+    try {
+      const { resumeId } = req.body;
+      if (!resumeId) throw new AppError(400, 'Resume ID is required', 'BAD_REQUEST');
+
+      const jobId = req.params['id'] as string;
+      const job = await this.jobService.getJob(jobId);
+      if (!job) throw new AppError(404, 'Job not found', 'NOT_FOUND');
+
+      const { ResumeService } = await import('../services/resumeService.js');
+      const resumeService = new ResumeService();
+      
+      const result = await resumeService.scoreMatch(
+        resumeId,
+        req.user!.userId,
+        job.title,
+        job.description || job.title,
+      );
+
+      this.handleSuccess(res, result);
+    } catch (error) {
+      this.handleError(error, res, 'JobController.scoreJob');
     }
   };
 }

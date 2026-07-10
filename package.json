@@ -2,9 +2,10 @@
   "name": "jobaggregator",
   "private": true,
   "scripts": {
+    "dev": "pnpm --filter @jobagg/api --filter @jobagg/web --filter moblie-app --parallel dev",
     "dev:api": "pnpm --filter @jobagg/api dev",
     "dev:web": "pnpm --filter @jobagg/web dev",
-    "dev:mobile": "pnpm --filter @jobagg/mobile start",
+    "dev:mobile": "pnpm --filter moblie-app dev",
     "build": "pnpm -r build",
     "build:shared": "pnpm --filter @jobagg/shared build",
     "build:api": "pnpm --filter @jobagg/api build",
@@ -22,5 +23,12 @@
     "node": ">=20",
     "pnpm": ">=9"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@9.15.0",
+  "pnpm": {
+    "overrides": {
+      "@expo/log-box": "55.0.12",
+      "react": "19.2.3",
+      "react-dom": "19.2.3"
+    }
+  }
 }

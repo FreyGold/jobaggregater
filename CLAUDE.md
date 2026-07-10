@@ -155,7 +155,7 @@ While we support light mode, the dark theme (`oklch(0.18 0 0)` background, viole
 - **Icons**: Lucide React
 - **State**: TanStack Query (React Query) for server state
 - **Theme**: next-themes for dark/light mode
-- **Monorepo**: pnpm workspaces (`@jobagg/web`, `@jobagg/api`, `@jobagg/shared`, `@jobagg/mobile`)
+- **Monorepo**: pnpm workspaces (`@jobagg/web`, `@jobagg/api`, `@jobagg/shared`, `moblie-app`)
 
 ### File Structure
 ```

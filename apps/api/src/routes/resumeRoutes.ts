@@ -51,6 +51,12 @@ router.post(
 );
 
 router.post(
+  '/extract',
+  asyncErrorWrapper(authMiddleware as never),
+  asyncErrorWrapper((req, res) => resumeController.extractJobDetails(req, res)),
+);
+
+router.post(
   '/:id/tailor',
   asyncErrorWrapper(authMiddleware as never),
   validateRequest(tailorResumeSchema),

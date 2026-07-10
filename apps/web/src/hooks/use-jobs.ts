@@ -92,13 +92,58 @@ export function useSaveJob() {
 
   const save = useMutation({
     mutationFn: (jobId: string) => apiClient.post(`/api/jobs/saved/${jobId}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['saved-jobs'] }),
+    onMutate: async (jobId: string) => {
+      await queryClient.cancelQueries({ queryKey: ['saved-jobs'] });
+      const previousSavedJobs = queryClient.getQueryData<Job[]>(['saved-jobs']);
+      queryClient.setQueryData<any[]>(['saved-jobs'], (old) => {
+        const newJob = { id: jobId, jobId, status: 'WISHLIST' };
+        return old ? [...old, newJob] : [newJob];
+      });
+      return { previousSavedJobs };
+    },
+    onError: (err, newJobId, context) => {
+      queryClient.setQueryData(['saved-jobs'], context?.previousSavedJobs);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['saved-jobs'] });
+    },
   });
 
   const unsave = useMutation({
     mutationFn: (jobId: string) => apiClient.delete(`/api/jobs/saved/${jobId}`),
+    onMutate: async (jobId: string) => {
+      await queryClient.cancelQueries({ queryKey: ['saved-jobs'] });
+      const previousSavedJobs = queryClient.getQueryData<Job[]>(['saved-jobs']);
+      queryClient.setQueryData<any[]>(['saved-jobs'], (old) => {
+        return old ? old.filter((job) => job.id !== jobId && job.jobId !== jobId) : [];
+      });
+      return { previousSavedJobs };
+    },
+    onError: (err, jobId, context) => {
+      queryClient.setQueryData(['saved-jobs'], context?.previousSavedJobs);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['saved-jobs'] });
+    },
+  });
+
+  const updateStatus = useMutation({
+    mutationFn: ({ jobId, status }: { jobId: string; status: string }) => 
+      apiClient.patch(`/api/jobs/saved/${jobId}/status`, { status }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['saved-jobs'] }),
   });
 
-  return { save, unsave };
+  return { save, unsave, updateStatus };
+}
+
+export function useAtsScore() {
+  return useMutation({
+    mutationFn: async ({ jobId, resumeId }: { jobId: string; resumeId: string }) => {
+      const res = await apiClient.post<{ score: number; missingKeywords: string[]; analysis: string }>(
+        `/api/jobs/${jobId}/score`,
+        { resumeId }
+      );
+      return res.data;
+    },
+  });
 }

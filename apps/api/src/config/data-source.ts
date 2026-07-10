@@ -7,13 +7,14 @@ import { Source } from '../entities/Source.js';
 import { SavedJob } from '../entities/SavedJob.js';
 import { Resume } from '../entities/Resume.js';
 import { TailoredResume } from '../entities/TailoredResume.js';
+import { EmailSubscription } from '../entities/EmailSubscription.js';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: config.db.url,
-  synchronize: true, // Force sync for local docker schema deployment
+  synchronize: config.isDev, // Sync schema automatically in development mode
   logging: config.isDev ? ['query', 'error'] : ['error'],
-  entities: [Job, User, Source, SavedJob, Resume, TailoredResume],
+  entities: [Job, User, Source, SavedJob, Resume, TailoredResume, EmailSubscription],
   migrations: [],
   subscribers: [],
 });

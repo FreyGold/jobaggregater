@@ -9,11 +9,11 @@ const startServer = async () => {
   await initializeDatabase();
   startScraperCron();
   
-  const server = app.listen(config.port, () => {
+  const server = app.listen(config.port, '0.0.0.0', () => {
     console.log(`
     ┌─────────────────────────────────────────┐
     │  🚀 Job Aggregator API                  │
-    │  Running on http://localhost:${config.port}       │
+    │  Running on http://0.0.0.0:${config.port}         │
     │  Environment: ${config.nodeEnv.padEnd(22)}│
     └─────────────────────────────────────────┘
     `);
@@ -35,3 +35,6 @@ startServer().catch((error) => {
   console.error('Failed to start server:', error);
   process.exit(1);
 });
+
+// Force restart: 2026-06-26T01:04:00Z
+

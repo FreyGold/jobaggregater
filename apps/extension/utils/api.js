@@ -1,4 +1,14 @@
-const API_BASE_URL = 'http://localhost:3001';
+async function getApiBaseUrl() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['api_env'], (result) => {
+      if (result.api_env === 'local') {
+        resolve('http://localhost:3001');
+      } else {
+        resolve('https://jobaggregater-api.vercel.app');
+      }
+    });
+  });
+}
 
 async function getToken() {
   return new Promise((resolve) => {
@@ -25,6 +35,7 @@ async function clearToken() {
 }
 
 async function apiRequest(endpoint, options = {}) {
+  const baseUrl = await getApiBaseUrl();
   const token = await getToken();
   const headers = { ...options.headers };
 
@@ -38,7 +49,7 @@ async function apiRequest(endpoint, options = {}) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await fetch(`${baseUrl}${endpoint}`, {
       ...options,
       headers
     });
@@ -61,47 +72,4 @@ async function apiRequest(endpoint, options = {}) {
   }
 }
 
-async function callGroq(apiKey, model, prompt) {
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.1,
-    }),
-  });
 
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`Groq API error (${response.status}): ${err}`);
-  }
-
-  const data = await response.json();
-  return data.choices[0].message.content;
-}
-
-async function callGemini(apiKey, model, prompt) {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.1 },
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`Gemini API error (${response.status}): ${err}`);
-  }
-
-  const data = await response.json();
-  return data.candidates[0].content.parts[0].text;
-}

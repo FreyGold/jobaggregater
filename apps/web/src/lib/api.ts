@@ -49,6 +49,14 @@ class ApiClient {
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        this.setToken(null);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+        }
+      }
+
       const error = data as ApiErrorResponse;
       throw new ApiError(
         error.error?.message ?? 'An error occurred',

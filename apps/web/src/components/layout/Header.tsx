@@ -71,6 +71,18 @@ export function Header() {
               </Link>
               <Link
                 className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                href="/board"
+              >
+                Board
+              </Link>
+              <Link
+                className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                href="/alerts"
+              >
+                Alerts
+              </Link>
+              <Link
+                className={buttonVariants({ variant: 'outline', size: 'sm' })}
                 href="/tailored"
               >
                 Tailored CVs

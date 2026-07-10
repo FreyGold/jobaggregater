@@ -32,15 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const resetBtn = document.getElementById('reset-btn');
   const copyBtn = document.getElementById('copy-preview-btn');
 
-  // DOM Elements - Settings
-  const settingsToggleBtn = document.getElementById('settings-toggle-btn');
-  const settingsPanel = document.getElementById('settings-panel');
-  const aiProviderSelect = document.getElementById('ai-provider');
-  const aiModelSelect = document.getElementById('ai-model');
-  const aiApiKeyInput = document.getElementById('ai-api-key');
-  const saveToBackendCheckbox = document.getElementById('save-to-backend');
-  const saveSettingsBtn = document.getElementById('save-settings-btn');
-
   // DOM Elements - Global Msg
   const globalMessage = document.getElementById('global-message');
 
@@ -85,65 +76,29 @@ document.addEventListener('DOMContentLoaded', async () => {
   jobCompanyInput.addEventListener('input', saveFormFields);
   jobDescInput.addEventListener('input', saveFormFields);
 
-  // ─── Settings ──────────────────────────────────────────────────────
-  function populateModelOptions(provider) {
-    const models = provider === 'groq' ? GROQ_MODELS : GEMINI_MODELS;
-    aiModelSelect.innerHTML = '';
-    models.forEach((m) => {
-      const opt = document.createElement('option');
-      opt.value = m;
-      opt.textContent = m;
-      aiModelSelect.appendChild(opt);
-    });
-  }
+  // DOM Elements - API Env Switcher
+  const apiEnvSelect = document.getElementById('api-env-select');
 
-  aiProviderSelect.addEventListener('change', () => {
-    populateModelOptions(aiProviderSelect.value);
-  });
-
-  settingsToggleBtn.addEventListener('click', () => {
-    settingsPanel.classList.toggle('hidden');
-  });
-
-  saveSettingsBtn.addEventListener('click', async () => {
-    const settings = {
-      provider: aiProviderSelect.value,
-      model: aiModelSelect.value,
-      apiKey: aiApiKeyInput.value.trim(),
-      saveToBackend: saveToBackendCheckbox.checked,
-    };
-    chrome.storage.local.set({ ai_settings: settings });
-
-    if (settings.saveToBackend) {
-      const res = await apiRequest('/api/settings/ai', {
-        method: 'PUT',
-        body: { provider: settings.provider, model: settings.model, apiKey: settings.apiKey },
-      });
-      if (res.error) {
-        showMessage('Saved locally, but failed to save to backend: ' + res.error, 'error');
-        return;
-      }
+  // Initialize API Environment Select
+  chrome.storage.local.get(['api_env'], (res) => {
+    if (apiEnvSelect) {
+      apiEnvSelect.value = res.api_env || 'production';
     }
-    showMessage('Settings saved!', 'success');
   });
 
-  async function loadSettings() {
-    return new Promise((resolve) => {
-      chrome.storage.local.get(['ai_settings'], (res) => {
-        const settings = res.ai_settings || {};
-        if (settings.provider) aiProviderSelect.value = settings.provider;
-        populateModelOptions(aiProviderSelect.value);
-        if (settings.model) aiModelSelect.value = settings.model;
-        if (settings.apiKey) aiApiKeyInput.value = settings.apiKey;
-        if (settings.saveToBackend) saveToBackendCheckbox.checked = true;
-        resolve();
+  if (apiEnvSelect) {
+    apiEnvSelect.addEventListener('change', async (e) => {
+      const newEnv = e.target.value;
+      await clearToken();
+      chrome.storage.local.set({ api_env: newEnv }, async () => {
+        await checkAuth();
+        showMessage(`Switched to ${newEnv === 'local' ? 'Local Dev' : 'Production'} API`, 'success');
       });
     });
   }
 
   // Initialize
   await checkAuth();
-  await loadSettings();
   await loadDetectedJob();
   loadFormFields();
 
@@ -211,16 +166,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ─── AI Extract from Page ─────────────────────────────────────────
   aiExtractBtn.addEventListener('click', async () => {
-    const settings = await new Promise(resolve => {
-      chrome.storage.local.get(['ai_settings'], (res) => resolve(res.ai_settings || {}));
-    });
-
-    if (!settings.apiKey) {
-      showMessage('Please configure an AI API key in Settings first.', 'error');
-      settingsPanel.classList.remove('hidden');
-      return;
-    }
-
     setLoading(aiExtractBtn, true, 'Extracting...');
     hideMessage();
 
@@ -240,26 +185,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      const prompt = `You are a job listing parser. Given the following page text, extract the job title and company name. If you can find a job description, include it. Return ONLY valid JSON with these fields: "jobTitle", "companyName", "jobDescription". If you cannot determine a field, use an empty string.
+      const response = await apiRequest('/api/resumes/extract', {
+        method: 'POST',
+        body: {
+          url: pageData.url,
+          title: pageData.title,
+          bodyText: pageData.bodyText,
+        }
+      });
 
-Page URL: ${pageData.url}
-Page Title: ${pageData.title}
-
-Page Text:
-${pageData.bodyText.slice(0, 15000)}`;
-
-      let result;
-      if (settings.provider === 'groq') {
-        result = await callGroq(settings.apiKey, settings.model || 'mixtral-8x7b-32768', prompt);
-      } else {
-        result = await callGemini(settings.apiKey, settings.model || 'gemini-2.0-flash', prompt);
+      if (response.error) {
+        showMessage('AI extraction failed: ' + response.error, 'error');
+        setLoading(aiExtractBtn, false);
+        return;
       }
 
-      const cleaned = result.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(cleaned);
-      if (parsed.jobTitle) jobTitleInput.value = parsed.jobTitle;
-      if (parsed.companyName) jobCompanyInput.value = parsed.companyName;
-      if (parsed.jobDescription) jobDescInput.value = parsed.jobDescription;
+      const parsed = response.data;
+      if (parsed && parsed.jobTitle) jobTitleInput.value = parsed.jobTitle;
+      if (parsed && parsed.companyName) jobCompanyInput.value = parsed.companyName;
+      if (parsed && parsed.jobDescription) jobDescInput.value = parsed.jobDescription;
       saveFormFields();
 
       showMessage('Job details extracted!', 'success');
@@ -475,6 +419,15 @@ ${pageData.bodyText.slice(0, 15000)}`;
     else scoreBadge.classList.add('score-high');
 
     tailoredPreview.textContent = tailoredData.tailoredContent || '';
+
+    const dashboardLink = document.getElementById('dashboard-link');
+    if (dashboardLink && tailoredData.id) {
+      chrome.storage.local.get(['api_env'], (res) => {
+        const isLocal = res.api_env === 'local';
+        const webUrl = isLocal ? 'http://localhost:3000' : 'https://jobagg.vercel.app';
+        dashboardLink.href = `${webUrl}/tailored/${tailoredData.id}`;
+      });
+    }
   }
 
   // ─── Reset & Copy ─────────────────────────────────────────────────

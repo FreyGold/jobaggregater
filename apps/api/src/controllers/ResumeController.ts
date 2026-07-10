@@ -59,6 +59,25 @@ export class ResumeController extends BaseController {
     }
   }
 
+  async extractJobDetails(req: Request, res: Response): Promise<void> {
+    try {
+      const { url, title, bodyText } = req.body;
+      if (!bodyText || typeof bodyText !== 'string') {
+        res.status(400).json({ data: null, error: { message: 'bodyText is required', code: 'VALIDATION_ERROR' } });
+        return;
+      }
+      const result = await this.resumeService.extractJobDetails(
+        req.user!.userId,
+        url,
+        title,
+        bodyText,
+      );
+      this.handleSuccess(res, result);
+    } catch (error) {
+      this.handleError(error, res, 'ResumeController.extractJobDetails');
+    }
+  }
+
   async listTailored(req: Request, res: Response): Promise<void> {
     try {
       const result = await this.resumeService.listTailored(req.user!.userId);

@@ -151,7 +151,7 @@ export class JobService {
     return results;
   }
 
-  async saveJob(userId: string, jobId: string) {
+  async saveJob(userId: string, jobId: string, status: 'WISHLIST' | 'APPLIED' | 'INTERVIEWING' | 'OFFERED' | 'REJECTED' = 'WISHLIST') {
     const job = await this.jobRepository.findById(jobId);
     if (!job) {
       throw new AppError(404, 'Job not found', 'JOB_NOT_FOUND');
@@ -162,7 +162,15 @@ export class JobService {
       throw new AppError(409, 'Job already saved', 'ALREADY_SAVED');
     }
 
-    return this.userRepository.saveJob(userId, jobId);
+    return this.userRepository.saveJob(userId, jobId, status);
+  }
+
+  async updateSavedJobStatus(userId: string, jobId: string, status: 'WISHLIST' | 'APPLIED' | 'INTERVIEWING' | 'OFFERED' | 'REJECTED') {
+    const exists = await this.userRepository.isJobSaved(userId, jobId);
+    if (!exists) {
+      throw new AppError(404, 'Saved job not found', 'NOT_FOUND');
+    }
+    return this.userRepository.updateSavedJobStatus(userId, jobId, status);
   }
 
   async unsaveJob(userId: string, jobId: string) {
@@ -171,6 +179,10 @@ export class JobService {
 
   async getSavedJobs(userId: string) {
     const saved = await this.userRepository.getSavedJobs(userId);
-    return saved.map((s: any) => s.job);
+    return saved.map((s: any) => ({
+      ...s.job,
+      savedStatus: s.status,
+      savedAt: s.createdAt,
+    }));
   }
 }

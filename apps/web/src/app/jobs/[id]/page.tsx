@@ -5,7 +5,8 @@
 import { use, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { sendGAEvent } from '@next/third-parties/google';
-import { useJob, useSavedJobs, useSaveJob } from '@/hooks/use-jobs';
+import { useJob, useSavedJobs, useSaveJob, useAtsScore } from '@/hooks/use-jobs';
+import { useResumes } from '@/hooks/use-resumes';
 import { useAuth } from '@/providers/auth-provider';
 import { apiClient, ApiError } from '@/lib/api';
 import { formatSalary, formatTimeAgo } from '@jobagg/shared';
@@ -39,7 +40,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const { isAuthenticated } = useAuth();
   const { data: job, isLoading, isError, refetch } = useJob(id);
   const { data: savedJobs = [] } = useSavedJobs();
+  const { data: resumes = [] } = useResumes();
   const { save, unsave } = useSaveJob();
+  const atsScoreMutation = useAtsScore();
+  const [atsResult, setAtsResult] = useState<{ score: number; missingKeywords: string[]; analysis: string } | null>(null);
+
   const [enrichedDescription, setEnrichedDescription] = useState<string | null>(null);
   const [isEnrichingDescription, setIsEnrichingDescription] = useState(false);
   const [enrichmentError, setEnrichmentError] = useState<string | null>(null);
@@ -77,6 +82,16 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
     } finally {
       setIsEnrichingDescription(false);
     }
+  };
+
+  const handleScore = () => {
+    if (resumes.length === 0) return;
+    const baseResumeId = resumes[0].id; // using first base resume
+    atsScoreMutation.mutate({ jobId: id, resumeId: baseResumeId }, {
+      onSuccess: (data) => {
+        setAtsResult(data);
+      }
+    });
   };
 
   const descriptionToShow = enrichedDescription || job?.description;
@@ -228,16 +243,58 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     size="lg" 
                     onClick={handleToggleSave}
                     disabled={!isAuthenticated}
-                    title={!isAuthenticated ? 'Login to save jobs' : isSaved ? 'Remove from saved' : 'Save job'}
+                    title={!isAuthenticated ? 'Login to save jobs' : isSaved ? 'Remove from board' : 'Track on Board'}
                   >
                     {isSaved ? (
                       <BookmarkCheck className="h-4 w-4 text-primary" />
                     ) : (
                       <Bookmark className="h-4 w-4" />
                     )}
-                    {isSaved ? 'Saved' : 'Save Job'}
+                    {isSaved ? 'Tracking' : 'Track on Board'}
                   </Button>
                 </div>
+
+                {isAuthenticated && resumes.length > 0 && (
+                  <div className="mt-8 pt-6 border-t border-border">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 className="font-semibold flex items-center gap-2">
+                          <BarChart3 className="h-4 w-4 text-primary" /> 
+                          ATS Match Scorer
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-1">Compare your base CV against this job description.</p>
+                      </div>
+                      <Button onClick={handleScore} disabled={atsScoreMutation.isPending || (hasDescription === false && !job.description)} variant="secondary">
+                        {atsScoreMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                        {atsScoreMutation.isPending ? 'Scoring...' : 'Score CV'}
+                      </Button>
+                    </div>
+
+                    {atsResult && (
+                      <div className="bg-muted/30 rounded-lg p-5 border mt-4">
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className={`flex items-center justify-center h-16 w-16 rounded-full border-4 font-bold text-xl ${
+                            atsResult.score >= 80 ? 'border-green-500 text-green-600' : 
+                            atsResult.score >= 60 ? 'border-yellow-500 text-yellow-600' : 'border-red-500 text-red-600'
+                          }`}>
+                            {atsResult.score}%
+                          </div>
+                          <p className="text-sm flex-1 leading-relaxed">{atsResult.analysis}</p>
+                        </div>
+                        {atsResult.missingKeywords.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-muted-foreground uppercase mb-2">Missing Keywords</h4>
+                            <div className="flex flex-wrap gap-1.5">
+                              {atsResult.missingKeywords.map(kw => (
+                                <Badge key={kw} variant="outline" className="text-red-500 bg-red-50 dark:bg-red-950/20">{kw}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </header>
 
               {/* Description */}
